@@ -10,13 +10,20 @@ import UIKit
 
 extension UIColor {
     var rgba: Int {
-        var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
-        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        guard let components = cgColor.components, cgColor.numberOfComponents == 4 else {
+            return 0
+        }
+        
+        let red = components[0]
+        let green = components[1]
+        let blue = components[2]
+        let alpha = components[3]
+        
         return Int(red * 255.0) << 24 | Int(green * 255.0) << 16 | Int(blue * 255.0) << 8 | Int(alpha * 255.0)
     }
 
     var alpha: CGFloat {
-        return CGFloat(self.rgba & 0xFF) / 255.0
+        return cgColor.alpha
     }
 
     convenience init(hex: Int, alpha: CGFloat = 1.0) {
