@@ -58,8 +58,8 @@ extension UIColor {
 
 // Gray Scale
 extension UIColor {
-    static let gray0 = UIColor(hex: 0xFFECECEC)
-    static let gray50 = UIColor(hex: 0xFFFFFFFF)
+    static let gray0 = UIColor(hex: 0xFFFFFFFF)
+    static let gray50 = UIColor(hex: 0xFFECECEC)
     static let gray100 = UIColor(hex: 0xFFC4C4C4)
     static let gray200 = UIColor(hex: 0xFFA7A7A7)
     static let gray300 = UIColor(hex: 0xFF7F7F7F)
