@@ -82,3 +82,5 @@ fastlane/screenshots/**/*.png
 # General
 DerivedData/
 build/
+
+On-Dot/On-Dot.xcodeproj/project.pbxproj
