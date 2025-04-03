@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PoptatoTypo {
+struct OnDotTypo {
     static let pretendardBlack = "Pretendard-Black"
     static let pretendardBold = "Pretendard-Bold"
     static let pretendardExtraBold = "Pretendart-ExtraBold"
