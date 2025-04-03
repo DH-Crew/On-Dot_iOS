@@ -82,7 +82,7 @@ extension Color {
     static let green900 = Color(uiColor: .green900)
     static let green1000 = Color(uiColor: .green1000)
     
-    static let gray00 = Color(uiColor: .gray0)
+    static let gray0 = Color(uiColor: .gray0)
     static let gray50 = Color(uiColor: .gray50)
     static let gray100 = Color(uiColor: .gray100)
     static let gray200 = Color(uiColor: .gray200)
