@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct OnDotToggle: View {
+    @Binding var isOn: Bool
+    var action: () -> Void = {}
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Toggle("", isOn: $isOn)
+            .tint(isOn ? Color.green600 : Color.gray400)
+            .onChange(of: isOn) { newValue in
+                action()
+            }
     }
-}
-
-#Preview {
-    OnDotToggle()
 }
