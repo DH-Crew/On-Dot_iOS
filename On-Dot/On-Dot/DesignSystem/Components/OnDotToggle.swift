@@ -13,6 +13,7 @@ struct OnDotToggle: View {
     
     var body: some View {
         Toggle("", isOn: $isOn)
+            .labelsHidden()
             .tint(isOn ? Color.green600 : Color.gray400)
             .onChange(of: isOn) { newValue in
                 action()
