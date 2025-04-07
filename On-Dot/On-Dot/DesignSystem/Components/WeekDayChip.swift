@@ -22,7 +22,7 @@ struct WeekDayChip: View {
             .font(OnDotTypo.bodyMediumR)
             .foregroundStyle(style.foregroundColor)
             .padding(.horizontal, 6.5)
-            .padding(.vertical, 7)
+            .padding(.vertical, 4)
             .background(Color.gray500)
             .cornerRadius(6)
     }
