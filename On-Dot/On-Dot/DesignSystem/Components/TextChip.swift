@@ -16,7 +16,7 @@ struct TextChip: View {
             .font(OnDotTypo.bodyMediumR)
             .foregroundColor(isActive ? Color.green600 : Color.gray50)
             .padding(.horizontal, 8)
-            .padding(.vertical, 6)
+            .padding(.vertical, 4)
             .background(Color.gray500)
             .cornerRadius(6)
     }
