@@ -15,7 +15,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                SelectedDateView()
+                SelectedTimeView()
             }
             .padding()
         }
