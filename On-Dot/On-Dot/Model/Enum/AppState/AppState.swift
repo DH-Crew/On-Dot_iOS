@@ -6,9 +6,9 @@
 //
 
 enum AppState {
-    case Auth
-    case Main
-    case Quick
-    case General
-    case Edit
+    case auth
+    case main
+    case quick
+    case general
+    case edit
 }
