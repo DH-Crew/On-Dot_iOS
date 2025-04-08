@@ -58,6 +58,8 @@ struct FromToLocationView: View {
                     .font(OnDotTypo.bodyLargeR1)
                     .foregroundStyle(Color.gray0)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
             Spacer().frame(width: 8)
             if !content.isEmpty {
