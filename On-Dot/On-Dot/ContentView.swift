@@ -15,7 +15,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                SelectedTimeView()
+                MonthNavigatorView(decreaseMonth: {}, increaseMonth: {})
             }
             .padding()
         }
