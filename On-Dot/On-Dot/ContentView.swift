@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var selectedDay: Int? = nil
     
     var body: some View {
         ZStack {
@@ -15,7 +16,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                MonthNavigatorView(decreaseMonth: {}, increaseMonth: {})
+                CalendarContentView(selectedDay: $selectedDay, year: 2025, month: 6)
             }
             .padding()
         }
