@@ -11,6 +11,8 @@ struct ContentView: View {
     @State private var meridiem: String = "오전"
     @State private var hour: Int = 1
     @State private var minute: Int = 0
+    @State private var fromLocation: String = "시작점"
+    @State private var toLocation: String = "도착점"
     
     var body: some View {
         ZStack {
@@ -18,7 +20,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                StepProgressBar(totalStep: 3, currentStep: 2)
+                FromToLocationView(fromLocation: $fromLocation, toLocation: $toLocation)
             }
             .padding()
         }
@@ -26,6 +28,9 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
+

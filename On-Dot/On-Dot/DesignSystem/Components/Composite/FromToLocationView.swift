@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct FromToLocationView: View {
-    @State var fromLocation: String = "서울 드림헌터로 성공하길 17"
-    @State var toLocation: String = ""
+    @Binding var fromLocation: String
+    @Binding var toLocation: String
+    
+    init(fromLocation: Binding<String>, toLocation: Binding<String>) {
+        self._fromLocation = fromLocation
+        self._toLocation = toLocation
+    }
     
     var body: some View {
         HStack(spacing: 0) {
