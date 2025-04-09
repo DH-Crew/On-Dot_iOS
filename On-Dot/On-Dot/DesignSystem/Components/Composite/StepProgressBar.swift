@@ -13,17 +13,26 @@ struct StepProgressBar: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(Color.gray700)
-
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(Color.green600)
-                    .frame(width: geometry.size.width * CGFloat(currentStep) / CGFloat(totalStep))
-                    .animation(.easeInOut(duration: 0.3), value: currentStep)
+            let barWidth = (geometry.size.width - CGFloat(totalStep - 1) * 4) / CGFloat(totalStep)
+            
+            HStack(spacing: 4) {
+                ForEach(0..<totalStep, id: \.self) { index in
+                    if index < currentStep {
+                        Rectangle()
+                            .fill(Color.green600)
+                            .frame(width: barWidth, height: 4)
+                            .cornerRadius(2)
+                            .animation(.easeInOut(duration: 0.3), value: currentStep)
+                    } else {
+                        Rectangle()
+                            .fill(Color.gray700)
+                            .frame(width: barWidth, height: 4)
+                            .cornerRadius(2)
+                            .animation(.easeInOut(duration: 0.3), value: currentStep)
+                    }
+                }
             }
         }
         .frame(height: 4)
-        .clipShape(RoundedRectangle(cornerRadius: 2))
     }
 }

@@ -14,11 +14,11 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color.gray700
+            Color.gray900
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                DialTimePickerView(meridiem: $meridiem, hour: $hour, minute: $minute)
+                StepProgressBar(totalStep: 3, currentStep: 2)
             }
             .padding()
         }
