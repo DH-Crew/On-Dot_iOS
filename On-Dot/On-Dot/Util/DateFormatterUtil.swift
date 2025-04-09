@@ -36,4 +36,12 @@ struct DateFormatterUtil {
         formatter.pmSymbol = "오후"
         return formatter.string(from: date)
     }
+    
+    /// 날짜를 "M월 d일 h:mm" 형식으로 반환 (예: "6월 13일 7:00")
+    static func formatShortKoreanDateTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M월 d일 H:mm"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter.string(from: date)
+    }
 }
