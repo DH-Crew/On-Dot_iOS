@@ -33,8 +33,11 @@ struct CalendarContentView: View {
         for _ in 1..<startWeekday {
             dates.append(Date.distantPast)
         }
-
-        let numberOfDays = calendar.range(of: .day, in: .month, for: startOfMonth)!.count
+        
+        guard let daysRange = calendar.range(of: .day, in: .month, for: startOfMonth) else {
+            return []
+        }
+        let numberOfDays = daysRange.count
 
         for day in 1...numberOfDays {
             if let date = calendar.date(bySetting: .day, value: day, of: startOfMonth) {
