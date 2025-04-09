@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var selectedDay: Int? = nil
+    @State private var meridiem: String = "오전"
+    @State private var hour: Int = 1
+    @State private var minute: Int = 0
     
     var body: some View {
         ZStack {
-            Color.gray900
+            Color.gray700
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                CalendarContentView(selectedDay: $selectedDay, year: 2025, month: 6)
+                DialTimePickerView(meridiem: $meridiem, hour: $hour, minute: $minute)
             }
             .padding()
         }
