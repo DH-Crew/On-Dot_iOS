@@ -22,7 +22,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                UserBadgeBannerView()
+                RemainingTimeView(day: 1, hour: 2, minute: 30)
             }
             .padding()
         }
