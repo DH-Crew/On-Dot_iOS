@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct UserBadgeBannerView: View {
+    var image: String = "ic_free_badge"
+    
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             Image("ic_logo")
-            Image("ic_free_badge")
+            Image(image)
         }
     }
 }
