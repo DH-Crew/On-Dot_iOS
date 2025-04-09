@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct SelectedDateTimeView: View {
-    @State var selectedDate: String = "2025년 6월 13일"
-    @State var selectedTime: String = "오후 7:00"
+    var selectedDate: String = "2025년 6월 13일"
+    var selectedTime: String = "오후 7:00"
     
     var onClickDateChip: () -> Void
     var onClickTimeChip: () -> Void
