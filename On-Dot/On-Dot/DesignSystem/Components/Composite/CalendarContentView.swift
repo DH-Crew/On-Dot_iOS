@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarContentView: View {
-    @Binding var selectedDay: Int?
+    @Binding var selectedDate: Date?
     let calendar = Calendar.current
     let year: Int
     let month: Int
@@ -21,31 +21,27 @@ struct CalendarContentView: View {
         return calendar.date(from: components)
     }
 
-    private var daysInMonth: [Date] {
+    private var daysInMonth: [CalendarDay] {
         guard let startOfMonth = referenceDate,
               let monthInterval = calendar.dateInterval(of: .month, for: startOfMonth),
-              let startWeekday = calendar.dateComponents([.weekday], from: monthInterval.start).weekday else {
+              let startWeekday = calendar.dateComponents([.weekday], from: monthInterval.start).weekday,
+              let range = calendar.range(of: .day, in: .month, for: startOfMonth) else {
             return []
         }
 
-        var dates: [Date] = []
+        var days: [CalendarDay] = []
 
         for _ in 1..<startWeekday {
-            dates.append(Date.distantPast)
+            days.append(CalendarDay(date: nil, isCurrentMonth: false))
         }
         
-        guard let daysRange = calendar.range(of: .day, in: .month, for: startOfMonth) else {
-            return []
-        }
-        let numberOfDays = daysRange.count
-
-        for day in 1...numberOfDays {
+        for day in range {
             if let date = calendar.date(bySetting: .day, value: day, of: startOfMonth) {
-                dates.append(date)
+                days.append(CalendarDay(date: date, isCurrentMonth: true))
             }
         }
 
-        return dates
+        return days
     }
 
     private var weekdaySymbols: [String] {
@@ -61,46 +57,43 @@ struct CalendarContentView: View {
                     Text(symbol)
                         .font(OnDotTypo.bodyLargeR2)
                         .frame(maxWidth: .infinity)
+                        .frame(height: 39)
                         .foregroundStyle(symbol == "일" ? Color.red : Color.gray100)
                 }
             }
             
-            Spacer().frame(height: 18)
+            Spacer().frame(height: 4)
 
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 7),
-                spacing: 18
-            ) {
-                ForEach(daysInMonth, id: \.self) { date in
-                    if calendar.isDate(date, equalTo: Date.distantPast, toGranularity: .day) {
-                        Text("")
-                            .frame(height: 39)
-                    } else {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 7), spacing: 4) {
+                ForEach(daysInMonth) { day in
+                    if let date = day.date {
+                        let isSelected = selectedDate != nil && calendar.isDate(date, inSameDayAs: selectedDate!)
+
                         Text("\(calendar.component(.day, from: date))")
                             .font(OnDotTypo.bodyLargeR2)
-                            .foregroundStyle(selectedDay == calendar.component(.day, from: date) ? Color.green400 : Color.gray100)
+                            .foregroundStyle(isSelected ? Color.green400 : Color.gray100)
                             .frame(maxWidth: .infinity)
                             .frame(height: 39)
                             .aspectRatio(1, contentMode: .fit)
-                            .background(
-                                Group {
-                                    if selectedDay == calendar.component(.day, from: date) {
-                                        Color.green900
-                                    } else {
-                                        Color.clear
-                                    }
-                                }
-                            )
+                            .background(isSelected ? Color.green900 : Color.clear)
                             .clipShape(Circle())
                             .onTapGesture {
-                                selectedDay = calendar.component(.day, from: date)
+                                selectedDate = date
                             }
+                    } else {
+                        Text("")
+                            .frame(height: 39)
                     }
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 0)
         }
         .padding()
+    }
+    
+    struct CalendarDay: Identifiable, Hashable {
+        let id = UUID()
+        let date: Date?
+        let isCurrentMonth: Bool
     }
 }

@@ -13,14 +13,15 @@ struct ContentView: View {
     @State private var minute: Int = 0
     @State private var fromLocation: String = "시작점"
     @State private var toLocation: String = "도착점"
+    @State private var selectedDate: Date? = nil
     
     var body: some View {
         ZStack {
-            Color.gray900
+            Color.gray700
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                FromToLocationView(fromLocation: $fromLocation, toLocation: $toLocation)
+                CalendarContentView(selectedDate: $selectedDate, year: 2025, month: 6)
             }
             .padding()
         }
