@@ -22,7 +22,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                AddScheduleButtonView(isShrunk: $isShrunk, onClickButton: {isShrunk.toggle()})
+                UserBadgeBannerView()
             }
             .padding()
         }
