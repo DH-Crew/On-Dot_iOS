@@ -29,12 +29,11 @@ struct LocationListItemView: View {
             
             Spacer().frame(width: 8)
             
-            Image("ic_close")
-                .resizable()
-                .frame(width: 12, height: 12)
-                .onTapGesture {
-                    onClickClose()
-                }
+            Button(action: onClickClose) {
+                Image("ic_close")
+                    .resizable()
+                    .frame(width: 12, height: 12)
+            }
         }
         .frame(maxWidth: .infinity)
     }
