@@ -63,7 +63,15 @@ struct FromToLocationView: View {
             }
             Spacer().frame(width: 8)
             if !content.isEmpty {
-                Image("ic_close")
+                Button(action: {
+                    if title == "출발지" {
+                        fromLocation = ""
+                    } else {
+                        toLocation = ""
+                    }
+                }) {
+                    Image("ic_close")
+                }
                 Spacer().frame(width: 20)
             }
         }
