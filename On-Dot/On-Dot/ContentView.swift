@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var toLocation: String = "도착점"
     @State private var selectedDate: Date? = nil
     @State private var isShrunk: Bool = false
+    @State private var schedule = ScheduleModel(id: 1, title: "일정1", isRepeat: true, repeatDays: [1,4], appointmentAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: true)
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -22,7 +23,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                RemainingTimeView(day: 1, hour: 2, minute: 30)
+                ScheduleAlarmListItemView(item: $schedule, onClickToggle: {})
             }
             .padding()
         }
