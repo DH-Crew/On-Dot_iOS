@@ -14,18 +14,22 @@ struct ContentView: View {
     @State private var fromLocation: String = "시작점"
     @State private var toLocation: String = "도착점"
     @State private var selectedDate: Date? = nil
+    @State private var isShrunk: Bool = false
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottomTrailing) {
             Color.gray900
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                EmptyScheduleView()
+                AddScheduleButtonView(isShrunk: $isShrunk, onClickButton: {isShrunk.toggle()})
             }
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onTapGesture {
+            isShrunk = false
+        }
     }
 }
 
