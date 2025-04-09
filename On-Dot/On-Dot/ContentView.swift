@@ -17,11 +17,11 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color.gray700
+            Color.gray900
                 .ignoresSafeArea()
             
             VStack(alignment: .center) {
-                CalendarContentView(selectedDate: $selectedDate, year: 2025, month: 6)
+                EmptyScheduleView()
             }
             .padding()
         }
