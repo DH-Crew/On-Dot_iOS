@@ -5,15 +5,17 @@
 //  Created by 현수 노트북 on 4/10/25.
 //
 
+import Foundation
+
 struct ScheduleModel: Codable, Identifiable {
     let id: Int
     let title: String
     let isRepeat: Bool
     let repeatDays: [Int]
     let appointmentAt: Date
-    let preparationTriggeredAt: Date
+    let preparationTriggeredAt: Date?
     let departureTriggeredAt: Date
-    let isEnabled: Bool
+    var isEnabled: Bool
 
     enum CodingKeys: String, CodingKey {
         case id = "scheduleId"
