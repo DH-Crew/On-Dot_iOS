@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MonthNavigatorView: View {
-    @State var currentDate: String = "2025년 06월"
+    var currentDate: String = "2025년 06월"
     
     var decreaseMonth: () -> Void
     var increaseMonth: () -> Void
