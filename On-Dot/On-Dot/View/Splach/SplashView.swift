@@ -9,10 +9,11 @@ import SwiftUI
 
 struct SplashView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack(alignment: .center) {
+            Color.gray900.ignoresSafeArea()
+            
+            LottieView(name: "Splash", loopMode: .playOnce)
+                .frame(width: 206, height: 40)
+        }
     }
-}
-
-#Preview {
-    SplashView()
 }
