@@ -8,40 +8,39 @@
 import Foundation
 
 struct DateFormatterUtil {
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter
+    }()
     
     /// 날짜를 "yyyy.MM.dd" 형식으로 반환
     static func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        formatter.locale = Locale(identifier: "ko_KR")
-        return formatter.string(from: date)
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        return dateFormatter.string(from: date)
     }
 
     /// 시간을 "오전/오후 h:mm" 형식으로 반환
     static func formatTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "a hh:mm"
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.amSymbol = "오전"
-        formatter.pmSymbol = "오후"
-        return formatter.string(from: date)
+        dateFormatter.dateFormat = "a hh:mm"
+        dateFormatter.amSymbol = "오전"
+        dateFormatter.pmSymbol = "오후"
+        return dateFormatter.string(from: date)
     }
 
     /// 날짜 + 시간 형식으로 반환 (예: "2025.04.08 오전 9:00")
     static func formatDateTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd a hh:mm"
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.amSymbol = "오전"
-        formatter.pmSymbol = "오후"
-        return formatter.string(from: date)
+        dateFormatter.dateFormat = "yyyy.MM.dd a hh:mm"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.amSymbol = "오전"
+        dateFormatter.pmSymbol = "오후"
+        return dateFormatter.string(from: date)
     }
     
     /// 날짜를 "M월 d일 h:mm" 형식으로 반환 (예: "6월 13일 7:00")
     static func formatShortKoreanDateTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월 d일 H:mm"
-        formatter.locale = Locale(identifier: "ko_KR")
-        return formatter.string(from: date)
+        dateFormatter.dateFormat = "M월 d일 H:mm"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        return dateFormatter.string(from: date)
     }
 }
