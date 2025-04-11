@@ -11,30 +11,23 @@ struct ContentView: View {
     @StateObject private var router = AppRouter()
     
     var body: some View {
-        NavigationStack(path: $router.path) {
-            ZStack {
-                Color.gray900.ignoresSafeArea()
-                
-                switch router.state {
-                case .splash:
-                    SplashView(onSplashCompleted: {
-                        router.state = .main
-                        router.replace(with: .main)
-                    })
-                default:
-                    Color.clear
-                }
-            }
-            .navigationDestination(for: AppState.self) { state in
-                switch state {
-                case .main:
+        ZStack {
+            Color.gray900.ignoresSafeArea()
+            
+            switch router.state {
+            case .splash:
+                SplashView(onSplashCompleted: {
+                    router.replace(with: .main)
+                    router.state = .main
+                })
+            case .main:
+                NavigationStack {
                     MainView()
-                default:
-                    Color.clear
                 }
+            default:
+                Color.clear
             }
         }
-        .environmentObject(router)
     }
 }
 
