@@ -5,7 +5,7 @@
 //  Created by 현수 노트북 on 4/8/25.
 //
 
-enum AppState {
+enum AppState: Hashable {
     case splash
     case auth
     case main
