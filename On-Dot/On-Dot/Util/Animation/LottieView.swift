@@ -12,12 +12,17 @@ struct LottieView: UIViewRepresentable {
     let name: String
     var loopMode: LottieLoopMode = .loop
     var speed: CGFloat = 1.0
+    var onCompleted: (() -> Void)? = nil
 
     func makeUIView(context: Context) -> LottieAnimationView {
         let animationView = LottieAnimationView(name: name)
         animationView.loopMode = loopMode
         animationView.animationSpeed = speed
-        animationView.play()
+        animationView.play { finished in
+            if finished {
+                onCompleted?()
+            }
+        }
         return animationView
     }
 
