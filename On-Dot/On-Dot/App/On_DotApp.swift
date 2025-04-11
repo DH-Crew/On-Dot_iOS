@@ -11,7 +11,8 @@ import SwiftUI
 struct On_DotApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView()
+            ContentView()
+                .dynamicTypeSize(.medium)
         }
     }
 }
