@@ -1,13 +1,13 @@
 //
-//  ContentView.swift
+//  OnDotComponentView.swift
 //  On-Dot
 //
-//  Created by 현수 노트북 on 4/2/25.
+//  Created by 현수 노트북 on 4/12/25.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct OnDotComponentView: View {
     @State private var meridiem: String = "오전"
     @State private var hour: Int = 1
     @State private var minute: Int = 0
@@ -41,9 +41,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct OnDotComponentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        OnDotComponentView()
     }
 }
-
