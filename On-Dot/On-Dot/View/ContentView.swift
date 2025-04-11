@@ -17,7 +17,6 @@ struct ContentView: View {
             switch router.state {
             case .splash:
                 SplashView(onSplashCompleted: {
-                    router.replace(with: .main)
                     router.state = .main
                 })
             case .main:
