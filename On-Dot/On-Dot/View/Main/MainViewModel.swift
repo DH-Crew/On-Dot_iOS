@@ -8,5 +8,4 @@
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
-    @Published var appState: AppState = AppState.quick
 }
