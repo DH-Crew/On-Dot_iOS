@@ -6,6 +6,7 @@
 //
 
 enum AppState {
+    case splash
     case auth
     case main
     case quick
