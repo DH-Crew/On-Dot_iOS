@@ -43,4 +43,20 @@ struct DateFormatterUtil {
         dateFormatter.locale = Locale(identifier: "ko_KR")
         return dateFormatter.string(from: date)
     }
+    
+    /// 날짜를 "오전/오후" 형식으로 반환 (예: 오전)
+    static func formatMeridiem(_ date: Date) -> String {
+        dateFormatter.dateFormat = "a"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.amSymbol = "오전"
+        dateFormatter.pmSymbol = "오후"
+        return dateFormatter.string(from: date)
+    }
+
+    /// 날짜를 "h:mm" 형식으로 반환 (예: 7:00)
+    static func formatHourMinute(_ date: Date) -> String {
+        dateFormatter.dateFormat = "h:mm"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        return dateFormatter.string(from: date)
+    }
 }

@@ -17,7 +17,8 @@ struct ScheduleAlarmListItemView: View {
             ScheduleNameDateView(item: item)
             
             ScheduleTimeAlarmView(
-                time: DateFormatterUtil.formatTime(item.appointmentAt).components(separatedBy: " "),
+                meridiem: DateFormatterUtil.formatMeridiem(item.appointmentAt),
+                hourMinute: DateFormatterUtil.formatHourMinute(item.appointmentAt),
                 isEnabled: $item.isEnabled,
                 onClickToggle: onClickToggle
             )
@@ -55,7 +56,7 @@ private struct ScheduleNameDateView: View {
                 HStack(spacing: 6) {
                     ForEach(0..<7, id: \.self) { index in
                         let dayNumber = index + 1
-                        Text(weekdaySymbolsKR[index])
+                        Text(AppConstants.weekdaySymbolsKR[index])
                             .font(OnDotTypo.bodySmallR1)
                             .foregroundStyle(
                                 item.repeatDays.contains(dayNumber)
@@ -74,7 +75,8 @@ private struct ScheduleNameDateView: View {
 }
 
 private struct ScheduleTimeAlarmView: View {
-    var time: [String]
+    var meridiem: String
+    var hourMinute: String
     @Binding var isEnabled: Bool
     
     var onClickToggle: () -> Void
@@ -83,11 +85,11 @@ private struct ScheduleTimeAlarmView: View {
         HStack(alignment: .center, spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(alignment: .lastTextBaseline, spacing: 10) {
-                    Text(time[0])
+                    Text(meridiem)
                         .font(OnDotTypo.titleMediumL)
                         .foregroundStyle(Color.gray0)
                     
-                    Text(time[1])
+                    Text(hourMinute)
                         .font(OnDotTypo.titleLargeL)
                         .foregroundStyle(Color.gray0)
                 }
