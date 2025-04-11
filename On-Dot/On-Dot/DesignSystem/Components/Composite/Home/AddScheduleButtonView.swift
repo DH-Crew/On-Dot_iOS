@@ -21,12 +21,10 @@ struct AddScheduleButtonView: View {
                 Image("ic_plus_20")
                     .transition(.opacity)
                 if !isShrunk {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        Text("알람 추가")
-                            .font(OnDotTypo.bodyLargeSB)
-                            .foregroundStyle(Color.gray800)
-                            .transition(.opacity)
-                    }
+                    Text("알람 추가")
+                        .font(OnDotTypo.bodyLargeSB)
+                        .foregroundStyle(Color.gray800)
+                        .transition(.opacity)
                 }
             }
             .padding(.horizontal, isShrunk ? 12 : 10)
