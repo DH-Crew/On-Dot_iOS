@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct SplashView: View {
+    var onSplashCompleted: () -> Void
+    
     var body: some View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
             
-            LottieView(name: "Splash", loopMode: .playOnce)
+            LottieView(name: "Splash", loopMode: .playOnce, onCompleted: onSplashCompleted)
                 .frame(width: 206, height: 40)
         }
     }
