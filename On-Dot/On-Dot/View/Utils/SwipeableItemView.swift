@@ -42,6 +42,13 @@ struct SwipeableItemView: View {
 
             ScheduleAlarmListItemView(item: item, onClickToggle: onClickToggle)
                 .offset(x: offsetX)
+                .onTapGesture {
+                    if offsetX < 0 {
+                        withAnimation {
+                            offsetX = 0
+                        }
+                    }
+                }
                 .gesture(
                     DragGesture()
                         .onChanged { value in
