@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ScheduleAlarmListItemView: View {
-    @Binding var item: ScheduleModel
+    let item: ScheduleModel
     
-    var onClickToggle: () -> Void
+    var onClickToggle: (Bool) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -19,7 +19,7 @@ struct ScheduleAlarmListItemView: View {
             ScheduleTimeAlarmView(
                 meridiem: DateFormatterUtil.formatMeridiem(item.appointmentAt),
                 hourMinute: DateFormatterUtil.formatHourMinute(item.appointmentAt),
-                isEnabled: $item.isEnabled,
+                isEnabled: item.isEnabled,
                 onClickToggle: onClickToggle
             )
             
@@ -77,9 +77,19 @@ private struct ScheduleNameDateView: View {
 private struct ScheduleTimeAlarmView: View {
     var meridiem: String
     var hourMinute: String
-    @Binding var isEnabled: Bool
+    var isEnabled: Bool
     
-    var onClickToggle: () -> Void
+    var onClickToggle: (Bool) -> Void
+    
+    @State private var internalIsEnabled: Bool
+    
+    init(meridiem: String, hourMinute: String, isEnabled: Bool, onClickToggle: @escaping (Bool) -> Void) {
+        self.meridiem = meridiem
+        self.hourMinute = hourMinute
+        self.isEnabled = isEnabled
+        self.onClickToggle = onClickToggle
+        _internalIsEnabled = State(initialValue: isEnabled)
+    }
     
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
@@ -98,7 +108,16 @@ private struct ScheduleTimeAlarmView: View {
             Spacer()
             
             VStack(alignment: .center) {
-                OnDotToggle(isOn: $isEnabled, action: onClickToggle)
+                OnDotToggle(
+                    isOn: Binding(
+                        get: { internalIsEnabled },
+                        set: { newValue in
+                            internalIsEnabled = newValue
+                            onClickToggle(newValue)
+                        }
+                    ),
+                    action: {}
+                )
             }
         }
         .frame(maxWidth: .infinity)

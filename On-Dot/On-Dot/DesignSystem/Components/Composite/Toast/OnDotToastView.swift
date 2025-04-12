@@ -69,6 +69,13 @@ private struct ToastModifier: ViewModifier {
                     OnDotToastView(isDelete: isDelete, minute: minute, dateTime: dateTime, onClickBtnRevert: onClickBtnRevert)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .padding(.bottom, 40)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation {
+                                    isPresented = false
+                                }
+                            }
+                        }
                 }
             }
         }
