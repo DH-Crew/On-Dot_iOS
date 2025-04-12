@@ -8,4 +8,5 @@
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
+    @Published var selectedTab: Int = 0
 }
