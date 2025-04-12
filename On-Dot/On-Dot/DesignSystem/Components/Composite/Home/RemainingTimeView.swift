@@ -23,6 +23,10 @@ struct RemainingTimeView: View {
             return "곧 알람이 울려요"
         }
         
+        if day == -1 && hour == -1 && minute == -1 {
+            return "등록된 알람이 없어요"
+        }
+        
         return "\(day)일 \(hour)시간 \(minute)분 후에 울려요"
     }
 }
