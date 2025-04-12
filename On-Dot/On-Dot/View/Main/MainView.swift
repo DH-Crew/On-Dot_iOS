@@ -39,10 +39,7 @@ struct OnDotTabView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            TabView(selection: Binding(
-                get: { selectedTab },
-                set: { newValue in self.selectedTab = newValue }
-            )) {
+            TabView(selection: $selectedTab) {
                 
                 HomeView(
                      
