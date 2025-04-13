@@ -16,10 +16,10 @@ struct SelectedDateTimeView: View {
     
     var body: some View {
         HStack {
-            TextChip(title: selectedDate, isActive: false)
+            TextChip(title: selectedDate, style: .normal, onClickChip: {})
                 .onTapGesture { onClickDateChip() }
             Spacer()
-            TextChip(title: selectedTime, isActive: false)
+            TextChip(title: selectedTime, style: .normal, onClickChip: {})
                 .onTapGesture { onClickTimeChip() }
         }
         .frame(maxWidth: .infinity)

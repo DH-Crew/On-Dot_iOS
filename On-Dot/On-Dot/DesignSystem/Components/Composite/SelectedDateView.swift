@@ -18,7 +18,7 @@ struct SelectedDateView: View {
             
             Spacer()
             
-            TextChip(title: selectedDate, isActive: true)
+            TextChip(title: selectedDate, style: .normal, onClickChip: {})
         }
         .frame(maxWidth: .infinity)
     }
