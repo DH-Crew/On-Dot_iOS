@@ -8,11 +8,87 @@
 import SwiftUI
 
 struct RepeatSettingView: View {
+    @Binding var isOn: Bool
+    @Binding var isChecked: Bool
+    
+    var activeCheckChip: Int?
+    var activeWeekdays: Set<Int>
+    
+    var onClickToggle: () -> Void
+    var onClickCheckTextChip: (Int) -> Void
+    var onClickTextChip: (Int) -> Void
+    var onClickCheckBox: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                Text("반복")
+                    .font(OnDotTypo.bodyLargeR1)
+                    .foregroundStyle(Color.gray0)
+                Spacer()
+                OnDotToggle(isOn: $isOn, action: onClickToggle)
+            }
+            .padding(.horizontal, 20)
+            
+            if isOn {
+                VStack(spacing: 0) {
+                    Spacer().frame(height: 16)
+                    
+                    Rectangle().fill(Color.gray600).frame(maxWidth: .infinity).frame(height: 0.5).padding(.horizontal, 4)
+                    
+                    Spacer().frame(height: 16)
+                    
+                    HStack(spacing: 8) {
+                        ForEach(0..<3) { index in
+                            let titles = ["매일", "평일", "주말"]
+                            CheckTextChip(
+                                title: titles[index],
+                                style: activeCheckChip == nil && activeWeekdays.isEmpty ? .normal : activeCheckChip == index ? .active : .inactive,
+                                onClickChip: { onClickCheckTextChip(index) }
+                            )
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    Spacer().frame(height: 16)
+                    
+                    HStack(spacing: 8) {
+                        ForEach(0..<7) { index in
+                            TextChip(
+                                title: AppConstants.weekdaySymbolsKR[index],
+                                style: activeWeekdays.isEmpty ? .normal : activeWeekdays.contains(index) ? .active : .inactive,
+                                onClickChip: { onClickTextChip(index) }
+                            )
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    Spacer().frame(height: 16)
+                    
+                    Rectangle().fill(Color.gray600).frame(maxWidth: .infinity).frame(height: 0.5).padding(.horizontal, 4)
+                    
+                    Spacer().frame(height: 16)
+                    
+                    HStack {
+                        Text("공휴일에는 울리지 않기")
+                            .font(OnDotTypo.bodyMediumR)
+                            .foregroundStyle(Color.gray200)
+                        
+                        Spacer()
+                        
+                        OnDotCheckBox(isChecked: $isChecked, action: onClickCheckBox)
+                    }
+                    .padding(.horizontal, 20)
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .background(Color.gray700)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .animation(.easeInOut(duration: 0.25), value: isOn)
     }
-}
-
-#Preview {
-    RepeatSettingView()
 }
