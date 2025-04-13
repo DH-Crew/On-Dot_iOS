@@ -52,16 +52,10 @@ struct RepeatSettingView: View {
                     
                     Spacer().frame(height: 16)
                     
-                    HStack(spacing: 8) {
-                        ForEach(0..<7) { index in
-                            TextChip(
-                                title: AppConstants.weekdaySymbolsKR[index],
-                                style: activeWeekdays.isEmpty ? .normal : activeWeekdays.contains(index) ? .active : .inactive,
-                                onClickChip: { onClickTextChip(index) }
-                            )
-                        }
-                        Spacer()
-                    }
+                    WeekdaySelector(
+                        activeWeekdays: activeWeekdays,
+                        onWeekdaySelected: onClickTextChip
+                    )
                     .padding(.horizontal, 20)
                     
                     Spacer().frame(height: 16)
@@ -88,5 +82,24 @@ struct RepeatSettingView: View {
         .padding(.vertical, 16)
         .background(Color.gray700)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+struct WeekdaySelector: View {
+    let activeWeekdays: Set<Int>
+    let onWeekdaySelected: (Int) -> Void
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<7) { index in
+                TextChip(
+                    title: AppConstants.weekdaySymbolsKR[index],
+                    style: activeWeekdays.isEmpty ? .normal :
+                           activeWeekdays.contains(index) ? .active : .inactive,
+                    onClickChip: { onWeekdaySelected(index) }
+                )
+            }
+            Spacer()
+        }
     }
 }
