@@ -8,24 +8,16 @@
 import SwiftUI
 
 struct CalendarContentView: View {
-    @Binding var selectedDate: Date?
+    let selectedDate: Date?
+    let referenceDate: Date
     let calendar = Calendar.current
-    let year: Int
-    let month: Int
-
-    private var referenceDate: Date? {
-        var components = DateComponents()
-        components.year = year
-        components.month = month
-        components.day = 1
-        return calendar.date(from: components)
-    }
+    
+    var onClickDate: (Date) -> Void
 
     private var daysInMonth: [CalendarDay] {
-        guard let startOfMonth = referenceDate,
-              let monthInterval = calendar.dateInterval(of: .month, for: startOfMonth),
+        guard let monthInterval = calendar.dateInterval(of: .month, for: referenceDate),
               let startWeekday = calendar.dateComponents([.weekday], from: monthInterval.start).weekday,
-              let range = calendar.range(of: .day, in: .month, for: startOfMonth) else {
+              let range = calendar.range(of: .day, in: .month, for: referenceDate) else {
             return []
         }
 
@@ -34,9 +26,13 @@ struct CalendarContentView: View {
         for _ in 1..<startWeekday {
             days.append(CalendarDay(date: nil, isCurrentMonth: false))
         }
-        
+
         for day in range {
-            if let date = calendar.date(bySetting: .day, value: day, of: startOfMonth) {
+            if let date = calendar.date(from: DateComponents(
+                year: calendar.component(.year, from: referenceDate),
+                month: calendar.component(.month, from: referenceDate),
+                day: day
+            )) {
                 days.append(CalendarDay(date: date, isCurrentMonth: true))
             }
         }
@@ -78,7 +74,7 @@ struct CalendarContentView: View {
                             .background(isSelected ? Color.green900 : Color.clear)
                             .clipShape(Circle())
                             .onTapGesture {
-                                selectedDate = date
+                                onClickDate(date)
                             }
                     } else {
                         Text("")

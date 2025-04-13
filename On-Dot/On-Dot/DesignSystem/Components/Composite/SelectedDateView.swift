@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SelectedDateView: View {
-    @State var selectedDate: String = "2025년 06월 13일"
+    let selectedDate: String
+    let isActive: Bool
     
     var body: some View {
         HStack {
@@ -18,8 +19,9 @@ struct SelectedDateView: View {
             
             Spacer()
             
-            TextChip(title: selectedDate, isActive: true)
+            TextChip(title: selectedDate.isEmpty ? "-" : selectedDate, style: isActive ? .active : .normal, onClickChip: {})
         }
         .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
     }
 }

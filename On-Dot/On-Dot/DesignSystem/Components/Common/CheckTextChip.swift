@@ -11,6 +11,8 @@ struct CheckTextChip: View {
     let title: String
     var style: Style = .normal
     
+    var onClickChip: () -> Void = {}
+    
     enum Style {
         case active
         case inactive
@@ -31,6 +33,9 @@ struct CheckTextChip: View {
         .padding(.vertical, 2)
         .background(Color.gray500)
         .cornerRadius(6)
+        .onTapGesture {
+            onClickChip()
+        }
     }
 }
 

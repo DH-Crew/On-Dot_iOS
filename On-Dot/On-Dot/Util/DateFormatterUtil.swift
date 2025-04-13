@@ -19,6 +19,11 @@ struct DateFormatterUtil {
         dateFormatter.dateFormat = "yyyy.MM.dd"
         return dateFormatter.string(from: date)
     }
+    
+    static func formatDateYearMonth(_ date: Date) -> String {
+        dateFormatter.dateFormat = "yyyy년 MM월"
+        return dateFormatter.string(from: date)
+    }
 
     /// 시간을 "오전/오후 h:mm" 형식으로 반환
     static func formatTime(_ date: Date) -> String {
