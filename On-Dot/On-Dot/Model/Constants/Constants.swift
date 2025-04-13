@@ -12,8 +12,8 @@ enum AppConstants {
 
 enum RepeatType: Int, CaseIterable {
     case daily = 0
-    case weekly = 1
-    case monthly = 2
+    case weekdays = 1
+    case weekend = 2
     
     var title: String {
         return AppConstants.repeatTypeTitles[self.rawValue]
