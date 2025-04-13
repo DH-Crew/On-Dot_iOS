@@ -39,11 +39,11 @@ struct RepeatSettingView: View {
                     Spacer().frame(height: 16)
                     
                     HStack(spacing: 8) {
-                        ForEach(0..<3) { index in
+                        ForEach(RepeatType.allCases, id: \.rawValue) { repeatType in
                             CheckTextChip(
-                                title: AppConstants.repeatTypeTitles[index],
-                                style: activeCheckChip == nil && activeWeekdays.isEmpty ? .normal : activeCheckChip == index ? .active : .inactive,
-                                onClickChip: { onClickCheckTextChip(index) }
+                                title: repeatType.title,
+                                style: activeCheckChip == nil && activeWeekdays.isEmpty ? .normal : activeCheckChip == repeatType.rawValue ? .active : .inactive,
+                                onClickChip: { onClickCheckTextChip(repeatType.rawValue) }
                             )
                         }
                         Spacer()
