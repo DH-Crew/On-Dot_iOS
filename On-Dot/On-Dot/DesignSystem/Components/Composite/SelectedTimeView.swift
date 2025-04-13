@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SelectedTimeView: View {
-    @State var selectedTime: String = "오후 7:00"
+    let selectedTime: String
+    let isActive: Bool
     
     var body: some View {
         HStack {
@@ -18,8 +19,9 @@ struct SelectedTimeView: View {
             
             Spacer()
             
-            TextChip(title: selectedTime, style: .normal, onClickChip: {})
+            TextChip(title: selectedTime.isEmpty ? "-" : selectedTime, style: isActive ? .active : .normal, onClickChip: {})
         }
         .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
     }
 }
