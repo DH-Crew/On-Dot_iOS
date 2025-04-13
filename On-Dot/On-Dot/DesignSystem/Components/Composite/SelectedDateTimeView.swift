@@ -8,19 +8,17 @@
 import SwiftUI
 
 struct SelectedDateTimeView: View {
-    var selectedDate: String = "2025년 6월 13일"
-    var selectedTime: String = "오후 7:00"
+    let selectedDate: String
+    let selectedTime: String
     
     var onClickDateChip: () -> Void
     var onClickTimeChip: () -> Void
     
     var body: some View {
         HStack {
-            TextChip(title: selectedDate, style: .normal, onClickChip: {})
-                .onTapGesture { onClickDateChip() }
+            TextChip(title: selectedDate, style: .normal, onClickChip: onClickDateChip)
             Spacer()
-            TextChip(title: selectedTime, style: .normal, onClickChip: {})
-                .onTapGesture { onClickTimeChip() }
+            TextChip(title: selectedTime, style: .normal, onClickChip: onClickTimeChip)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
