@@ -40,9 +40,8 @@ struct RepeatSettingView: View {
                     
                     HStack(spacing: 8) {
                         ForEach(0..<3) { index in
-                            let titles = ["매일", "평일", "주말"]
                             CheckTextChip(
-                                title: titles[index],
+                                title: AppConstants.repeatTypeTitles[index],
                                 style: activeCheckChip == nil && activeWeekdays.isEmpty ? .normal : activeCheckChip == index ? .active : .inactive,
                                 onClickChip: { onClickCheckTextChip(index) }
                             )
@@ -89,6 +88,5 @@ struct RepeatSettingView: View {
         .padding(.vertical, 16)
         .background(Color.gray700)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .animation(.easeInOut(duration: 0.25), value: isOn)
     }
 }
