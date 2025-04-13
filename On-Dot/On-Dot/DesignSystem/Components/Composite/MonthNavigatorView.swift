@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MonthNavigatorView: View {
-    var currentDate: String = "2025년 06월"
+    let currentDate: Date
     
     var decreaseMonth: () -> Void
     var increaseMonth: () -> Void
@@ -17,7 +17,7 @@ struct MonthNavigatorView: View {
         HStack(spacing: 0) {
             Spacer().frame(width: 9)
             
-            Text(currentDate)
+            Text(DateFormatterUtil.formatDateYearMonth(currentDate))
                 .font(OnDotTypo.titleSmallM)
                 .foregroundStyle(Color.gray0)
             
