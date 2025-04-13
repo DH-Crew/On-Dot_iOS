@@ -11,7 +11,7 @@ struct TextChip: View {
     var title: String = ""
     var style: Style = .normal
     
-    var onClickChip: () -> Void
+    var onClickChip: () -> Void = {}
     
     enum Style {
         case active
