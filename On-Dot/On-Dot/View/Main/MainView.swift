@@ -10,11 +10,13 @@ import SwiftUI
 struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
     
+    var convertAppState: (AppState) -> Void
+    
     var body: some View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
             
-            OnDotTabView(selectedTab: $viewModel.selectedTab)
+            OnDotTabView(selectedTab: $viewModel.selectedTab, convertAppState: convertAppState)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -23,8 +25,14 @@ struct MainView: View {
 struct OnDotTabView: View {
     @Binding var selectedTab: Int
     
-    init(selectedTab: Binding<Int>) {
+    var convertAppState: (AppState) -> Void
+    
+    init(
+        selectedTab: Binding<Int>,
+        convertAppState: @escaping (AppState) -> Void
+    ) {
         self._selectedTab = selectedTab
+        self.convertAppState = convertAppState
 
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -42,7 +50,7 @@ struct OnDotTabView: View {
             TabView(selection: $selectedTab) {
                 
                 HomeView(
-                     
+                    navigateToGeneralScheduleCreateView: { convertAppState(AppState.general) }
                 )
                 .tabItem {
                     Label("", image: selectedTab == 0 ? "ic_home_selected" : "ic_home_unselected")
@@ -50,7 +58,7 @@ struct OnDotTabView: View {
                 .tag(0)
                 
                 HomeView(
-                     
+                    navigateToGeneralScheduleCreateView: { }
                 )
                 .tabItem {
                     Label("", image: selectedTab == 1 ? "ic_settings_selected" : "ic_settings_unselected")
