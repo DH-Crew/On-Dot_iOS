@@ -11,6 +11,7 @@ struct CalendarContentView: View {
     let selectedDate: Date?
     let referenceDate: Date
     let calendar = Calendar.current
+    let activeWeekdays: Set<Int>
     
     var onClickDate: (Date) -> Void
 
@@ -63,7 +64,12 @@ struct CalendarContentView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 7), spacing: 4) {
                 ForEach(daysInMonth) { day in
                     if let date = day.date {
-                        let isSelected = selectedDate != nil && calendar.isDate(date, inSameDayAs: selectedDate!)
+                        let isSelected = activeWeekdays.isEmpty
+                            ? (selectedDate != nil && calendar.isDate(date, inSameDayAs: selectedDate!))
+                            : {
+                                let weekday = calendar.component(.weekday, from: date) - 1 // 0~6
+                                return activeWeekdays.contains(weekday)
+                            }()
 
                         Text("\(calendar.component(.day, from: date))")
                             .font(OnDotTypo.bodyLargeR2)
@@ -74,7 +80,9 @@ struct CalendarContentView: View {
                             .background(isSelected ? Color.green900 : Color.clear)
                             .clipShape(Circle())
                             .onTapGesture {
-                                onClickDate(date)
+                                if activeWeekdays.isEmpty {
+                                    onClickDate(date)
+                                }
                             }
                     } else {
                         Text("")

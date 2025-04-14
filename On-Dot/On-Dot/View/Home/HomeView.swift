@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel = HomeViewModel()
     
+    var navigateToGeneralScheduleCreateView: () -> Void
+    
     var body: some View {
         ZStack {
             Color.gray900.ignoresSafeArea()
@@ -38,10 +40,27 @@ struct HomeView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 22)
             
-            AddScheduleButtonView(isShrunk: $viewModel.isShrunk, onClickButton: { viewModel.isShrunk.toggle() })
+            ZStack {
+                if viewModel.isShrunk {
+                    Color.gray900.opacity(0.8).onTapGesture {
+                        withAnimation {
+                            viewModel.isShrunk = false
+                        }
+                    }
+                }
+                
+                VStack(alignment: .trailing, spacing: 0) {
+                    if viewModel.isShrunk { CreateScheduleMenu(onClickQuickSchedule: {}, onClickGeneralSchedule: { navigateToGeneralScheduleCreateView() }) }
+                    
+                    Spacer().frame(height: 15)
+                    
+                    AddScheduleButtonView(isShrunk: $viewModel.isShrunk, onClickButton: { viewModel.isShrunk.toggle() })
+                }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                 .padding(.bottom, 20)
                 .padding(.trailing, 22)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toast(isPresented: $viewModel.showDeleteCompletionToast, isDelete: true, minute: 0, dateTime: "", onClickBtnRevert: viewModel.restoreDeletedSchedule)
@@ -79,6 +98,8 @@ struct ScheduleAlarmListView: View {
                                 }
                             }
                         )
+                        
+                        Spacer().frame(height: 20)
                     }
                 }
             }

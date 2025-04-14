@@ -19,7 +19,6 @@ struct CreateScheduleMenu: View {
         .frame(width: 162, height: 92)
         .background(Color.gray600)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(8)
     }
     
     @ViewBuilder
@@ -30,11 +29,13 @@ struct CreateScheduleMenu: View {
     ) -> some View {
         Button(action: action) {
             HStack(alignment: .center, spacing: 0) {
+                Spacer().frame(width: 8)
                 Image(image)
                 Spacer().frame(width: 4)
                 Text(title)
                     .foregroundStyle(Color.gray0)
                     .font(OnDotTypo.bodyLargeR1)
+                Spacer().frame(width: 19)
             }
             .frame(width: 146, height: 38)
         }
