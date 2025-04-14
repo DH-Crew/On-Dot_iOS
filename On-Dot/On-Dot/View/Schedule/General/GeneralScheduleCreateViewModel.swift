@@ -102,7 +102,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
         components.minute = minute
         
         let baseDate = selectedTime ?? Date()
-        let date = Calendar.current.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: baseDate)
+        guard let hour = components.hour, let minute = components.minute else { return }
+        let date = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: baseDate)
         
         selectedTime = date
     }
