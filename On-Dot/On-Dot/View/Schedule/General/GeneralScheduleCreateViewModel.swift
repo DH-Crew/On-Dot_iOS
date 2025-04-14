@@ -1,0 +1,114 @@
+//
+//  GeneralScheduleCreateViewModel.swift
+//  On-Dot
+//
+//  Created by 현수 노트북 on 4/14/25.
+//
+
+import SwiftUI
+
+final class GeneralScheduleCreateViewModel: ObservableObject {
+    
+    // MARK: - RepeatSettingView State
+    @Published var isRepeatOn: Bool = false
+    @Published var isChecked: Bool = false
+    @Published var activeCheckChip: Int? = nil  // 0: 매일, 1: 평일, 2: 주말
+    @Published var activeWeekdays: Set<Int> = []  // 일(0) ~ 토(6)
+    let fullWeek = Array(0...6)
+    let weekdays = Array(1...5)
+    let weekend = [0, 6]
+    
+    // MARK: - DateTimeSettingView State
+    @Published var selectedDate: Date? = nil
+    @Published var selectedTime: Date? = nil
+    @Published var referenceDate: Date = Date()
+    @Published var isActiveCalendar: Bool = false
+    @Published var isActiveTimePicker: Bool = false
+    @Published var meridiem: String = "오전"
+    @Published var hour: Int = 1
+    @Published var minute: Int = 0
+    
+    // MARK: - DateTimeSettingViewHandler
+    func onClickToggle() {
+        isRepeatOn.toggle()
+        
+        if !isRepeatOn {
+            activeCheckChip = nil
+            activeWeekdays.removeAll()
+        } else {
+            selectedDate = nil
+            referenceDate = Date()
+        }
+    }
+    
+    func onClickTextCheckChip(index: Int) {
+        activeCheckChip = index
+        switch index {
+        case 0: activeWeekdays = Set(fullWeek)     // 매일
+        case 1: activeWeekdays = Set(weekdays)     // 평일
+        case 2: activeWeekdays = Set(weekend)      // 주말
+        default: break
+        }
+    }
+    
+    func onClickTextChip(index: Int) {
+        if activeWeekdays.contains(index) {
+            activeWeekdays.remove(index)
+        } else {
+            activeWeekdays.insert(index)
+        }
+
+        // 요일 수동 변경 시 자동 선택 해제
+        if activeWeekdays == Set(fullWeek) {
+            activeCheckChip = 0
+        } else if activeWeekdays == Set(weekdays) {
+            activeCheckChip = 1
+        } else if activeWeekdays == Set(weekend) {
+            activeCheckChip = 2
+        } else {
+            activeCheckChip = nil
+        }
+    }
+    
+    func onClickCheckBox() {
+        isChecked.toggle()
+    }
+    
+    // MARK: - DateTimeSettingView Handler
+    func onClickSelectedDateView() {
+        isActiveCalendar.toggle()
+    }
+    
+    func onClickSelectedTimeView() {
+        isActiveTimePicker.toggle()
+    }
+    
+    func increaseMonth() {
+        referenceDate = Calendar.current.date(byAdding: .month, value: +1, to: referenceDate)!
+    }
+    
+    func decreaseMonth() {
+        referenceDate = Calendar.current.date(byAdding: .month, value: -1, to: referenceDate)!
+    }
+    
+    func onClickDate(date: Date) {
+        selectedDate = date
+        referenceDate = date
+    }
+    
+    func updateSelectedTime() {
+        var components = DateComponents()
+        components.hour = meridiem == "오전" ? hour % 12 : (hour % 12 + 12)
+        components.minute = minute
+        
+        let baseDate = selectedTime ?? Date()
+        let date = Calendar.current.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: baseDate)
+        
+        selectedTime = date
+    }
+    
+    // MARK: - ButtonHandler
+    func onClickButton() {
+        
+    }
+}
