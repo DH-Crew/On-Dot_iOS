@@ -21,7 +21,17 @@ struct ContentView: View {
                 })
             case .main:
                 NavigationStack {
-                    MainView()
+                    MainView(
+                        convertAppState: { newState in
+                            router.state = newState
+                        }
+                    )
+                }
+            case .general:
+                NavigationStack {
+                    GeneralScheduleCreateView(
+                        onClickBtnClose: { router.state = .main }
+                    )
                 }
             default:
                 Color.clear
