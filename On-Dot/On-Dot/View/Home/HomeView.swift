@@ -98,6 +98,8 @@ struct ScheduleAlarmListView: View {
                                 }
                             }
                         )
+                        
+                        Spacer().frame(height: 20)
                     }
                 }
             }
