@@ -22,6 +22,7 @@ struct TopBar: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity)
+            .padding(.top, 29)
             
             Text(title)
                 .font(OnDotTypo.titleSmallM)
