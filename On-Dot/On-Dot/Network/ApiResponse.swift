@@ -8,5 +8,5 @@
 struct ApiResponse<T: Decodable>: Decodable {
     let isSuccess: Bool
     let message: String
-    let result: T
+    let result: T?
 }
