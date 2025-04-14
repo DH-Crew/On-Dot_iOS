@@ -11,10 +11,14 @@ struct TopBar: View {
     var title: String = ""
     let image: String
     
+    var onClickButton: () -> Void = {}
+    
     var body: some View {
         ZStack(alignment: .center) {
             HStack {
-                Image(image)
+                Button(action: onClickButton) {
+                    Image(image)
+                }
                 Spacer()
             }
             .frame(maxWidth: .infinity)
