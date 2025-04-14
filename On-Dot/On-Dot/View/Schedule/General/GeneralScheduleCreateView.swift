@@ -10,6 +10,10 @@ import SwiftUI
 struct GeneralScheduleCreateView: View {
     @StateObject private var viewModel = GeneralScheduleCreateViewModel()
     
+    private var isNextBUttonEnabled: Bool {
+        (viewModel.selectedDate != nil || !viewModel.activeWeekdays.isEmpty) && viewModel.selectedTime != nil
+    }
+    
     var onClickBtnClose: () -> Void
     
     var body: some View {
@@ -70,11 +74,11 @@ struct GeneralScheduleCreateView: View {
                 OnDotButton(
                     content: "다음",
                     action: {
-                        if viewModel.selectedDate != nil || !viewModel.activeWeekdays.isEmpty && viewModel.selectedTime != nil {
+                        if isNextBUttonEnabled {
                             
                         }
                     },
-                    style: (viewModel.selectedDate != nil || !viewModel.activeWeekdays.isEmpty && viewModel.selectedTime != nil) ? .green500 : .gray300
+                    style: isNextBUttonEnabled ? .green500 : .gray300
                 )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
