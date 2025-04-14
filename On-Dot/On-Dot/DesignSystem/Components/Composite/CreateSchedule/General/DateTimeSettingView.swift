@@ -13,6 +13,7 @@ struct DateTimeSettingView: View {
     let referenceDate: Date
     let isActiveCalendar: Bool
     let isActiveTimePicker: Bool
+    let activeWeekdays: Set<Int>
     
     @Binding var meridiem: String
     @Binding var hour: Int
@@ -55,6 +56,7 @@ struct DateTimeSettingView: View {
                 CalendarContentView(
                     selectedDate: selectedDate,
                     referenceDate: referenceDate,
+                    activeWeekdays: activeWeekdays,
                     onClickDate: onClickDate
                 )
             }
