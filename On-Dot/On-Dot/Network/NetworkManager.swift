@@ -21,7 +21,9 @@ final class NetworkManager {
 
         switch response.result {
         case .success(let apiResponse):
-            return apiResponse.result
+            if let result = apiResponse.result {
+                return result
+            }
         case .failure(let error):
             if let statusCode = response.response?.statusCode {
                 if statusCode == 401 {
