@@ -10,7 +10,7 @@ import SwiftUI
 final class LoginViewModel: ObservableObject {
     private let authRepository: AuthRepository
     
-    init(authRepository: AuthRepositoryImpl = AuthRepositoryImpl()) {
+    init(authRepository: AuthRepository = AuthRepositoryImpl()) {
         self.authRepository = authRepository
     }
     
