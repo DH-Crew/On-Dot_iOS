@@ -90,8 +90,22 @@ struct GeneralScheduleCreateView: View {
             .navigationDestination(for: GeneralSchedule.self) { view in
                 switch view {
                 case .fromToSearch:
-                    FromToSearchView()
-                        .environmentObject(viewModel)
+                    FromToSearchView(
+                        selectedDate: viewModel.formattedSelectedDate,
+                        selectedTime: viewModel.formattedSelectedTime,
+                        onClickBack: { path.removeLast() },
+                        isLocationSelected: {
+                            path.removeLast()
+                            path.append(GeneralSchedule.calculate)
+                        }
+                    )
+                    .environmentObject(viewModel)
+                    .navigationBarBackButtonHidden(true)
+                case .calculate:
+                    DepartureTimeCalculatingView(
+                        onClickBtnClose: onClickBtnClose
+                    )
+                    .navigationBarBackButtonHidden(true)
                 }
             }
         }
