@@ -11,8 +11,8 @@ struct SelectedDateTimeView: View {
     let selectedDate: String
     let selectedTime: String
     
-    var onClickDateChip: () -> Void
-    var onClickTimeChip: () -> Void
+    var onClickDateChip: () -> Void = {}
+    var onClickTimeChip: () -> Void = {}
     
     var body: some View {
         HStack {
