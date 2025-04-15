@@ -8,6 +8,13 @@
 import SwiftUI
 
 final class GeneralScheduleCreateViewModel: ObservableObject {
+    private let locationRepository: LocationRepository
+    
+    init(
+        locationRepository: LocationRepository = LocationRepositoryImpl()
+    ) {
+        self.locationRepository = locationRepository
+    }
     
     // MARK: - RepeatSettingView State
     @Published var isRepeatOn: Bool = false
@@ -27,6 +34,17 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     @Published var meridiem: String = "오전"
     @Published var hour: Int = 1
     @Published var minute: Int = 0
+    
+    // MARK: - FromToLocationView State
+    @Published var fromLocation: String = ""
+    @Published var toLocation: String = ""
+    @Published var currentKeyword: String = ""
+    @Published var lastFocuesdField: FocusField = .from
+    @Published var isFromLocationSelected: Bool = false
+    @Published var isToLocationSelected: Bool = false
+    
+    // MARK: - LocationSearchItemView State
+    @Published var searchResult: [LocationInfo] = []
     
     // MARK: - DateTimeSettingViewHandler
     func onClickToggle() {
@@ -108,9 +126,41 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
         selectedTime = date
     }
     
+    // MARK: - FromToLocationView Handler
+    func onValueChanged(newValue: String) async {
+        do {
+            let response = try await locationRepository.searchLocation(query: newValue)
+            
+            await MainActor.run {
+                searchResult = response
+            }
+        } catch {
+            print("Search Location Failed: \(error)")
+        }
+    }
+    
     // MARK: - ButtonHandler
     func onClickButton() {
         
+    }
+    
+    func onClickLocationItem(location: LocationInfo) {
+        if lastFocuesdField == .to {
+            toLocation = location.title
+            isToLocationSelected = true
+        } else {
+            fromLocation = location.title
+            isFromLocationSelected = true
+        }
+    }
+    
+    func onClickClose(field: FocusField) {
+        switch field {
+        case .from:
+            isFromLocationSelected = false
+        case .to:
+            isToLocationSelected = false
+        }
     }
 }
 
