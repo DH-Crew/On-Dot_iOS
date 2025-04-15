@@ -12,17 +12,24 @@ enum Router: URLRequestConvertible {
     
     // MARK: Auth
     case login(provider: String, accessToken: String)
-    
+
+    // MARK: Location
+    case searchPlace(query: String)
 
     var method: HTTPMethod {
         switch self {
         case .login: .post
+        case .searchPlace: .get
         }
     }
 
     var path: String {
         switch self {
+        // MARK: Auth
         case .login: "/auth/login/oauth"
+        
+        // MARK: Location
+        case .searchPlace: "places/search"
         }
     }
 
@@ -47,7 +54,11 @@ enum Router: URLRequestConvertible {
                 URLQueryItem(name: "provider", value: provider),
                 URLQueryItem(name: "access_token", value: accessToken)
             ]
-        default: return nil
+        case .searchPlace(let query):
+            return [
+                URLQueryItem(name: "query", value: query)
+            ]
+//        default: return nil
         }
     }
 
