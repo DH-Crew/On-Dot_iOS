@@ -9,9 +9,14 @@ import SwiftUI
 
 final class LoginViewModel: ObservableObject {
     private let authRepository: AuthRepository
+    private let keyChainManager: KeychainManager
     
-    init(authRepository: AuthRepository = AuthRepositoryImpl()) {
+    init(
+        authRepository: AuthRepository = AuthRepositoryImpl(),
+        keyChainManager: KeychainManager = KeychainManager.shared
+    ) {
         self.authRepository = authRepository
+        self.keyChainManager = keyChainManager
     }
     
     func kakaoLogin(token: String) async {
@@ -19,8 +24,8 @@ final class LoginViewModel: ObservableObject {
             let response = try await authRepository.login(provider: "KAKAO", accessToken: token)
             await MainActor.run {
                 print("Login success: \(response)")
-                KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
-                KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+                keyChainManager.saveToken(response.accessToken, for: "accessToken")
+                keyChainManager.saveToken(response.refreshToken, for: "refreshToken")
             }
         } catch {
             await MainActor.run {
