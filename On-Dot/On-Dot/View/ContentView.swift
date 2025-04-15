@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import KakaoSDKAuth
 
 struct ContentView: View {
     @StateObject private var router = AppRouter()
@@ -17,8 +18,10 @@ struct ContentView: View {
             switch router.state {
             case .splash:
                 SplashView(onSplashCompleted: {
-                    router.state = .main
+                    router.state = .auth
                 })
+            case .auth:
+                LoginView()
             case .main:
                 NavigationStack {
                     MainView(
@@ -35,6 +38,12 @@ struct ContentView: View {
                 }
             default:
                 Color.clear
+            }
+        }
+        .onOpenURL { url in
+            print("Received URL: \(url)")
+            if AuthApi.isKakaoTalkLoginUrl(url) {
+                _ = AuthController.handleOpenUrl(url: url, options: [:])
             }
         }
     }
