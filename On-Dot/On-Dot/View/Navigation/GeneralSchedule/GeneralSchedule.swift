@@ -7,4 +7,5 @@
 
 enum GeneralSchedule: Hashable {
     case fromToSearch
+    case calculate
 }
