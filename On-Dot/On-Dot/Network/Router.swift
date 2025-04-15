@@ -32,7 +32,7 @@ enum Router: URLRequestConvertible {
         case .login: "/auth/login/oauth"
         
         // MARK: Location
-        case .searchPlace: "places/search"
+        case .searchPlace: "/places/search"
             
         // MARK: Schedule
         case .createSchdule: "/schedules"
