@@ -6,7 +6,13 @@
 //
 
 final class AuthRepositoryImpl: AuthRepository {
+    private let networkManager: NetworkManager
+    
+    init(networkManager: NetworkManager = NetworkManager.shared) {
+        self.networkManager = networkManager
+    }
+    
     func login(provider: String, accessToken: String) async throws -> JwtTokenModel {
-        try await NetworkManager.shared.request(type: JwtTokenModel.self, api: .login(provider: provider, accessToken: accessToken))
+        try await networkManager.request(type: JwtTokenModel.self, api: .login(provider: provider, accessToken: accessToken))
     }
 }
