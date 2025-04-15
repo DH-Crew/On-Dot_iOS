@@ -6,5 +6,5 @@
 //
 
 protocol LocationRepository {
-    func searchLocation(query: String) async throws -> [LocationSearchResult]
+    func searchLocation(query: String) async throws -> [LocationInfo]
 }

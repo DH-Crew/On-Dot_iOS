@@ -14,7 +14,7 @@ final class LocationRepositoryImpl: LocationRepository {
         self.networkManager = networkManager
     }
     
-    func searchLocation(query: String) async throws -> [LocationSearchResult] {
-        return try await networkManager.request(type: [LocationSearchResult].self, api: .searchPlace(query: query))
+    func searchLocation(query: String) async throws -> [LocationInfo] {
+        return try await networkManager.request(type: [LocationInfo].self, api: .searchPlace(query: query))
     }
 }
