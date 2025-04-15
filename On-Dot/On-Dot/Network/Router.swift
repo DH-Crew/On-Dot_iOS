@@ -9,19 +9,25 @@ import Foundation
 import Alamofire
 
 enum Router: URLRequestConvertible {
+    
+    // MARK: Auth
+    case login(provider: String, accessToken: String)
+    
 
     var method: HTTPMethod {
         switch self {
+        case .login: .post
         }
     }
 
     var path: String {
         switch self {
+        case .login: "/auth/login/oauth"
         }
     }
 
     var headers: HTTPHeaders {
-        var headers: HTTPHeaders = ["Content-Type": "application/json"]
+        let headers: HTTPHeaders = ["Content-Type": "application/json"]
 //        if let token = KeychainManager.shared.readToken(for: "accessToken") {
 //            headers.add(name: "Authorization", value: "Bearer \(token)")
 //        }
@@ -33,15 +39,45 @@ enum Router: URLRequestConvertible {
         default: return nil
         }
     }
+    
+    var queryItems: [URLQueryItem]? {
+        switch self {
+        case .login(let provider, let accessToken):
+            return [
+                URLQueryItem(name: "provider", value: provider),
+                URLQueryItem(name: "access_token", value: accessToken)
+            ]
+        default: return nil
+        }
+    }
 
     func asURLRequest() throws -> URLRequest {
-        guard let url = URL(string: BASE_URL + path) else { throw RequestError.invalidURL }
+        var url: URL
+
+        if let queryItems = queryItems {
+            guard var components = URLComponents(string: BASE_URL + path) else {
+                throw RequestError.invalidURL
+            }
+            components.queryItems = queryItems
+            guard let fullURL = components.url else {
+                throw RequestError.invalidURL
+            }
+            url = fullURL
+        } else {
+            guard let simpleURL = URL(string: BASE_URL + path) else {
+                throw RequestError.invalidURL
+            }
+            url = simpleURL
+        }
+        
         var request = URLRequest(url: url)
         request.method = method
         request.headers = headers
+        
         if let body = body {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
         }
+        
         return request
     }
 }
