@@ -25,5 +25,6 @@ struct SelectedDateTimeView: View {
         .padding(.horizontal, 20)
         .background(Color.gray700)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .contentShape(Rectangle())
     }
 }
