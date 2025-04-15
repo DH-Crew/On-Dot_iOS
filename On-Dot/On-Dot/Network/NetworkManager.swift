@@ -16,15 +16,19 @@ final class NetworkManager {
         let request = try api.asURLRequest()
         logRequest(request)
 
-        let dataTask = AF.request(request).serializingDecodable(ApiResponse<T>.self)
+        let dataTask = AF.request(request).serializingData()
         let response = await dataTask.response
 
         switch response.result {
-        case .success(let apiResponse):
-            if let result = apiResponse.result {
-                return result
-            } else {
-                throw RequestError.emptyResult
+        case .success(let data):
+            if data.isEmpty, T.self == EmptyResponse.self {
+                return EmptyResponse() as! T
+            }
+
+            do {
+                return try JSONDecoder().decode(T.self, from: data)
+            } catch {
+                throw error
             }
         case .failure(let error):
             if let statusCode = response.response?.statusCode {
@@ -43,8 +47,7 @@ final class NetworkManager {
         🔹 [요청 URL] \(request.url?.absoluteString ?? "")
         🔹 [Method] \(request.httpMethod ?? "")
         🔹 [Headers] \(request.allHTTPHeaderFields ?? [:])
-        🔹 [Body]
-        \(prettyPrintedJSON(data: request.httpBody))
+        🔹 [Body] \(prettyPrintedJSON(data: request.httpBody))
         """)
     }
     
