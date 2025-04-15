@@ -11,9 +11,16 @@ struct FromToLocationView: View {
     @Binding var fromLocation: String
     @Binding var toLocation: String
     
-    init(fromLocation: Binding<String>, toLocation: Binding<String>) {
+    var onValueChanged: (String) -> Void
+    
+    init(
+        fromLocation: Binding<String>,
+        toLocation: Binding<String>,
+        onValueChanged: @escaping (String) -> Void = { _ in }
+    ) {
         self._fromLocation = fromLocation
         self._toLocation = toLocation
+        self.onValueChanged = onValueChanged
     }
     
     var body: some View {
@@ -27,12 +34,18 @@ struct FromToLocationView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 locationView(image: "ic_from_location", title: "출발지", content: fromLocation)
+                    .onChange(of: fromLocation) { newValue in
+                        onValueChanged(newValue)
+                    }
                 Spacer().frame(height: 16)
                 Spacer()
                     .frame(maxWidth: .infinity, maxHeight: 0.5)
                     .background(Color.gray600)
                 Spacer().frame(height: 16)
                 locationView(image: "ic_to_location", title: "도착지", content: toLocation)
+                    .onChange(of: toLocation) { newValue in
+                        onValueChanged(newValue)
+                    }
             }
         }
         .frame(maxWidth: .infinity)
