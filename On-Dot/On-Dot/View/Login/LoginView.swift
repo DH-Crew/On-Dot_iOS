@@ -13,6 +13,8 @@ import KakaoSDKUser
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     
+    var onLoginSuccess: () -> Void
+    
     var body: some View {
         ZStack {
             Color.gray900.ignoresSafeArea()
@@ -35,6 +37,11 @@ struct LoginView: View {
                 .padding(.bottom, 20)
             }
             .padding(.horizontal, 22)
+        }
+        .onChange(of: viewModel.isLoginSuccessful) { newValue in
+            if newValue {
+                onLoginSuccess()
+            }
         }
     }
     

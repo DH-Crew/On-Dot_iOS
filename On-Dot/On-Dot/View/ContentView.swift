@@ -21,7 +21,9 @@ struct ContentView: View {
                     router.state = .auth
                 })
             case .auth:
-                LoginView()
+                LoginView(
+                    onLoginSuccess: { router.state = .main }
+                )
             case .main:
                 NavigationStack {
                     MainView(

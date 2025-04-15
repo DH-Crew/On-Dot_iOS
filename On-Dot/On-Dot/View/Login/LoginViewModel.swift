@@ -11,6 +11,8 @@ final class LoginViewModel: ObservableObject {
     private let authRepository: AuthRepository
     private let keyChainManager: KeychainManager
     
+    @Published var isLoginSuccessful: Bool = false
+    
     init(
         authRepository: AuthRepository = AuthRepositoryImpl(),
         keyChainManager: KeychainManager = KeychainManager.shared
@@ -26,6 +28,7 @@ final class LoginViewModel: ObservableObject {
                 print("Login success: \(response)")
                 keyChainManager.saveToken(response.accessToken, for: "accessToken")
                 keyChainManager.saveToken(response.refreshToken, for: "refreshToken")
+                isLoginSuccessful = true
             }
         } catch {
             await MainActor.run {
