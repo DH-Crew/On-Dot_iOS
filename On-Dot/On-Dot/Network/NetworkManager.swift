@@ -23,6 +23,8 @@ final class NetworkManager {
         case .success(let apiResponse):
             if let result = apiResponse.result {
                 return result
+            } else {
+                throw RequestError.emptyResult
             }
         case .failure(let error):
             if let statusCode = response.response?.statusCode {
