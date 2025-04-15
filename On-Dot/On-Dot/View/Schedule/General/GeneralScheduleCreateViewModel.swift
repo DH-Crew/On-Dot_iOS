@@ -113,3 +113,15 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
         
     }
 }
+
+extension GeneralScheduleCreateViewModel {
+    var formattedSelectedDate: String {
+        guard let date = selectedDate else { return "-" }
+        return DateFormatterUtil.formatDate(date, separator: "-")
+    }
+
+    var formattedSelectedTime: String {
+        guard let time = selectedTime else { return "-" }
+        return DateFormatterUtil.formatTime(time)
+    }
+}
