@@ -25,19 +25,15 @@ struct ContentView: View {
                     onLoginSuccess: { router.state = .main }
                 )
             case .main:
-                NavigationStack {
-                    MainView(
-                        convertAppState: { newState in
-                            router.state = newState
-                        }
-                    )
-                }
+                MainView(
+                    convertAppState: { newState in
+                        router.state = newState
+                    }
+                )
             case .general:
-                NavigationStack {
-                    GeneralScheduleCreateView(
-                        onClickBtnClose: { router.state = .main }
-                    )
-                }
+                GeneralScheduleCreateView(
+                    onClickBtnClose: { router.state = .main }
+                )
             default:
                 Color.clear
             }
