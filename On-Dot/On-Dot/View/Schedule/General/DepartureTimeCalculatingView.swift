@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct DepartureTimeCalculatingView: View {
+    var onClickBtnClose: () -> Void
+    
     var body: some View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
@@ -23,5 +25,10 @@ struct DepartureTimeCalculatingView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                onClickBtnClose()
+            }
+        }
     }
 }
