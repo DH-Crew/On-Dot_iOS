@@ -14,7 +14,10 @@ final class KeychainManager {
     private init() {}
     
     func saveToken(_ value: String, for key: String) {
-        guard let data = value.data(using: .utf8) else {return}
+        guard let data = value.data(using: .utf8) else {
+            print("KeychainManager: Failed to convert token to data")
+            return
+        }
         
         let query = [
             kSecClass: kSecClassGenericPassword,
@@ -22,8 +25,12 @@ final class KeychainManager {
             kSecValueData: data
         ] as CFDictionary
         
-        SecItemDelete(query)
-        SecItemAdd(query, nil)
+        let deleteStatus = SecItemDelete(query)
+        let addStatus = SecItemAdd(query, nil)
+        
+        if addStatus != errSecSuccess {
+            print("KeychainManager: Failed to save token to Keychain: \(addStatus)")
+        }
     }
     
     func readToken(for key: String) -> String? {
