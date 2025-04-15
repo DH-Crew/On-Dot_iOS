@@ -27,10 +27,10 @@ enum Router: URLRequestConvertible {
     }
 
     var headers: HTTPHeaders {
-        let headers: HTTPHeaders = ["Content-Type": "application/json"]
-//        if let token = KeychainManager.shared.readToken(for: "accessToken") {
-//            headers.add(name: "Authorization", value: "Bearer \(token)")
-//        }
+        var headers: HTTPHeaders = ["Content-Type": "application/json"]
+        if let token = KeychainManager.shared.readToken(for: "accessToken") {
+            headers.add(name: "Authorization", value: "Bearer \(token)")
+        }
         return headers
     }
 
