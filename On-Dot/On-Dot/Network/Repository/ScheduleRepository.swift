@@ -6,5 +6,5 @@
 //
 
 protocol ScheduleRepository {
-    func createSchedule(schdule: ScheduleRequest) async throws -> Void
+    func createSchedule(schedule: ScheduleRequest) async throws -> Void
 }
