@@ -12,7 +12,7 @@ struct FromToSearchView: View {
     
     @FocusState private var focusedField: FocusField?
     
-    let selectedDate: String
+    let selectedDate: String?
     let selectedTime: String
     
     var onClickBack: () -> Void
@@ -42,7 +42,8 @@ struct FromToSearchView: View {
                     
                     SelectedDateTimeView(
                         selectedDate: selectedDate,
-                        selectedTime: selectedTime
+                        selectedTime: selectedTime,
+                        selectedWeekdays: viewModel.activeWeekdays
                     )
                     
                     Spacer().frame(height: 20)
