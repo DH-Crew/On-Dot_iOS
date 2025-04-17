@@ -17,11 +17,11 @@ enum Router: URLRequestConvertible {
     case searchPlace(query: String)
     
     // MARK: Schedule
-    case createSchdule(schedule: ScheduleRequest)
+    case createSchedule(schedule: ScheduleRequest)
 
     var method: HTTPMethod {
         switch self {
-        case .login, .createSchdule: .post
+        case .login, .createSchedule: .post
         case .searchPlace: .get
         }
     }
@@ -35,7 +35,7 @@ enum Router: URLRequestConvertible {
         case .searchPlace: "/places/search"
             
         // MARK: Schedule
-        case .createSchdule: "/schedules"
+        case .createSchedule: "/schedules"
         }
     }
 
