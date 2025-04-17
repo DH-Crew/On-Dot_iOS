@@ -51,7 +51,7 @@ struct FromToSearchView: View {
                     FromToLocationView(
                         fromLocation: $viewModel.fromLocation,
                         toLocation: $viewModel.toLocation,
-                        lastFocusedField: $viewModel.lastFocuesdField,
+                        lastFocusedField: $viewModel.lastFocusedField,
                         focusedField: $focusedField,
                         onValueChanged: { newValue in
                             viewModel.currentKeyword = newValue

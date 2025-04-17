@@ -39,7 +39,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     @Published var fromLocation: String = ""
     @Published var toLocation: String = ""
     @Published var currentKeyword: String = ""
-    @Published var lastFocuesdField: FocusField = .from
+    @Published var lastFocusedField: FocusField = .from
     @Published var isFromLocationSelected: Bool = false
     @Published var isToLocationSelected: Bool = false
     
@@ -145,7 +145,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     }
     
     func onClickLocationItem(location: LocationInfo) {
-        if lastFocuesdField == .to {
+        if lastFocusedField == .to {
             toLocation = location.title
             isToLocationSelected = true
         } else {
