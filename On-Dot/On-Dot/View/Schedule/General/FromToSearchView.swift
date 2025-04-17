@@ -77,9 +77,7 @@ struct FromToSearchView: View {
                         ForEach(viewModel.searchResult) { location in
                             LocationSearchItemView(keyword: viewModel.currentKeyword, title: location.title, detail: location.roadAddress)
                                 .onTapGesture {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                        viewModel.onClickLocationItem(location: location)
-                                    }
+                                    viewModel.onClickLocationItem(location: location)
                                 }
                             Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
                         }
