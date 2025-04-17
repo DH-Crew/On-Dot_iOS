@@ -15,8 +15,8 @@ struct DateFormatterUtil {
     }()
     
     /// 날짜를 "yyyy.MM.dd" 형식으로 반환
-    static func formatDate(_ date: Date) -> String {
-        dateFormatter.dateFormat = "yyyy.MM.dd"
+    static func formatDate(_ date: Date, separator: String = ".") -> String {
+        dateFormatter.dateFormat = "yyyy\(separator)MM\(separator)dd"
         return dateFormatter.string(from: date)
     }
     

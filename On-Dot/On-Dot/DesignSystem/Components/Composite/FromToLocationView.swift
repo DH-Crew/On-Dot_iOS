@@ -10,10 +10,26 @@ import SwiftUI
 struct FromToLocationView: View {
     @Binding var fromLocation: String
     @Binding var toLocation: String
+    @Binding var lastFocusedField: FocusField
+    @FocusState.Binding var focusedField: FocusField?
     
-    init(fromLocation: Binding<String>, toLocation: Binding<String>) {
+    var onValueChanged: (String) -> Void
+    var onClickClose: (FocusField) -> Void
+    
+    init(
+        fromLocation: Binding<String>,
+        toLocation: Binding<String>,
+        lastFocusedField: Binding<FocusField>,
+        focusedField: FocusState<FocusField?>.Binding,
+        onValueChanged: @escaping (String) -> Void = { _ in },
+        onClickClose: @escaping (FocusField) -> Void = { _ in }
+    ) {
         self._fromLocation = fromLocation
         self._toLocation = toLocation
+        self._lastFocusedField = lastFocusedField
+        self._focusedField = focusedField
+        self.onValueChanged = onValueChanged
+        self.onClickClose = onClickClose
     }
     
     var body: some View {
@@ -26,13 +42,13 @@ struct FromToLocationView: View {
             Spacer().frame(width: 10)
             
             VStack(alignment: .leading, spacing: 0) {
-                locationView(image: "ic_from_location", title: "출발지", content: fromLocation)
+                locationView(image: "ic_from_location", title: "출발지", content: $fromLocation)
                 Spacer().frame(height: 16)
                 Spacer()
                     .frame(maxWidth: .infinity, maxHeight: 0.5)
                     .background(Color.gray600)
                 Spacer().frame(height: 16)
-                locationView(image: "ic_to_location", title: "도착지", content: toLocation)
+                locationView(image: "ic_to_location", title: "도착지", content: $toLocation)
             }
         }
         .frame(maxWidth: .infinity)
@@ -45,34 +61,48 @@ struct FromToLocationView: View {
     private func locationView(
         image: String,
         title: String,
-        content: String
+        content: Binding<String>
     ) -> some View {
         HStack(alignment: .center, spacing: 0) {
             Image(image)
             Spacer().frame(width: 8)
             Text("\(title): ")
                 .font(OnDotTypo.bodyLargeR1)
-                .foregroundStyle(content.isEmpty ? Color.gray300 : Color.gray0)
-            if content.isEmpty {
-                Text("입력")
+                .foregroundStyle(content.wrappedValue.isEmpty ? Color.gray300 : Color.gray0)
+            
+            ZStack(alignment: .leading) {
+                if content.wrappedValue.isEmpty {
+                    Text("입력")
+                        .foregroundColor(.gray300)
+                        .font(OnDotTypo.bodyLargeR1)
+                }
+                
+                TextField("입력", text: content)
                     .font(OnDotTypo.bodyLargeR1)
-                    .foregroundStyle(Color.gray300)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            } else {
-                Text(content)
-                    .font(OnDotTypo.bodyLargeR1)
-                    .foregroundStyle(Color.gray0)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(Color.gray0)
+                    .focused($focusedField, equals: title == "출발지" ? .from : .to)
+                    .onChange(of: content.wrappedValue) { newValue in
+                        onValueChanged(newValue)
+                    }
+                    .frame(maxWidth: .infinity)
                     .lineLimit(1)
                     .truncationMode(.tail)
+                    .onChange(of: focusedField) { newValue in
+                        if let field = newValue {
+                            lastFocusedField = field
+                        }
+                    }
             }
+            
             Spacer().frame(width: 8)
-            if !content.isEmpty {
+            
+            if !content.wrappedValue.isEmpty {
                 Button(action: {
+                    content.wrappedValue = ""
                     if title == "출발지" {
-                        fromLocation = ""
+                        onClickClose(FocusField.from)
                     } else {
-                        toLocation = ""
+                        onClickClose(FocusField.to)
                     }
                 }) {
                     Image("ic_close")
