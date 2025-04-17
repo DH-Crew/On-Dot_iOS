@@ -15,6 +15,6 @@ final class ScheduleRepositoryImpl: ScheduleRepository {
     }
     
     func createSchedule(schedule: ScheduleRequest) async throws {
-        _ = try await networkManager.request(type: EmptyResponse.self, api: .createSchdule(schedule: schedule))
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .createSchedule(schedule: schedule))
     }
 }
