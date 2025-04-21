@@ -44,7 +44,7 @@ struct OnboardingView: View {
                             viewModel.onClickButton()
                         }
                     },
-                    style: isButtonEnabled ? .gray300 : .green500
+                    style: isButtonEnabled ? .green500 : .gray300
                 )
             }
             .frame(maxWidth: .infinity)
