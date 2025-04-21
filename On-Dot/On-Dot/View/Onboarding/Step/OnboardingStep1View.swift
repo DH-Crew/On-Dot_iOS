@@ -32,12 +32,14 @@ struct OnboardingStep1View: View {
             HStack(spacing: 11) {
                 TimeInputView(
                     content: $hourText,
-                    subText: "시간"
+                    subText: "시간",
+                    focusType: .hour
                 )
                 
                 TimeInputView(
                     content: $minuteText,
-                    subText: "분"
+                    subText: "분",
+                    focusType: .minute
                 )
             }
         }
@@ -46,7 +48,8 @@ struct OnboardingStep1View: View {
     @ViewBuilder
     private func TimeInputView(
         content: Binding<String>,
-        subText: String
+        subText: String,
+        focusType: TimeFocusField
     ) -> some View {
         HStack(alignment: .center, spacing: 8) {
             ZStack(alignment: .leading) {
@@ -66,7 +69,7 @@ struct OnboardingStep1View: View {
                     .frame(maxWidth: .infinity)
                     .font(OnDotTypo.bodyLargeR1)
                     .foregroundStyle(Color.gray0)
-                    .focused($focusField, equals: subText == "시간" ? .hour : .minute)
+                    .focused($focusField, equals: focusType)
             }
             .frame(maxWidth: .infinity)
             .padding(.leading, 20)
