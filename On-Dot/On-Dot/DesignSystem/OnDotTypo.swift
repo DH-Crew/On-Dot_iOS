@@ -10,7 +10,7 @@ import SwiftUI
 struct OnDotTypo {
     static let pretendardBlack = "Pretendard-Black"
     static let pretendardBold = "Pretendard-Bold"
-    static let pretendardExtraBold = "Pretendart-ExtraBold"
+    static let pretendardExtraBold = "Pretendard-ExtraBold"
     static let pretendardExtraLight = "Pretendard-ExtraLight"
     static let pretendardLight = "Pretendard-Light"
     static let pretendardMedium = "Pretendard-Medium"

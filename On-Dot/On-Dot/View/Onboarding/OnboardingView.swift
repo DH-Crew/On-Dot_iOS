@@ -11,6 +11,7 @@ struct OnboardingView: View {
     @ObservedObject private var viewModel = OnboardingViewModel()
     
     @State private var isButtonEnabled: Bool = false
+    @State private var showAddressWebView: Bool = false
     @FocusState private var focusState: TimeFocusField?
     
     var body: some View {
@@ -24,16 +25,23 @@ struct OnboardingView: View {
                 
                 Spacer().frame(height: 34)
                 
-                switch viewModel.currentStep {
-                case 1:
-                    OnboardingStep1View(
-                        hourText: $viewModel.hourText,
-                        minuteText: $viewModel.minuteText,
-                        focusField: $focusState
-                    )
-                default:
-                    EmptyView()
+                ZStack {
+                    if viewModel.currentStep == 1 {
+                        OnboardingStep1View(
+                            hourText: $viewModel.hourText,
+                            minuteText: $viewModel.minuteText,
+                            focusField: $focusState
+                        )
+                        .transition(.opacity.combined(with: .move(edge: .leading)))
+                    } else if viewModel.currentStep == 2 {
+                        OnboardingStep2View(
+                            address: viewModel.address,
+                            onClickLocationSearchView: { showAddressWebView = true }
+                        )
+                        .transition(.opacity.combined(with: .move(edge: .trailing)))
+                    }
                 }
+                .animation(.easeInOut, value: viewModel.currentStep)
                 
                 Spacer()
                 
@@ -41,7 +49,9 @@ struct OnboardingView: View {
                     content: "다음",
                     action: {
                         if isButtonEnabled {
-                            viewModel.onClickButton()
+                            withAnimation {
+                                viewModel.onClickButton()
+                            }
                         }
                     },
                     style: isButtonEnabled ? .green500 : .gray300
@@ -58,6 +68,22 @@ struct OnboardingView: View {
         }
         .onChange(of: viewModel.minuteText) { _ in
             isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
+        }
+        .onChange(of: viewModel.address) { _ in
+            isButtonEnabled = !viewModel.address.isEmpty
+        }
+        .onChange(of: viewModel.currentStep) { _ in
+            switch viewModel.currentStep {
+            case 1:
+                isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
+            case 2:
+                isButtonEnabled = !viewModel.address.isEmpty
+            default:
+                isButtonEnabled = false
+            }
+        }
+        .fullScreenCover(isPresented: $showAddressWebView) {
+            AddressWebView(isPresented: $showAddressWebView, address: $viewModel.address)
         }
     }
 }

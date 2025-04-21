@@ -14,12 +14,14 @@ struct OnboardingStep1View: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            (
-                Text("평소 ").foregroundColor(Color.gray0).font(OnDotTypo.titleMediumL) +
-                Text("외출 준비").foregroundColor(Color.green500).font(OnDotTypo.titleMediumL) +
-                Text("하는데\n얼마나 소요되나요?").foregroundColor(Color.gray0).font(OnDotTypo.titleMediumL)
-            )
-            .multilineTextAlignment(.leading)
+            VStack(alignment: .leading) {
+                HStack(spacing: 0) {
+                    Text("평소 ").font(OnDotTypo.titleMediumM).foregroundColor(Color.gray0)
+                    Text("외출 준비").font(OnDotTypo.titleMediumM).foregroundColor(Color.green500)
+                    Text("하는데").font(OnDotTypo.titleMediumM).foregroundColor(Color.gray0)
+                }
+                Text("얼마나 소요되나요?").font(OnDotTypo.titleMediumM).foregroundColor(Color.gray0)
+            }
             
             Spacer().frame(height: 16)
             

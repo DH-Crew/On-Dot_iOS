@@ -5,6 +5,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var currentStep = 1
     @Published var hourText: String = ""
     @Published var minuteText: String = ""
+    @Published var address: String = ""
     
     let totalStep = 5
     
