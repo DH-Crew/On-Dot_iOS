@@ -75,6 +75,8 @@ struct OnboardingView: View {
         .onChange(of: viewModel.currentStep) { _ in
             switch viewModel.currentStep {
             case 1:
+                isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
+            case 2:
                 isButtonEnabled = !viewModel.address.isEmpty
             default:
                 isButtonEnabled = false
