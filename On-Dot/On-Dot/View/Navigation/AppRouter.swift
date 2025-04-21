@@ -8,7 +8,7 @@
 import SwiftUI
 
 final class AppRouter: ObservableObject {
-    @Published var state: AppState = .splash
+    @Published var state: AppState = .onboarding
     @Published var path: [AppState] = []
     
     func navigate(to newState: AppState) {
