@@ -12,4 +12,5 @@ enum AppState: Hashable {
     case quick
     case general
     case edit
+    case onboarding
 }

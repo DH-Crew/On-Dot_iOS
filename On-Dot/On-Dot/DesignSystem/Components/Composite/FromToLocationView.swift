@@ -42,13 +42,13 @@ struct FromToLocationView: View {
             Spacer().frame(width: 10)
             
             VStack(alignment: .leading, spacing: 0) {
-                locationView(image: "ic_from_location", title: "출발지", content: $fromLocation)
+                locationView(image: "ic_from_location", title: "출발지", content: $fromLocation, focusType: .from)
                 Spacer().frame(height: 16)
                 Spacer()
                     .frame(maxWidth: .infinity, maxHeight: 0.5)
                     .background(Color.gray600)
                 Spacer().frame(height: 16)
-                locationView(image: "ic_to_location", title: "도착지", content: $toLocation)
+                locationView(image: "ic_to_location", title: "도착지", content: $toLocation, focusType: .to)
             }
         }
         .frame(maxWidth: .infinity)
@@ -61,7 +61,8 @@ struct FromToLocationView: View {
     private func locationView(
         image: String,
         title: String,
-        content: Binding<String>
+        content: Binding<String>,
+        focusType: FocusField
     ) -> some View {
         HStack(alignment: .center, spacing: 0) {
             Image(image)
@@ -80,7 +81,7 @@ struct FromToLocationView: View {
                 TextField("입력", text: content)
                     .font(OnDotTypo.bodyLargeR1)
                     .foregroundColor(Color.gray0)
-                    .focused($focusedField, equals: title == "출발지" ? .from : .to)
+                    .focused($focusedField, equals: focusType)
                     .onChange(of: content.wrappedValue) { newValue in
                         onValueChanged(newValue)
                     }
