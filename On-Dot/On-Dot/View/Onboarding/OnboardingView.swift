@@ -53,5 +53,11 @@ struct OnboardingView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .onChange(of: viewModel.hourText) { _ in
+            isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
+        }
+        .onChange(of: viewModel.minuteText) { _ in
+            isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
+        }
     }
 }
