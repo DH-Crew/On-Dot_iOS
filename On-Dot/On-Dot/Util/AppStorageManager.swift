@@ -13,6 +13,8 @@ final class AppStorageManager {
     
     private let alarmSoundKey = "selectedAlarmSound"
     
+    private init() {}
+    
     func saveSelectedSound(fileName: String) {
         UserDefaults.standard.set(fileName, forKey: alarmSoundKey)
     }
