@@ -10,6 +10,9 @@ final class OnboardingViewModel: ObservableObject {
     @Published var selectedSound: AlarmSound?
     @Published var isMuteMode: Bool = false
     @Published var selectedVolume: Float = 0.5
+    @Published var isDelayMode: Bool = false
+    @Published var selectedInterval: AlarmInterval = .one
+    @Published var selectedRepeatCount: RepeatCount = .infinite
     
     let totalStep = 5
     let alarmLibrary: [AlarmCategory: [AlarmSound]] = [
@@ -32,6 +35,8 @@ final class OnboardingViewModel: ObservableObject {
     var currentAlarmList: [AlarmSound] {
         alarmLibrary[selectedCategory] ?? []
     }
+    let intervalList: [AlarmInterval] = AlarmInterval.allCases
+    let repeatCountList: [RepeatCount] = RepeatCount.allCases
     
     func onClickButton() {
         if currentStep < 5 {
