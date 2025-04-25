@@ -18,6 +18,8 @@ struct OnboardingView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
+                Color.black.ignoresSafeArea()
+                
                 Color.gray900.ignoresSafeArea().onTapGesture {
                     focusState = nil
                 }
@@ -133,7 +135,15 @@ struct OnboardingView: View {
                     )
                     .navigationBarBackButtonHidden(true).enableSwipeBack()
                 case .delay:
-                    EmptyView()
+                    AlarmDelaySettingsView(
+                        intervalList: viewModel.intervalList,
+                        repeatCountList: viewModel.repeatCountList,
+                        onClickBtnBack: { path.removeLast() },
+                        onClickToggle: { newValue in viewModel.isDelayMode = newValue },
+                        onIntervalSelected: { newValue in viewModel.selectedInterval = newValue },
+                        onRepeatCountSelected: { newValue in viewModel.selectedRepeatCount = newValue }
+                    )
+                    .navigationBarBackButtonHidden(true).enableSwipeBack()
                 @unknown default:
                     EmptyView()
                 }
