@@ -10,6 +10,7 @@ import SwiftUI
 struct OnDotRadioGroup<T: Hashable & Identifiable>: View {
     var items: [T]
     var label: (T) -> String
+    var callback: () -> Void = {}
     @Binding var selected: T
     
     var body: some View {
@@ -31,6 +32,7 @@ struct OnDotRadioGroup<T: Hashable & Identifiable>: View {
                 }
                 .onTapGesture {
                     selected = item
+                    callback()
                 }
             }
         }
