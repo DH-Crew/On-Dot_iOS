@@ -11,6 +11,7 @@ struct SoundSettingsView: View {
     @State private var isOn: Bool = false
     
     @Binding var selectedCategory: AlarmCategory
+    @Binding var selectedVolume: Float
     let alarmSoundList: [AlarmSound]
     
     var onClickBtnBack: () -> Void
@@ -59,7 +60,9 @@ struct SoundSettingsView: View {
                     
                     Spacer().frame(height: 20)
                     
-                    VolumeSliderView().padding(.horizontal, 20)
+                    VolumeSliderView(
+                        volume: $selectedVolume
+                    ).padding(.horizontal, 20)
                     
                     Spacer()
                 }
@@ -77,7 +80,6 @@ private struct CategoryListView: View {
         HStack(spacing: 10) {
             categoryItemView(categoryType: .category1)
             categoryItemView(categoryType: .category2)
-            categoryItemView(categoryType: .category3)
         }
         .padding(.horizontal, 20)
     }
@@ -123,7 +125,7 @@ private struct SoundListView: View {
 }
 
 private struct VolumeSliderView: View {
-    @State private var volume: Float = 0.5
+    @Binding var volume: Float
 
     var body: some View {
         HStack {
