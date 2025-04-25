@@ -20,6 +20,8 @@ struct SoundSettingsView: View {
     
     var body: some View {
         ZStack {
+            Color.black.ignoresSafeArea()
+            
             Color.gray900.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
