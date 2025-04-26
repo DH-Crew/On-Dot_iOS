@@ -12,8 +12,11 @@ struct SwipeBackEnabler: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         let vc = UIViewController()
         DispatchQueue.main.async {
-            vc.navigationController?.interactivePopGestureRecognizer?.delegate = context.coordinator
-            vc.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+            guard let navController = vc.navigationController, navController.viewControllers.count > 1 else {
+                return
+            }
+            navController.interactivePopGestureRecognizer?.delegate = context.coordinator
+            navController.interactivePopGestureRecognizer?.isEnabled = true
         }
         return vc
     }
@@ -22,7 +25,10 @@ struct SwipeBackEnabler: UIViewControllerRepresentable {
     
     class Coordinator: NSObject, UIGestureRecognizerDelegate {
         func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            return true
+            if let navController = gestureRecognizer.view?.next as? UINavigationController {
+                return navController.viewControllers.count > 1
+            }
+            return false
         }
     }
 }
