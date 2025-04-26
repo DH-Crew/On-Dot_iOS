@@ -12,9 +12,14 @@ final class AlarmPlayer {
     static let shared = AlarmPlayer()
     private init() {
         configureAudioSession()
+        setupNotifications()
     }
     
     private var player: AVAudioPlayer?
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     private func configureAudioSession() {
         do {
@@ -22,6 +27,35 @@ final class AlarmPlayer {
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print("오디오 세션 설정 실패: \(error.localizedDescription)")
+        }
+    }
+    
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        switch type {
+        case .began:
+            player?.pause()
+        case .ended:
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt,
+               AVAudioSession.InterruptionOptions(rawValue: optionsValue).contains(.shouldResume) {
+                player?.play()
+            }
+        @unknown default:
+            break
         }
     }
     
