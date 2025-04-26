@@ -6,5 +6,5 @@
 //
 
 protocol AuthRepository {
-    func login(provider: String, accessToken: String) async throws -> JwtTokenModel
+    func login(provider: String, accessToken: String) async throws -> LoginResponse
 }

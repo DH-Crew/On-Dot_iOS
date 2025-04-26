@@ -12,7 +12,7 @@ final class AuthRepositoryImpl: AuthRepository {
         self.networkManager = networkManager
     }
     
-    func login(provider: String, accessToken: String) async throws -> JwtTokenModel {
-        try await networkManager.request(type: JwtTokenModel.self, api: .login(provider: provider, accessToken: accessToken))
+    func login(provider: String, accessToken: String) async throws -> LoginResponse {
+        try await networkManager.request(type: LoginResponse.self, api: .login(provider: provider, accessToken: accessToken))
     }
 }
