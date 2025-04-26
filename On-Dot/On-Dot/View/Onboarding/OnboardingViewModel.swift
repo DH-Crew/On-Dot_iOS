@@ -40,6 +40,16 @@ final class OnboardingViewModel: ObservableObject {
     let intervalList: [AlarmInterval] = AlarmInterval.allCases
     let repeatCountList: [RepeatCount] = RepeatCount.allCases
     
+    // MARK: OnboardingStep4View
+    @Published var selectedExpectationItem: ExpectationItem?
+    let gridItems = [
+        ExpectationItem(imageName: "ic_hurry_up", title: "지각방지"),
+        ExpectationItem(imageName: "ic_mind_peace", title: "신경 쓰임 해소"),
+        ExpectationItem(imageName: "ic_calendar_check", title: "간편한 일정 관리"),
+        ExpectationItem(imageName: "ic_alarm_clock", title: "정확한 출발 타이밍 알림")
+    ]
+    
+    // MARK: Handler
     func onClickButton() {
         if currentStep < 5 {
             if currentStep == 3 { saveAlarmSettings() }
