@@ -12,6 +12,7 @@ final class LoginViewModel: ObservableObject {
     private let keyChainManager: KeychainManager
     
     @Published var isLoginSuccessful: Bool = false
+    @Published var isNewUser: Bool = false
     
     init(
         authRepository: AuthRepository = AuthRepositoryImpl(),
@@ -29,6 +30,7 @@ final class LoginViewModel: ObservableObject {
                 keyChainManager.saveToken(response.accessToken, for: "accessToken")
                 keyChainManager.saveToken(response.refreshToken, for: "refreshToken")
                 isLoginSuccessful = true
+                isNewUser = !response.isOnboardingCompleted
             }
         } catch {
             await MainActor.run {
