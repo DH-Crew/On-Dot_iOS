@@ -1,8 +1,18 @@
 
 import SwiftUI
+import CoreLocation
 
 final class OnboardingViewModel: ObservableObject {
-    private let appStorageManager = AppStorageManager.shared
+    private let appStorageManager: AppStorageManager
+    private let memberRepository: MemberRepository
+    
+    init(
+        appStorageManager: AppStorageManager = AppStorageManager.shared,
+        memberRepository: MemberRepository = MemberRepositoryImpl()
+    ) {
+        self.appStorageManager = appStorageManager
+        self.memberRepository = memberRepository
+    }
     
     @Published var onboardingCompleted: Bool = false
     
@@ -15,7 +25,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isMuteMode: Bool = false
     @Published var selectedVolume: Float = 0.5
     @Published var isDelayMode: Bool = false
-    @Published var selectedInterval: AlarmInterval = .one
+    @Published var selectedInterval: AlarmInterval = .five
     @Published var selectedRepeatCount: RepeatCount = .infinite
     
     var isNextButtonEnabled: Bool {
@@ -25,7 +35,7 @@ final class OnboardingViewModel: ObservableObject {
         case 2:
             return !address.isEmpty
         case 3:
-            return (isMuteMode || selectedSound != nil) && (!isDelayMode)
+            return (isMuteMode || selectedSound != nil)
         case 4:
             return selectedExpectationItem != nil
         case 5:
@@ -83,7 +93,9 @@ final class OnboardingViewModel: ObservableObject {
             if currentStep == 3 { saveAlarmSettings() }
             currentStep += 1
         } else if currentStep == 5 {
-            onboardingCompleted = true
+            Task {
+                await saveOnboardingInfo()
+            }
         }
     }
     
@@ -100,6 +112,56 @@ final class OnboardingViewModel: ObservableObject {
         if isDelayMode {
             appStorageManager.saveInterval(interval: selectedInterval)
             appStorageManager.saveRepeatCount(repeatCount: selectedRepeatCount)
+        }
+    }
+    
+    private func saveOnboardingInfo() async {
+        var totalMinutes: Int {
+            let hours = Int(hourText) ?? 0
+            let minutes = Int(minuteText) ?? 0
+            return (hours * 60) + minutes
+        }
+        
+        guard let coordinate = await getCoordinate(address: address) else {
+            print("좌표를 가져올 수 없습니다.")
+            return
+        }
+        
+        do {
+            try await memberRepository.saveOnboardingInfo(
+                request: OnboardingRequest(
+                    preparationTime: totalMinutes,
+                    roadAddress: address,
+                    longitude: coordinate.longitude,
+                    latitude: coordinate.latitude,
+                    soundCategory: selectedCategory.displayName,
+                    ringTone: selectedSound?.fileName ?? "",
+                    volume: selectedVolume,
+                    questions: [
+                        OnboardingRequest.Question(questionId: 1, answerId: selectedExpectationItem?.id ?? -1),
+                        OnboardingRequest.Question(questionId: 2, answerId: selectedReasonItem?.id ?? -1)
+                    ]
+                )
+            )
+            
+            await MainActor.run {
+                onboardingCompleted = true
+            }
+        } catch {
+            print("Onboarding 저장 실패: \(error)")
+        }
+    }
+    
+    func getCoordinate(address: String) async -> CLLocationCoordinate2D? {
+        await withCheckedContinuation { continuation in
+            let geocoder = CLGeocoder()
+            geocoder.geocodeAddressString(address) { placemarks, error in
+                if let coordinate = placemarks?.first?.location?.coordinate {
+                    continuation.resume(returning: coordinate)
+                } else {
+                    continuation.resume(returning: nil)
+                }
+            }
         }
     }
 }
