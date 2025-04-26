@@ -103,12 +103,20 @@ struct OnboardingView: View {
             .onChange(of: viewModel.address) { _ in
                 isButtonEnabled = !viewModel.address.isEmpty
             }
+            .onChange(of: viewModel.isMuteMode) { _ in
+                isButtonEnabled = viewModel.isMuteMode || viewModel.selectedSound != nil
+            }
+            .onChange(of: viewModel.selectedSound) { _ in
+                isButtonEnabled = true
+            }
             .onChange(of: viewModel.currentStep) { _ in
                 switch viewModel.currentStep {
                 case 1:
                     isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
                 case 2:
                     isButtonEnabled = !viewModel.address.isEmpty
+                case 3:
+                    isButtonEnabled = (viewModel.isMuteMode || viewModel.selectedSound != nil) && (!viewModel.isDelayMode)
                 default:
                     isButtonEnabled = false
                 }

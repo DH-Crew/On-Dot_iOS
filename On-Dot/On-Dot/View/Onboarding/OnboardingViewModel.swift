@@ -42,6 +42,7 @@ final class OnboardingViewModel: ObservableObject {
     
     func onClickButton() {
         if currentStep < 5 {
+            if currentStep == 3 { saveAlarmSettings() }
             currentStep += 1
         } else if currentStep == 5 {
             // TODO: 온보딩 완료 메서드 호출
@@ -49,8 +50,17 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     func saveAlarmSettings() {
-        guard let sound = selectedSound else { return }
+        appStorageManager.saveMuteMode(value: isMuteMode)
         
-        appStorageManager.saveSelectedSound(fileName: sound.fileName)
+        if !isMuteMode {
+            if let sound = selectedSound {
+                appStorageManager.saveSelectedSound(fileName: sound.fileName)
+            }
+        }
+        
+        if isDelayMode {
+            appStorageManager.saveInterval(interval: selectedInterval)
+            appStorageManager.saveRepeatCount(repeatCount: selectedRepeatCount)
+        }
     }
 }
