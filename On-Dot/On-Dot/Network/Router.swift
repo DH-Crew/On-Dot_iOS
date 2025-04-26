@@ -18,11 +18,15 @@ enum Router: URLRequestConvertible {
     
     // MARK: Schedule
     case createSchedule(schedule: ScheduleRequest)
+    
+    // MARK: Member
+    case onboarding(onboardingRequest: OnboardingRequest)
 
     var method: HTTPMethod {
         switch self {
         case .login, .createSchedule: .post
         case .searchPlace: .get
+        case .onboarding: .put
         }
     }
 
@@ -36,6 +40,9 @@ enum Router: URLRequestConvertible {
             
         // MARK: Schedule
         case .createSchedule: "/schedules"
+            
+        // MARK: Member
+        case .onboarding: "/members/onboarding"
         }
     }
 
@@ -49,6 +56,8 @@ enum Router: URLRequestConvertible {
 
     var body: Parameters? {
         switch self {
+        case .onboarding(let request):
+            return try? request.asDictionary()
         default: return nil
         }
     }

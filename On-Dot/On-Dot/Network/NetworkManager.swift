@@ -18,6 +18,8 @@ final class NetworkManager {
 
         let dataTask = AF.request(request).serializingData()
         let response = await dataTask.response
+        
+        logResponse(response)
 
         switch response.result {
         case .success(let data):
@@ -48,6 +50,17 @@ final class NetworkManager {
         🔹 [Method] \(request.httpMethod ?? "")
         🔹 [Headers] \(request.allHTTPHeaderFields ?? [:])
         🔹 [Body] \(prettyPrintedJSON(data: request.httpBody))
+        """)
+    }
+    
+    private func logResponse(_ response: DataResponse<Data, AFError>) {
+        let statusCode = response.response?.statusCode ?? -1
+        let bodyString = String(data: response.data ?? Data(), encoding: .utf8) ?? "Body 없음"
+
+        print("""
+        🔸 [응답 StatusCode] \(statusCode)
+        🔸 [응답 Body]
+        \(bodyString)
         """)
     }
     

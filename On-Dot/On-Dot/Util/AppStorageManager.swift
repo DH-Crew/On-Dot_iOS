@@ -13,6 +13,7 @@ final class AppStorageManager {
     
     private let alarmSoundKey = "selectedAlarmSound"
     private let muteModeKey = "muteMode"
+    private let volumeKey = "volume"
     private let intervalKey = "interval"
     private let repeatCountKey = "repeatCount"
     
@@ -36,6 +37,15 @@ final class AppStorageManager {
     
     func getMuteMode() -> Bool {
         return UserDefaults.standard.bool(forKey: muteModeKey)
+    }
+    
+    func saveSelectedVolume(volume: Float) {
+        UserDefaults.standard.set(volume, forKey: volumeKey)
+    }
+    
+    func getSelectedVolume() -> Float {
+        let savedValue = UserDefaults.standard.float(forKey: volumeKey)
+        return savedValue == 0.0 ? 0.5 : savedValue
     }
     
     func saveInterval(interval: AlarmInterval) {
