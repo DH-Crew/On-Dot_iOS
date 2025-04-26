@@ -39,11 +39,19 @@ struct OnboardingStep5View: View {
                 Text(item.content)
                     .font(OnDotTypo.bodyMediumR)
                     .foregroundStyle(Color.gray0)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 17)
                     .background(Color.gray700)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal, 20)
+                    .contentShape(Rectangle())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(selectedItem?.id == item.id ? Color.green600 : Color.clear, lineWidth: 1)
+                    )
+                    .onTapGesture {
+                        selectedItem = item
+                    }
                 
                 Spacer().frame(height: 16)
             }
