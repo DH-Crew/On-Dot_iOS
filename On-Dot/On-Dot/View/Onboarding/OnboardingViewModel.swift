@@ -49,6 +49,15 @@ final class OnboardingViewModel: ObservableObject {
         ExpectationItem(id: 4, imageName: "ic_alarm_clock", title: "정확한 출발 타이밍 알림")
     ]
     
+    // MARK: OnboardingStep5View
+    @Published var selectedReasonItem: ReasonItem?
+    let reasonItems = [
+        ReasonItem(id: 5, content: "여유 있는 하루를 보내고 싶어서"),
+        ReasonItem(id: 6, content: "중요한 사람과의 약속을 잘 지키고 싶어서"),
+        ReasonItem(id: 7, content: "계획한 하루를 흐트러짐 없이 보내고 싶어서"),
+        ReasonItem(id: 8, content: "지각 걱정 없이 신뢰받는 사람이 되고 싶어서")
+    ]
+    
     // MARK: Handler
     func onClickButton() {
         if currentStep < 5 {
