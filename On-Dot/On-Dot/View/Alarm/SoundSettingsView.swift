@@ -48,7 +48,6 @@ struct SoundSettingsView: View {
                 .padding(.vertical, 16)
                 .background(Color.gray700)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.vertical, 16)
                 .padding(.horizontal, 20)
                 
                 Group {
