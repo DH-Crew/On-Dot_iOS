@@ -116,11 +116,9 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     private func saveOnboardingInfo() async {
-        var totalMinutes: Int {
-            let hours = Int(hourText) ?? 0
-            let minutes = Int(minuteText) ?? 0
-            return (hours * 60) + minutes
-        }
+        let hours = Int(hourText) ?? 0
+        let minutes = Int(minuteText) ?? 0
+        let totalMinutes = (hours * 60) + minutes
         
         guard let coordinate = await getCoordinate(address: address) else {
             print("좌표를 가져올 수 없습니다.")
