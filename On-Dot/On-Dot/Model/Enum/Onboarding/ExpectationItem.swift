@@ -8,7 +8,7 @@
 import Foundation
 
 struct ExpectationItem: Identifiable, Equatable {
-    let id = UUID()
+    let id: Int
     let imageName: String
     let title: String
 }
