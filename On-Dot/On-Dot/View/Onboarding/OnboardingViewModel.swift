@@ -2,6 +2,8 @@
 import SwiftUI
 
 final class OnboardingViewModel: ObservableObject {
+    private let appStorageManager = AppStorageManager.shared
+    
     @Published var currentStep = 1
     @Published var hourText: String = ""
     @Published var minuteText: String = ""
@@ -44,5 +46,11 @@ final class OnboardingViewModel: ObservableObject {
         } else if currentStep == 5 {
             // TODO: 온보딩 완료 메서드 호출
         }
+    }
+    
+    func saveAlarmSettings() {
+        guard let sound = selectedSound else { return }
+        
+        appStorageManager.saveSelectedSound(fileName: sound.fileName)
     }
 }
