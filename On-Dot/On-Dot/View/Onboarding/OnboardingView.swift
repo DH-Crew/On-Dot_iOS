@@ -124,7 +124,6 @@ struct OnboardingView: View {
                         selectedVolume: $viewModel.selectedVolume,
                         alarmSoundList: viewModel.alarmLibrary[viewModel.selectedCategory]!,
                         onClickBtnBack: {
-                            AlarmPlayer.shared.stop()
                             path.removeLast()
                         },
                         onClickToggle: { newValue in viewModel.isMuteMode = newValue },
@@ -133,7 +132,11 @@ struct OnboardingView: View {
                             AlarmPlayer.shared.play(soundFileName: newValue.fileName, numberOfLoops: 0)
                         }
                     )
-                    .navigationBarBackButtonHidden(true).enableSwipeBack()
+                    .navigationBarBackButtonHidden(true)
+                    .enableSwipeBack()
+                    .onDisappear {
+                        AlarmPlayer.shared.stop()
+                    }
                 case .delay:
                     AlarmDelaySettingsView(
                         intervalList: viewModel.intervalList,
