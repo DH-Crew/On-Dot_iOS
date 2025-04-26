@@ -94,6 +94,7 @@ final class OnboardingViewModel: ObservableObject {
             if let sound = selectedSound {
                 appStorageManager.saveSelectedSound(fileName: sound.fileName)
             }
+            appStorageManager.saveSelectedVolume(volume: selectedVolume)
         }
         
         if isDelayMode {
