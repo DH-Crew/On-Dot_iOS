@@ -122,7 +122,7 @@ struct OnboardingView: View {
                     SoundSettingsView(
                         selectedCategory: $viewModel.selectedCategory,
                         selectedVolume: $viewModel.selectedVolume,
-                        alarmSoundList: viewModel.alarmLibrary[viewModel.selectedCategory]!,
+                        alarmSoundList: viewModel.alarmLibrary[viewModel.selectedCategory] ?? [],
                         onClickBtnBack: {
                             path.removeLast()
                         },
