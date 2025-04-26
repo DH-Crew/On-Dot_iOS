@@ -70,6 +70,17 @@ struct OnboardingView: View {
                                     removal: .move(edge: .leading).combined(with: .opacity)
                                 )
                             )
+                        } else if viewModel.currentStep == 4 {
+                            OnboardingStep4View(
+                                selectedItem: $viewModel.selectedExpectationItem,
+                                gridItems: viewModel.gridItems
+                            )
+                            .transition(
+                                .asymmetric(
+                                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                                    removal: .move(edge: .leading).combined(with: .opacity)
+                                )
+                            )
                         }
                     }
                     .animation(.easeInOut, value: viewModel.currentStep)
@@ -103,12 +114,25 @@ struct OnboardingView: View {
             .onChange(of: viewModel.address) { _ in
                 isButtonEnabled = !viewModel.address.isEmpty
             }
+            .onChange(of: viewModel.isMuteMode) { _ in
+                isButtonEnabled = viewModel.isMuteMode || viewModel.selectedSound != nil
+            }
+            .onChange(of: viewModel.selectedSound) { _ in
+                isButtonEnabled = true
+            }
+            .onChange(of: viewModel.selectedExpectationItem) { _ in
+                isButtonEnabled = viewModel.selectedExpectationItem != nil
+            }
             .onChange(of: viewModel.currentStep) { _ in
                 switch viewModel.currentStep {
                 case 1:
                     isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
                 case 2:
                     isButtonEnabled = !viewModel.address.isEmpty
+                case 3:
+                    isButtonEnabled = (viewModel.isMuteMode || viewModel.selectedSound != nil) && (!viewModel.isDelayMode)
+                case 4:
+                    isButtonEnabled = viewModel.selectedExpectationItem != nil
                 default:
                     isButtonEnabled = false
                 }

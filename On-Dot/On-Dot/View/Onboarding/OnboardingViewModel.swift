@@ -40,8 +40,19 @@ final class OnboardingViewModel: ObservableObject {
     let intervalList: [AlarmInterval] = AlarmInterval.allCases
     let repeatCountList: [RepeatCount] = RepeatCount.allCases
     
+    // MARK: OnboardingStep4View
+    @Published var selectedExpectationItem: ExpectationItem?
+    let gridItems = [
+        ExpectationItem(imageName: "ic_hurry_up", title: "지각방지"),
+        ExpectationItem(imageName: "ic_mind_peace", title: "신경 쓰임 해소"),
+        ExpectationItem(imageName: "ic_calendar_check", title: "간편한 일정 관리"),
+        ExpectationItem(imageName: "ic_alarm_clock", title: "정확한 출발 타이밍 알림")
+    ]
+    
+    // MARK: Handler
     func onClickButton() {
         if currentStep < 5 {
+            if currentStep == 3 { saveAlarmSettings() }
             currentStep += 1
         } else if currentStep == 5 {
             // TODO: 온보딩 완료 메서드 호출
@@ -49,8 +60,17 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     func saveAlarmSettings() {
-        guard let sound = selectedSound else { return }
+        appStorageManager.saveMuteMode(value: isMuteMode)
         
-        appStorageManager.saveSelectedSound(fileName: sound.fileName)
+        if !isMuteMode {
+            if let sound = selectedSound {
+                appStorageManager.saveSelectedSound(fileName: sound.fileName)
+            }
+        }
+        
+        if isDelayMode {
+            appStorageManager.saveInterval(interval: selectedInterval)
+            appStorageManager.saveRepeatCount(repeatCount: selectedRepeatCount)
+        }
     }
 }
