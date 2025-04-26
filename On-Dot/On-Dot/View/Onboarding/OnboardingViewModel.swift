@@ -4,6 +4,8 @@ import SwiftUI
 final class OnboardingViewModel: ObservableObject {
     private let appStorageManager = AppStorageManager.shared
     
+    @Published var onboardingCompleted: Bool = false
+    
     @Published var currentStep = 1
     @Published var hourText: String = ""
     @Published var minuteText: String = ""
@@ -15,6 +17,23 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isDelayMode: Bool = false
     @Published var selectedInterval: AlarmInterval = .one
     @Published var selectedRepeatCount: RepeatCount = .infinite
+    
+    var isNextButtonEnabled: Bool {
+        switch currentStep {
+        case 1:
+            return !hourText.isEmpty || !minuteText.isEmpty
+        case 2:
+            return !address.isEmpty
+        case 3:
+            return (isMuteMode || selectedSound != nil) && (!isDelayMode)
+        case 4:
+            return selectedExpectationItem != nil
+        case 5:
+            return selectedReasonItem != nil
+        default:
+            return false
+        }
+    }
     
     let totalStep = 5
     let alarmLibrary: [AlarmCategory: [AlarmSound]] = [
@@ -64,7 +83,7 @@ final class OnboardingViewModel: ObservableObject {
             if currentStep == 3 { saveAlarmSettings() }
             currentStep += 1
         } else if currentStep == 5 {
-            // TODO: 온보딩 완료 메서드 호출
+            onboardingCompleted = true
         }
     }
     

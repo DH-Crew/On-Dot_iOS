@@ -15,6 +15,8 @@ struct OnboardingView: View {
     @State private var showAddressWebView: Bool = false
     @FocusState private var focusState: TimeFocusField?
     
+    var onOnboardingCompleted: () -> Void
+    
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
@@ -101,13 +103,13 @@ struct OnboardingView: View {
                     OnDotButton(
                         content: "다음",
                         action: {
-                            if isButtonEnabled {
+                            if viewModel.isNextButtonEnabled {
                                 withAnimation {
                                     viewModel.onClickButton()
                                 }
                             }
                         },
-                        style: isButtonEnabled ? .green500 : .gray300
+                        style: viewModel.isNextButtonEnabled ? .green500 : .gray300
                     )
                 }
                 .frame(maxWidth: .infinity)
@@ -116,26 +118,8 @@ struct OnboardingView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea(.keyboard, edges: .bottom)
-            .onChange(of: viewModel.hourText) { _ in
-                isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
-            }
-            .onChange(of: viewModel.minuteText) { _ in
-                isButtonEnabled = !viewModel.hourText.isEmpty || !viewModel.minuteText.isEmpty
-            }
-            .onChange(of: viewModel.address) { _ in
-                isButtonEnabled = !viewModel.address.isEmpty
-            }
-            .onChange(of: viewModel.isMuteMode) { _ in
-                isButtonEnabled = viewModel.isMuteMode || viewModel.selectedSound != nil
-            }
-            .onChange(of: viewModel.selectedSound) { _ in
-                isButtonEnabled = true
-            }
-            .onChange(of: viewModel.selectedExpectationItem) { _ in
-                isButtonEnabled = viewModel.selectedExpectationItem != nil
-            }
-            .onChange(of: viewModel.selectedReasonItem) { _ in
-                isButtonEnabled = viewModel.selectedReasonItem != nil
+            .onChange(of: viewModel.onboardingCompleted) { _ in
+                if viewModel.onboardingCompleted { onOnboardingCompleted() }
             }
             .onChange(of: viewModel.currentStep) { _ in
                 switch viewModel.currentStep {
