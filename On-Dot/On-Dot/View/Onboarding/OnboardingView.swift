@@ -139,12 +139,12 @@ struct OnboardingView: View {
                     }
                 case .delay:
                     AlarmDelaySettingsView(
+                        selectedInterval: $viewModel.selectedInterval,
+                        selectedRepeatCount: $viewModel.selectedRepeatCount,
                         intervalList: viewModel.intervalList,
                         repeatCountList: viewModel.repeatCountList,
                         onClickBtnBack: { path.removeLast() },
-                        onClickToggle: { newValue in viewModel.isDelayMode = newValue },
-                        onIntervalSelected: { newValue in viewModel.selectedInterval = newValue },
-                        onRepeatCountSelected: { newValue in viewModel.selectedRepeatCount = newValue }
+                        onClickToggle: { newValue in viewModel.isDelayMode = newValue }
                     )
                     .navigationBarBackButtonHidden(true).enableSwipeBack()
                 @unknown default:

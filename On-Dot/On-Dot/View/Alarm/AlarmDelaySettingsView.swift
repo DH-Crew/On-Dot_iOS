@@ -9,14 +9,14 @@ import SwiftUI
 
 struct AlarmDelaySettingsView: View {
     @State private var isOn: Bool = false
+    @Binding var selectedInterval: AlarmInterval
+    @Binding var selectedRepeatCount: RepeatCount
     
     let intervalList: [AlarmInterval]
     let repeatCountList: [RepeatCount]
     
     var onClickBtnBack: () -> Void
     var onClickToggle: (Bool) -> Void
-    var onIntervalSelected: (AlarmInterval) -> Void
-    var onRepeatCountSelected: (RepeatCount) -> Void
     
     var body: some View {
         ZStack {
@@ -54,13 +54,13 @@ struct AlarmDelaySettingsView: View {
                     if isOn {
                         VStack(spacing: 20) {
                             AlarmIntervalView(
-                                intervalList: intervalList,
-                                onIntervalSelected: onIntervalSelected
+                                selectedInterval: $selectedInterval,
+                                intervalList: intervalList
                             )
                             
                             AlarmRepeatCountView(
-                                repeatCountList: repeatCountList,
-                                onRepeatCountSelected: onRepeatCountSelected
+                                selectedRepeatCount: $selectedRepeatCount,
+                                repeatCountList: repeatCountList
                             )
                         }
                     }
@@ -75,11 +75,9 @@ struct AlarmDelaySettingsView: View {
 }
 
 private struct AlarmIntervalView: View {
-    @State private var selectedDelay: AlarmInterval = AlarmInterval.one
+    @Binding var selectedInterval: AlarmInterval
     
     let intervalList: [AlarmInterval]
-    
-    var onIntervalSelected: (AlarmInterval) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -97,8 +95,7 @@ private struct AlarmIntervalView: View {
             OnDotRadioGroup(
                 items: intervalList,
                 label: { newValue in newValue.displayName },
-                callback: { onIntervalSelected(selectedDelay) },
-                selected: $selectedDelay
+                selected: $selectedInterval
             )
             .padding(.horizontal, 20)
         }
@@ -110,11 +107,9 @@ private struct AlarmIntervalView: View {
 }
 
 private struct AlarmRepeatCountView: View {
-    @State private var selectedCount: RepeatCount = .infinite
+    @Binding var selectedRepeatCount: RepeatCount
     
     let repeatCountList: [RepeatCount]
-    
-    var onRepeatCountSelected: (RepeatCount) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -132,8 +127,7 @@ private struct AlarmRepeatCountView: View {
             OnDotRadioGroup(
                 items: repeatCountList,
                 label: { newValue in newValue.displayName },
-                callback: { onRepeatCountSelected(selectedCount) },
-                selected: $selectedCount
+                selected: $selectedRepeatCount
             )
             .padding(.horizontal, 20)
         }
