@@ -22,10 +22,18 @@ struct ContentView: View {
                 })
             case .auth:
                 LoginView(
-                    onLoginSuccess: { router.state = .main }
+                    onLoginSuccess: { isNewUser in
+                        if isNewUser {
+                            router.state = .onboarding
+                        } else {
+                            router.state = .main
+                        }
+                    }
                 )
             case .onboarding:
-                OnboardingView()
+                OnboardingView(
+                    onOnboardingCompleted: { router.state = .main }
+                )
             case .main:
                 MainView(
                     convertAppState: { newState in

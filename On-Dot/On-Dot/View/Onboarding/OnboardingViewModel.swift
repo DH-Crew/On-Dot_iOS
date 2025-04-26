@@ -4,6 +4,8 @@ import SwiftUI
 final class OnboardingViewModel: ObservableObject {
     private let appStorageManager = AppStorageManager.shared
     
+    @Published var onboardingCompleted: Bool = false
+    
     @Published var currentStep = 1
     @Published var hourText: String = ""
     @Published var minuteText: String = ""
@@ -15,6 +17,23 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isDelayMode: Bool = false
     @Published var selectedInterval: AlarmInterval = .one
     @Published var selectedRepeatCount: RepeatCount = .infinite
+    
+    var isNextButtonEnabled: Bool {
+        switch currentStep {
+        case 1:
+            return !hourText.isEmpty || !minuteText.isEmpty
+        case 2:
+            return !address.isEmpty
+        case 3:
+            return (isMuteMode || selectedSound != nil) && (!isDelayMode)
+        case 4:
+            return selectedExpectationItem != nil
+        case 5:
+            return selectedReasonItem != nil
+        default:
+            return false
+        }
+    }
     
     let totalStep = 5
     let alarmLibrary: [AlarmCategory: [AlarmSound]] = [
@@ -43,10 +62,19 @@ final class OnboardingViewModel: ObservableObject {
     // MARK: OnboardingStep4View
     @Published var selectedExpectationItem: ExpectationItem?
     let gridItems = [
-        ExpectationItem(imageName: "ic_hurry_up", title: "지각방지"),
-        ExpectationItem(imageName: "ic_mind_peace", title: "신경 쓰임 해소"),
-        ExpectationItem(imageName: "ic_calendar_check", title: "간편한 일정 관리"),
-        ExpectationItem(imageName: "ic_alarm_clock", title: "정확한 출발 타이밍 알림")
+        ExpectationItem(id: 1, imageName: "ic_hurry_up", title: "지각방지"),
+        ExpectationItem(id: 2, imageName: "ic_mind_peace", title: "신경 쓰임 해소"),
+        ExpectationItem(id: 3, imageName: "ic_calendar_check", title: "간편한 일정 관리"),
+        ExpectationItem(id: 4, imageName: "ic_alarm_clock", title: "정확한 출발 타이밍 알림")
+    ]
+    
+    // MARK: OnboardingStep5View
+    @Published var selectedReasonItem: ReasonItem?
+    let reasonItems = [
+        ReasonItem(id: 5, content: "여유 있는 하루를 보내고 싶어서"),
+        ReasonItem(id: 6, content: "중요한 사람과의 약속을 잘 지키고 싶어서"),
+        ReasonItem(id: 7, content: "계획한 하루를 흐트러짐 없이 보내고 싶어서"),
+        ReasonItem(id: 8, content: "지각 걱정 없이 신뢰받는 사람이 되고 싶어서")
     ]
     
     // MARK: Handler
@@ -55,7 +83,7 @@ final class OnboardingViewModel: ObservableObject {
             if currentStep == 3 { saveAlarmSettings() }
             currentStep += 1
         } else if currentStep == 5 {
-            // TODO: 온보딩 완료 메서드 호출
+            onboardingCompleted = true
         }
     }
     

@@ -13,7 +13,7 @@ import KakaoSDKUser
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     
-    var onLoginSuccess: () -> Void
+    var onLoginSuccess: (Bool) -> Void
     
     var body: some View {
         ZStack {
@@ -40,7 +40,7 @@ struct LoginView: View {
         }
         .onChange(of: viewModel.isLoginSuccessful) { newValue in
             if newValue {
-                onLoginSuccess()
+                onLoginSuccess(viewModel.isNewUser)
             }
         }
     }
