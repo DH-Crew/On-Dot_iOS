@@ -14,19 +14,17 @@ struct DepartureTimeCalculatingView: View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
             
-            VStack(spacing: 32) {
-                Rectangle()
-                    .fill(Color.gray50)
-                    .frame(width: 200, height: 163)
-                    
-                Text("최적의 출발 시간을 계산하고 있어요.")
-                    .font(OnDotTypo.titleSmallSB)
-                    .foregroundStyle(Color.gray0)
-            }
+            LottieView(name: "TimeCalculate", loopMode: .playOnce)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            Text("최적의 출발 시간을 계산하고 있어요.")
+                .padding(.top, 220)
+                .font(OnDotTypo.bodyLargeR1)
+                .foregroundStyle(Color.gray0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 onClickBtnClose()
             }
         }

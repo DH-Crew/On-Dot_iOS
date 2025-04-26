@@ -27,6 +27,7 @@ struct TopBar: View {
             Text(title)
                 .font(OnDotTypo.titleSmallM)
                 .foregroundStyle(Color.gray0)
+                .padding(.top, 29)
         }
     }
 }
