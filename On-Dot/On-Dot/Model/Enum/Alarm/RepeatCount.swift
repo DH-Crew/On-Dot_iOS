@@ -23,4 +23,14 @@ enum RepeatCount: String, CaseIterable, Identifiable {
         case .ten: "10회"
         }
     }
+    
+    var count: Int {
+        switch self {
+        case .infinite: -1
+        case .one: 1
+        case .three: 3
+        case .five: 5
+        case .ten: 10
+        }
+    }
 }
