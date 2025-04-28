@@ -60,4 +60,34 @@ struct DateFormatterUtil {
         dateFormatter.dateFormat = "h:mm"
         return dateFormatter.string(from: date)
     }
+    
+    /// 첫 번째 Date에서 날짜를 가져오고, 두 번째 Date에서 시간을 가져와 새로운 Date 생성
+    static func combineDateAndTime(date: Date, time: Date) -> Date? {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
+
+        var combinedComponents = DateComponents()
+        combinedComponents.year = dateComponents.year
+        combinedComponents.month = dateComponents.month
+        combinedComponents.day = dateComponents.day
+        combinedComponents.hour = timeComponents.hour
+        combinedComponents.minute = timeComponents.minute
+        combinedComponents.second = timeComponents.second
+
+        return calendar.date(from: combinedComponents)
+    }
+    
+    static func parseISO8601Date(from string: String?) throws -> Date {
+        guard let input = string, !input.isEmpty else {
+            throw DateParsingError.missingValue
+        }
+        let formatter = ISO8601DateFormatter()
+        guard let date = formatter.date(from: input) else {
+            throw DateParsingError.invalidFormat
+        }
+        return date
+    }
 }

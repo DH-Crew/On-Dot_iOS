@@ -13,6 +13,10 @@ struct FromToLocationView: View {
     @Binding var lastFocusedField: FocusField
     @FocusState.Binding var focusedField: FocusField?
     
+    var isConfirmMode: Bool = false
+    var backgroundColor: Color = .gray700
+    var closeButtonColor: Color = .gray400
+    
     var onValueChanged: (String) -> Void
     var onClickClose: (FocusField) -> Void
     
@@ -21,6 +25,9 @@ struct FromToLocationView: View {
         toLocation: Binding<String>,
         lastFocusedField: Binding<FocusField>,
         focusedField: FocusState<FocusField?>.Binding,
+        isConfirmMode: Bool = false,
+        backgroundColor: Color = .gray700,
+        closeButtonColor: Color = .gray400,
         onValueChanged: @escaping (String) -> Void = { _ in },
         onClickClose: @escaping (FocusField) -> Void = { _ in }
     ) {
@@ -28,32 +35,35 @@ struct FromToLocationView: View {
         self._toLocation = toLocation
         self._lastFocusedField = lastFocusedField
         self._focusedField = focusedField
+        self.isConfirmMode = isConfirmMode
+        self.backgroundColor = backgroundColor
+        self.closeButtonColor = closeButtonColor
         self.onValueChanged = onValueChanged
         self.onClickClose = onClickClose
     }
     
     var body: some View {
         HStack(spacing: 0) {
-            Spacer().frame(width: 10)
+//            Spacer().frame(width: 10)
             
-            Image("ic_swap_vertical")
-                .onTapGesture { swapLocation() }
-            
-            Spacer().frame(width: 10)
+//            Image("ic_swap_vertical")
+//                .onTapGesture { swapLocation() }
+//            
+//            Spacer().frame(width: 10)
             
             VStack(alignment: .leading, spacing: 0) {
                 locationView(image: "ic_from_location", title: "출발지", content: $fromLocation, focusType: .from)
                 Spacer().frame(height: 16)
                 Spacer()
                     .frame(maxWidth: .infinity, maxHeight: 0.5)
-                    .background(Color.gray600)
+                    .background(isConfirmMode ? Color.green800 : Color.gray600)
                 Spacer().frame(height: 16)
                 locationView(image: "ic_to_location", title: "도착지", content: $toLocation, focusType: .to)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
-        .background(Color.gray700)
+        .background(backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
@@ -97,7 +107,7 @@ struct FromToLocationView: View {
             
             Spacer().frame(width: 8)
             
-            if !content.wrappedValue.isEmpty {
+            if !content.wrappedValue.isEmpty && !isConfirmMode {
                 Button(action: {
                     content.wrappedValue = ""
                     if title == "출발지" {
@@ -107,11 +117,16 @@ struct FromToLocationView: View {
                     }
                 }) {
                     Image("ic_close")
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 20, height: 20)
+                        .foregroundStyle(closeButtonColor)
                 }
                 Spacer().frame(width: 20)
             }
         }
         .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
     }
     
     private func swapLocation() {

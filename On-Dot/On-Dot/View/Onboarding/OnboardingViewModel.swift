@@ -84,7 +84,7 @@ final class OnboardingViewModel: ObservableObject {
         ReasonItem(id: 5, content: "여유 있는 하루를 보내고 싶어서"),
         ReasonItem(id: 6, content: "중요한 사람과의 약속을 잘 지키고 싶어서"),
         ReasonItem(id: 7, content: "계획한 하루를 흐트러짐 없이 보내고 싶어서"),
-        ReasonItem(id: 8, content: "지각 걱정 없이 신뢰받는 사람이 되고 싶어서")
+        ReasonItem(id: 8, content: "시간 약속을 잘 지키는 사람이 되고 싶어서")
     ]
     
     // MARK: Handler
@@ -132,13 +132,17 @@ final class OnboardingViewModel: ObservableObject {
                     roadAddress: address,
                     longitude: coordinate.longitude,
                     latitude: coordinate.latitude,
-                    soundCategory: selectedCategory.displayName,
-                    ringTone: selectedSound?.fileName ?? "",
+                    soundCategory: "DEFAULT",
+                    ringTone: "DEFAULT",
                     volume: selectedVolume,
                     questions: [
                         OnboardingRequest.Question(questionId: 1, answerId: selectedExpectationItem?.id ?? -1),
                         OnboardingRequest.Question(questionId: 2, answerId: selectedReasonItem?.id ?? -1)
-                    ]
+                    ],
+                    alarmMode: isMuteMode ? "VIBRATE" : "SOUND",
+                    isSnoozeEnabled: isDelayMode,
+                    snoozeInterval: selectedInterval.rawValue,
+                    snoozeCount: selectedRepeatCount.count
                 )
             )
             

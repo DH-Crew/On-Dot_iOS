@@ -9,11 +9,14 @@ import SwiftUI
 
 final class GeneralScheduleCreateViewModel: ObservableObject {
     private let locationRepository: LocationRepository
+    private let alarmRepository: AlarmRepository
     
     init(
-        locationRepository: LocationRepository = LocationRepositoryImpl()
+        locationRepository: LocationRepository = LocationRepositoryImpl(),
+        alarmRepository: AlarmRepository = AlarmRepositoryImpl()
     ) {
         self.locationRepository = locationRepository
+        self.alarmRepository = alarmRepository
     }
     
     // MARK: - RepeatSettingView State
@@ -42,9 +45,16 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     @Published var lastFocusedField: FocusField = .from
     @Published var isFromLocationSelected: Bool = false
     @Published var isToLocationSelected: Bool = false
+    @Published var selectedFromLocation: LocationInfo = .placeholder
+    @Published var selectedToLocation: LocationInfo = .placeholder
     
     // MARK: - LocationSearchItemView State
     @Published var searchResult: [LocationInfo] = []
+    
+    // MARK: - ConfirmEditScheduleView State
+    @Published var newScheduleTitle: String = "새로운 일정"
+    @Published var departureAlarm: AlarmInfo = .placeholder
+    @Published var preparationAlarm: AlarmInfo = .placeholder
     
     // MARK: - DateTimeSettingViewHandler
     func onClickToggle() {
@@ -75,7 +85,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
         } else {
             activeWeekdays.insert(index)
         }
-
+        
         // 요일 수동 변경 시 자동 선택 해제
         if activeWeekdays == Set(fullWeek) {
             activeCheckChip = 0
@@ -136,6 +146,41 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
             }
         } catch {
             print("Search Location Failed: \(error)")
+        }
+    }
+    
+    func onLocationSelected() async {
+        do {
+            guard
+                let date = selectedDate,
+                let time = selectedTime,
+                let combinedDate = DateFormatterUtil.combineDateAndTime(date: date, time: time)
+            else {
+                print("""
+                ❌ 필수 데이터 부족
+                date: \(String(describing: selectedDate))
+                time: \(String(describing: selectedTime))
+                combinedDate: \(String(describing: DateFormatterUtil.combineDateAndTime(date: selectedDate ?? Date(), time: selectedTime ?? Date())))
+                """)
+                return
+            }
+
+            let request = CalculateRequest(
+                date: combinedDate,
+                startLongitude: selectedFromLocation.longitude,
+                startLatitude: selectedFromLocation.latitude,
+                endLongitude: selectedToLocation.longitude,
+                endLatitude: selectedToLocation.latitude
+            )
+            
+            let response = try await alarmRepository.calculateAlarm(request: request)
+            
+            await MainActor.run {
+                departureAlarm = response.departureAlarm
+                preparationAlarm = response.preparationAlarm
+            }
+        } catch {
+            print("알람 정보 계산 서버 통신 실패: \(error)")
         }
     }
     

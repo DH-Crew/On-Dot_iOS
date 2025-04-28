@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DepartureTimeCalculatingView: View {
-    var onClickBtnClose: () -> Void
+    var onCalculatingFinished: () -> Void
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -25,7 +25,7 @@ struct DepartureTimeCalculatingView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                onClickBtnClose()
+                onCalculatingFinished()
             }
         }
     }
