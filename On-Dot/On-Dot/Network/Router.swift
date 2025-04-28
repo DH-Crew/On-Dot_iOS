@@ -21,10 +21,14 @@ enum Router: URLRequestConvertible {
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
+    
+    // MARK: Alarm
+    case calculate(calculateRequest: CalculateRequest)
 
+    // MARK: -
     var method: HTTPMethod {
         switch self {
-        case .login, .createSchedule: .post
+        case .login, .createSchedule, .calculate: .post
         case .searchPlace: .get
         case .onboarding: .put
         }
@@ -43,6 +47,9 @@ enum Router: URLRequestConvertible {
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
+            
+        // MARK: Alarm
+        case .calculate: "/alarms/setting"
         }
     }
 
@@ -57,6 +64,8 @@ enum Router: URLRequestConvertible {
     var body: Parameters? {
         switch self {
         case .onboarding(let request):
+            return try? request.asDictionary()
+        case .calculate(let request):
             return try? request.asDictionary()
         default: return nil
         }
