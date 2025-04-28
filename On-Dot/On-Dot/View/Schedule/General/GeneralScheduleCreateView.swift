@@ -11,7 +11,7 @@ struct GeneralScheduleCreateView: View {
     @StateObject private var viewModel = GeneralScheduleCreateViewModel()
     @State private var path = NavigationPath()
     
-    private var isNextBUttonEnabled: Bool {
+    private var isNextButtonEnabled: Bool {
         (viewModel.selectedDate != nil || !viewModel.activeWeekdays.isEmpty) && viewModel.selectedTime != nil
     }
     
@@ -76,11 +76,11 @@ struct GeneralScheduleCreateView: View {
                     OnDotButton(
                         content: "다음",
                         action: {
-                            if isNextBUttonEnabled {
-                                path.append(GeneralSchedule.fromToSearch)
+                            if isNextButtonEnabled {
+                                path.append(GeneralSchedule.confirm)
                             }
                         },
-                        style: isNextBUttonEnabled ? .green500 : .gray300
+                        style: isNextButtonEnabled ? .green500 : .gray300
                     )
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -97,15 +97,35 @@ struct GeneralScheduleCreateView: View {
                         isLocationSelected: {
                             path.removeLast()
                             path.append(GeneralSchedule.calculate)
+                            Task {
+                                await viewModel.onLocationSelected()
+                            }
                         }
                     )
                     .environmentObject(viewModel)
                     .navigationBarBackButtonHidden(true)
                 case .calculate:
                     DepartureTimeCalculatingView(
-                        onClickBtnClose: onClickBtnClose
+                        onCalculatingFinished: { path.append(GeneralSchedule.confirm) }
                     )
                     .navigationBarBackButtonHidden(true)
+                case .confirm:
+                    ConfirmEditScheduleView(
+                        scheduleTitle: $viewModel.newScheduleTitle,
+                        lastFocusedField: $viewModel.lastFocusedField,
+                        fromLocation: $viewModel.fromLocation,
+                        toLocation: $viewModel.toLocation,
+                        selectedDate: viewModel.formattedSelectedDate,
+                        selectedTime: viewModel.formattedSelectedTime,
+                        selectedWeekdays: viewModel.activeWeekdays,
+                        isConfirmMode: true,
+                        departureAlarm: viewModel.departureAlarm,
+                        preparationAlarm: viewModel.preparationAlarm,
+                        onClickCreateButton: {  },
+                        onClickBackButton: { path.removeLast() }
+                    )
+                    .navigationBarBackButtonHidden(true)
+                    .enableSwipeBack()
                 }
             }
         }
