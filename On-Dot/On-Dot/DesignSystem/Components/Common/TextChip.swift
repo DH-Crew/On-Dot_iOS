@@ -17,6 +17,7 @@ struct TextChip: View {
         case active
         case inactive
         case normal
+        case confirm
     }
     
     var body: some View {
@@ -25,7 +26,7 @@ struct TextChip: View {
             .foregroundColor(style.foregroundColor)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color.gray500)
+            .background(style.backgroundColor)
             .cornerRadius(6)
             .onTapGesture {
                 onClickChip()
@@ -39,6 +40,13 @@ private extension TextChip.Style {
         case .active: return Color.green500
         case .inactive: return Color.gray400
         case .normal: return Color.gray50
+        case .confirm: return Color.gray0
+        }
+    }
+    var backgroundColor: Color {
+        switch self {
+        case .active, .inactive, .normal: return Color.gray500
+        case .confirm: return Color.green800
         }
     }
 }
