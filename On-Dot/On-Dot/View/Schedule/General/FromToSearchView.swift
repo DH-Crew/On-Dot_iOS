@@ -77,6 +77,11 @@ struct FromToSearchView: View {
                         ForEach(viewModel.searchResult) { location in
                             LocationSearchItemView(keyword: viewModel.currentKeyword, title: location.title, detail: location.roadAddress)
                                 .onTapGesture {
+                                    if focusedField == .from {
+                                        viewModel.selectedFromLocation = location
+                                    } else if focusedField == .to {
+                                        viewModel.selectedToLocation = location
+                                    }
                                     viewModel.onClickLocationItem(location: location)
                                 }
                             Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
