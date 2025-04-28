@@ -121,7 +121,9 @@ struct GeneralScheduleCreateView: View {
                         isConfirmMode: true,
                         departureAlarm: viewModel.departureAlarm,
                         preparationAlarm: viewModel.preparationAlarm,
-                        onClickCreateButton: {  },
+                        onClickCreateButton: {
+                            onClickBtnClose()
+                        },
                         onClickBackButton: { path.removeLast() }
                     )
                     .navigationBarBackButtonHidden(true)
