@@ -110,4 +110,20 @@ extension Color {
             startPoint: .leading,
             endPoint: .trailing
         )
+    static let gradientGreenTop = LinearGradient(
+        gradient: Gradient(colors: [
+            Color(hex: 0xFF88B500),
+            Color(hex: 0xFFA4D01F)
+        ]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
+    static let gradientGreenBottom = LinearGradient(
+        gradient: Gradient(colors: [
+            Color(hex: 0xFFA4D01F),
+            Color(hex: 0xFFD4FF54)
+        ]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }
