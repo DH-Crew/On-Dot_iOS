@@ -33,7 +33,11 @@ struct AlarmInfo: Codable {
 
 extension AlarmInfo {
     var triggeredDate: Date? {
-        let formatter = ISO8601DateFormatter()
-        return formatter.date(from: triggeredAt)
+        do {
+            return try DateFormatterUtil.parseISO8601Date(from: triggeredAt)
+        } catch {
+            print("triggeredDate 파싱 실패: \(error.localizedDescription)")
+            return nil
+        }
     }
 }

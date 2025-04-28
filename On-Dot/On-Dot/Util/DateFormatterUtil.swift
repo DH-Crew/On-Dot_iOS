@@ -79,4 +79,15 @@ struct DateFormatterUtil {
 
         return calendar.date(from: combinedComponents)
     }
+    
+    static func parseISO8601Date(from string: String?) throws -> Date {
+        guard let input = string, !input.isEmpty else {
+            throw DateParsingError.missingValue
+        }
+        let formatter = ISO8601DateFormatter()
+        guard let date = formatter.date(from: input) else {
+            throw DateParsingError.invalidFormat
+        }
+        return date
+    }
 }
