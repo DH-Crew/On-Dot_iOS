@@ -30,7 +30,8 @@ struct MyPageView: View {
                         title: "일반",
                         content1: "집 주소 설정",
                         content2: "길 안내 지도 설정",
-                        onClickContent1: { path.append(MyPageDestination.homeAddress) }
+                        onClickContent1: { path.append(MyPageDestination.homeAddress) },
+                        onClickContent2: { path.append(MyPageDestination.defaultMap) }
                     )
                     
                     Spacer().frame(height: 16)
@@ -66,6 +67,13 @@ struct MyPageView: View {
                     .enableSwipeBack()
                 case .homeAddressEdit:
                     HomeAddressEditView(
+                        onClickBackButton: { path.removeLast() }
+                    )
+                    .environmentObject(viewModel)
+                    .navigationBarBackButtonHidden(true)
+                    .enableSwipeBack()
+                case .defaultMap:
+                    DefaultMapSettingView(
                         onClickBackButton: { path.removeLast() }
                     )
                     .environmentObject(viewModel)

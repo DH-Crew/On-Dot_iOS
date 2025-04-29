@@ -8,4 +8,5 @@
 enum MyPageDestination {
     case homeAddress
     case homeAddressEdit
+    case defaultMap
 }
