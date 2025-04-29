@@ -8,5 +8,6 @@
 import SwiftUI
 
 final class MyPageViewModel: ObservableObject {
-    
+    // MARK: - HomeAddressSettingView State
+    var homeAddress: HomeAddressInfo = .placeholder
 }

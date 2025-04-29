@@ -10,45 +10,64 @@ import SwiftUI
 struct MyPageView: View {
     @ObservedObject private var viewModel = MyPageViewModel()
     
+    @State private var path = NavigationPath()
+    
     var body: some View {
-        ZStack {
-            Color.gray900.ignoresSafeArea()
-            
-            VStack(alignment: .leading, spacing: 0) {
-                Spacer().frame(height: 24)
+        NavigationStack(path: $path) {
+            ZStack {
+                Color.gray900.ignoresSafeArea()
                 
-                Text("마이")
-                    .font(OnDotTypo.titleMediumSB)
-                    .foregroundStyle(Color.gray0)
-                
-                Spacer().frame(height: 28)
-                
-                MyPageMenuView(
-                    title: "일반",
-                    content1: "집 주소 설정",
-                    content2: "길 안내 지도 설정"
-                )
-                
-                Spacer().frame(height: 16)
-                
-                MyPageMenuView(
-                    title: "도움",
-                    content1: "고객센터",
-                    content2: "서비스 정책"
-                )
-                
-                Spacer().frame(height: 16)
-                
-                MyPageMenuView(
-                    title: "계정",
-                    content1: "회원탈퇴",
-                    content2: "로그아웃"
-                )
-                
-                Spacer()
+                VStack(alignment: .leading, spacing: 0) {
+                    Spacer().frame(height: 24)
+                    
+                    Text("마이")
+                        .font(OnDotTypo.titleMediumSB)
+                        .foregroundStyle(Color.gray0)
+                    
+                    Spacer().frame(height: 28)
+                    
+                    MyPageMenuView(
+                        title: "일반",
+                        content1: "집 주소 설정",
+                        content2: "길 안내 지도 설정",
+                        onClickContent1: { path.append(MyPageDestination.homeAddress) }
+                    )
+                    
+                    Spacer().frame(height: 16)
+                    
+                    MyPageMenuView(
+                        title: "도움",
+                        content1: "고객센터",
+                        content2: "서비스 정책"
+                    )
+                    
+                    Spacer().frame(height: 16)
+                    
+                    MyPageMenuView(
+                        title: "계정",
+                        content1: "회원탈퇴",
+                        content2: "로그아웃"
+                    )
+                    
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.horizontal, 22)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.horizontal, 22)
+            .navigationDestination(for: MyPageDestination.self) { view in
+                switch view {
+                case .homeAddress:
+                    HomeAddressSettingView(
+                        onClickBackButton: { path.removeLast() },
+                        onClickEditButton: { path.append(MyPageDestination.homeAddressEdit) }
+                    )
+                    .environmentObject(viewModel)
+                    .navigationBarBackButtonHidden(true)
+                    .enableSwipeBack()
+                case .homeAddressEdit:
+                    
+                }
+            }
         }
     }
 }
@@ -57,6 +76,9 @@ struct MyPageMenuView: View {
     let title: String
     let content1: String
     let content2: String
+    
+    var onClickContent1: () -> Void = {}
+    var onClickContent2: () -> Void = {}
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -71,11 +93,11 @@ struct MyPageMenuView: View {
             
             Spacer().frame(height: 16)
             
-            menuItem(content: content1)
+            menuItem(content: content1, onClickContent: onClickContent1)
             
             Spacer().frame(height: 20)
             
-            menuItem(content: content2)
+            menuItem(content: content2, onClickContent: onClickContent2)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
@@ -85,7 +107,8 @@ struct MyPageMenuView: View {
     
     @ViewBuilder
     private func menuItem(
-        content: String
+        content: String,
+        onClickContent: @escaping () -> Void = {}
     ) -> some View {
         HStack {
             Text(content)
@@ -101,5 +124,9 @@ struct MyPageMenuView: View {
                 .frame(width: 20, height: 20)
         }
         .padding(.horizontal, 20)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onClickContent()
+        }
     }
 }
