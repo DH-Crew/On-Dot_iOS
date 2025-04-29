@@ -8,6 +8,32 @@
 import SwiftUI
 
 final class MyPageViewModel: ObservableObject {
+    private let locationRepository: LocationRepository
+    
+    init(
+        locationRepository: LocationRepository = LocationRepositoryImpl()
+    ) {
+        self.locationRepository = locationRepository
+    }
+    
     // MARK: - HomeAddressSettingView State
     var homeAddress: HomeAddressInfo = .placeholder
+    
+    // MARK: - HomeAddressEditView State
+    @Published var addressInput: String = ""
+    @Published var searchResult: [LocationInfo] = []
+    @Published var selectedLocation: LocationInfo = .placeholder
+    
+    // MARK: - HomeAddressEditView Handler
+    func onValueChanged(newValue: String) async {
+        do {
+            let response = try await locationRepository.searchLocation(query: newValue)
+            
+            await MainActor.run {
+                searchResult = response
+            }
+        } catch {
+            print("Search Location Failed: \(error)")
+        }
+    }
 }
