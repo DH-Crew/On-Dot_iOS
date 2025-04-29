@@ -57,11 +57,10 @@ struct OnDotTabView: View {
                 }
                 .tag(0)
                 
-                HomeView(
-                    navigateToGeneralScheduleCreateView: { }
+                MyPageView(
                 )
                 .tabItem {
-                    Label("", image: selectedTab == 1 ? "ic_settings_selected" : "ic_settings_unselected")
+                    Label("", image: selectedTab == 1 ? "ic_my_selected" : "ic_my_unselected")
                 }
                 .tag(1)
             }
