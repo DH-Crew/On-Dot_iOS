@@ -17,7 +17,7 @@ struct DefaultMapSettingView: View {
             Color.black.ignoresSafeArea()
             Color.gray900.ignoresSafeArea()
             
-            VStack {
+            VStack(alignment: .leading, spacing: 0) {
                 TopBar(
                     title: "길 안내 지도 설정",
                     image: "ic_back",
