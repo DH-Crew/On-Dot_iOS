@@ -24,6 +24,9 @@ final class MyPageViewModel: ObservableObject {
     @Published var searchResult: [LocationInfo] = []
     @Published var selectedLocation: LocationInfo = .placeholder
     
+    // MARK: - DefaultMapSettingView State
+    @Published var selectedMapType: MapProvider.MapType = .naver
+    
     // MARK: - HomeAddressEditView Handler
     func onValueChanged(newValue: String) async {
         do {
