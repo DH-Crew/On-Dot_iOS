@@ -65,7 +65,12 @@ struct MyPageView: View {
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()
                 case .homeAddressEdit:
-                    
+                    HomeAddressEditView(
+                        onClickBackButton: { path.removeLast() }
+                    )
+                    .environmentObject(viewModel)
+                    .navigationBarBackButtonHidden(true)
+                    .enableSwipeBack()
                 }
             }
         }
