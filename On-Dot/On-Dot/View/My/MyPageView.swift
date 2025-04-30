@@ -56,7 +56,7 @@ struct MyPageView: View {
                         title: "계정",
                         content1: "회원탈퇴",
                         content2: "로그아웃",
-                        onClickContent1: {},
+                        onClickContent1: { path.append(MyPageDestination.withdrawal) },
                         onClickContent2: { viewModel.showLogoutDialog = true }
                     )
                     
@@ -67,6 +67,10 @@ struct MyPageView: View {
                 
                 if viewModel.showLogoutDialog {
                     OnDotDialog(
+                        title: "로그아웃",
+                        content: "정말 로그아웃 하시겠어요?",
+                        positiveButtonText: "네",
+                        negativeButtonText: "아니요",
                         onClickBtnPositive: { viewModel.showLogoutDialog = false },
                         onClickBtnNegative: { viewModel.showLogoutDialog = false },
                         onDismissRequest: { viewModel.showLogoutDialog = false }
@@ -80,6 +84,7 @@ struct MyPageView: View {
                         onClickBackButton: { path.removeLast() },
                         onClickEditButton: { path.append(MyPageDestination.homeAddressEdit) }
                     )
+                    .toolbar(.hidden, for: .tabBar)
                     .environmentObject(viewModel)
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()
@@ -87,6 +92,7 @@ struct MyPageView: View {
                     HomeAddressEditView(
                         onClickBackButton: { path.removeLast() }
                     )
+                    .toolbar(.hidden, for: .tabBar)
                     .environmentObject(viewModel)
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()
@@ -94,6 +100,15 @@ struct MyPageView: View {
                     DefaultMapSettingView(
                         onClickBackButton: { path.removeLast() }
                     )
+                    .toolbar(.hidden, for: .tabBar)
+                    .environmentObject(viewModel)
+                    .navigationBarBackButtonHidden(true)
+                    .enableSwipeBack()
+                case .withdrawal:
+                    AccountWithdrawalView(
+                        onClickBackButton: { path.removeLast() }
+                    )
+                    .toolbar(.hidden, for: .tabBar)
                     .environmentObject(viewModel)
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()
