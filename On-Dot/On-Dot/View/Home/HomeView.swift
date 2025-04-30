@@ -133,9 +133,6 @@ struct ScheduleAlarmListView: View {
                             },
                             onItemSelected: onScheduleSelected
                         )
-                        .onTapGesture {
-                            onScheduleSelected(item.id)
-                        }
                         
                         Spacer().frame(height: 20)
                     }
