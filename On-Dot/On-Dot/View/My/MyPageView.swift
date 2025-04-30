@@ -42,7 +42,7 @@ struct MyPageView: View {
                         content2: "서비스 이용약관",
                         content3: "개인정보 처리 방침",
                         onClickContent1: {
-                            if let url = URL(string: "http://pf.kakao.com/_xfdLfn/chat") {
+                            if let url = URL(string: viewModel.customerServiceChatLink) {
                                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
                             }
                         },
@@ -90,12 +90,12 @@ struct MyPageView: View {
                 }
             }
             .fullScreenCover(isPresented: $viewModel.isPolicyViewPresented) {
-                if let url = URL(string: "https://ondotdh.notion.site/Ondot-1e1d775a8a04802495c7cc44cac766cc?pvs=4") {
+                if let url = URL(string: viewModel.privacyPolicyLink) {
                     WebViewScreen(url: url)
                 }
             }
             .fullScreenCover(isPresented: $viewModel.isTermsViewPresented) {
-                if let url = URL(string: "https://ondotdh.notion.site/Ondot-1e1d775a8a04808782acc823d631d74b?pvs=4") {
+                if let url = URL(string: viewModel.termsLink) {
                     WebViewScreen(url: url)
                 }
             }

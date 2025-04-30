@@ -19,6 +19,9 @@ final class MyPageViewModel: ObservableObject {
     // MARK: - MyPageView State
     @Published var isPolicyViewPresented: Bool = false
     @Published var isTermsViewPresented: Bool = false
+    let customerServiceChatLink = "http://pf.kakao.com/_xfdLfn/chat"
+    let privacyPolicyLink = "https://ondotdh.notion.site/Ondot-1e1d775a8a04802495c7cc44cac766cc?pvs=4"
+    let termsLink = "https://ondotdh.notion.site/Ondot-1e1d775a8a04808782acc823d631d74b?pvs=4"
     
     // MARK: - HomeAddressSettingView State
     var homeAddress: HomeAddressInfo = .placeholder
