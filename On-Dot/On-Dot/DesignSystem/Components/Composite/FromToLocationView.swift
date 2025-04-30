@@ -95,6 +95,7 @@ struct FromToLocationView: View {
                     .onChange(of: content.wrappedValue) { newValue in
                         onValueChanged(newValue)
                     }
+                    .disabled(isConfirmMode)
                     .frame(maxWidth: .infinity)
                     .lineLimit(1)
                     .truncationMode(.tail)
