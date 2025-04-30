@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ConfirmEditScheduleView: View {
+    @State private var showDeleteScheduleDialog: Bool = false
     @Binding var scheduleTitle: String
     @Binding var lastFocusedField: FocusField
     @Binding var fromLocation: String
@@ -23,6 +24,7 @@ struct ConfirmEditScheduleView: View {
     
     var onClickCreateButton: () -> Void
     var onClickBackButton: () -> Void
+    var onClickDeleteButton: () -> Void = {}
     
     var body: some View {
         ZStack {
@@ -38,7 +40,7 @@ struct ConfirmEditScheduleView: View {
                             selectedDate: selectedDate,
                             selectedTime: selectedTime,
                             selectedWeekdays: selectedWeekdays,
-                            isConfirmMode: isConfirmMode,
+                            isConfirmMode: true,
                             backgroundColor: .green900
                         )
                         
@@ -47,7 +49,7 @@ struct ConfirmEditScheduleView: View {
                             toLocation: $toLocation,
                             lastFocusedField: $lastFocusedField,
                             focusedField: $focusedField,
-                            isConfirmMode: isConfirmMode,
+                            isConfirmMode: true,
                             backgroundColor: .green900,
                             closeButtonColor: .green700
                         )
@@ -73,17 +75,46 @@ struct ConfirmEditScheduleView: View {
                         type: .preparation,
                         alarmInfo: preparationAlarm
                     )
+                    
+                    if !isConfirmMode {
+                        Spacer().frame(height: 32)
+                        
+                        Button(action: { showDeleteScheduleDialog = true }) {
+                            Text("알람 삭제")
+                                .font(OnDotTypo.bodyLargeSB)
+                                .foregroundStyle(Color.red)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray700)
+                                )
+                                .padding(.horizontal, 22)
+                        }
+                    }
                 }
                 
                 Spacer()
                 
                 OnDotButton(
-                    content: "일정 생성",
+                    content: isConfirmMode ? "일정 생성" : "저장",
                     action: onClickCreateButton,
-                    style: .outline
+                    style: isConfirmMode ? .outline : .green500
                 )
                 .padding(.horizontal, 22)
                 .padding(.bottom, 16)
+            }
+            
+            if showDeleteScheduleDialog {
+                OnDotDialog(
+                    title: "알람 삭제",
+                    content: "정말 알람을 삭제하시겠어요?",
+                    positiveButtonText: "확인",
+                    negativeButtonText: "취소",
+                    onClickBtnPositive: onClickDeleteButton,
+                    onClickBtnNegative: { showDeleteScheduleDialog = false },
+                    onDismissRequest: { showDeleteScheduleDialog = false }
+                )
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -131,7 +162,6 @@ private struct ConfirmEditScheduleTopBar: View {
 }
 
 private struct ConfirmEditAlarmView: View {
-    @State private var isExpanded: Bool = false
     @State var isOn: Bool
     
     let type: AlarmType
@@ -145,19 +175,10 @@ private struct ConfirmEditAlarmView: View {
                     .foregroundStyle(Color.gray50)
                 
                 Spacer()
-                
-                Image(isExpanded ? "ic_arrow_up" : "ic_arrow_down")
-                    .resizable()
-                    .renderingMode(.template)
-                    .frame(width: 20, height: 20)
-                    .foregroundStyle(Color.gray400)
-                    .onTapGesture {
-                        isExpanded.toggle()
-                    }
             }
             .padding(.horizontal, 20)
             
-            HStack(spacing: 8) {
+            HStack(alignment: .lastTextBaseline, spacing: 8) {
                 Text(DateFormatterUtil.formatMeridiem(alarmInfo.triggeredDate ?? Date()))
                     .font(OnDotTypo.titleMediumL)
                     .foregroundStyle(Color.gray50)
@@ -171,24 +192,6 @@ private struct ConfirmEditAlarmView: View {
                 if type == AlarmType.preparation { OnDotToggle(isOn: $isOn) }
             }
             .padding(.horizontal, 20)
-            
-            if isExpanded {
-                Spacer().frame(height: 16)
-                
-                Rectangle().fill(Color.gray600).frame(height: 0.5).frame(maxWidth: .infinity)
-                
-                Spacer().frame(height: 16)
-                
-                menuItem(title: "알람 미루기", content: "\(alarmInfo.snoozeInterval)분")
-                
-                Spacer().frame(height: 16)
-                
-                Rectangle().fill(Color.gray600).frame(height: 0.5).frame(maxWidth: .infinity)
-                
-                Spacer().frame(height: 16)
-                
-                menuItem(title: "사운드", content: "기본")
-            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
