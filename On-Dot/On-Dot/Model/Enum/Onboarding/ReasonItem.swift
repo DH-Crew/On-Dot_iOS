@@ -8,4 +8,6 @@
 struct ReasonItem: Identifiable, Equatable {
     let id: Int
     let content: String
+    
+    static let placeholder = ReasonItem(id: -1, content: "")
 }
