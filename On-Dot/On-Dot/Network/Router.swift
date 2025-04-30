@@ -17,7 +17,7 @@ enum Router: URLRequestConvertible {
     case searchPlace(query: String)
     
     // MARK: Schedule
-    case createSchedule(schedule: ScheduleRequest)
+    case createSchedule(schedule: ScheduleInfo)
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)

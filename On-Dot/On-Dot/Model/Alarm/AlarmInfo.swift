@@ -9,7 +9,7 @@ import Foundation
 
 struct AlarmInfo: Codable {
     let alarmMode: String
-    let isEnabled: Bool?
+    var isEnabled: Bool?
     let triggeredAt: String
     let isSnoozeEnabled: Bool
     let snoozeInterval: Int
@@ -27,7 +27,7 @@ struct AlarmInfo: Codable {
         snoozeCount: 3,
         soundCategory: "BIRD",
         ringTone: "morning.mp3",
-        volume: 7
+        volume: 0.2
     )
 }
 

@@ -11,6 +11,7 @@ struct DateFormatterUtil {
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         return formatter
     }()
     
@@ -78,6 +79,21 @@ struct DateFormatterUtil {
         combinedComponents.second = timeComponents.second
 
         return calendar.date(from: combinedComponents)
+    }
+    
+    // yyyy-MM-dd'T'HH:mm:ss 형태의 문자열 데이터를 Date로 변환하는 메서드
+    static func parseSimpleDate(from string: String?) throws -> Date {
+        guard let input = string, !input.isEmpty else {
+            throw DateParsingError.missingValue
+        }
+
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        if let date = dateFormatter.date(from: input) {
+            return date
+        } else {
+            throw DateParsingError.invalidFormat
+        }
     }
     
     static func parseISO8601Date(from string: String?) throws -> Date {

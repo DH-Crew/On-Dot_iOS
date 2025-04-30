@@ -11,6 +11,7 @@ struct SwipeableItemView: View {
     let item: ScheduleModel
     var onClickToggle: (Bool) -> Void
     var onDelete: () -> Void
+    var onItemSelected: (Int) -> Void = { _ in }
 
     @State private var offsetX: CGFloat = 0
     private let swipeThreshold: CGFloat = -60
@@ -47,7 +48,7 @@ struct SwipeableItemView: View {
                         withAnimation {
                             offsetX = 0
                         }
-                    }
+                    } else if offsetX == 0 { onItemSelected(item.id) }
                 }
                 .gesture(
                     DragGesture()

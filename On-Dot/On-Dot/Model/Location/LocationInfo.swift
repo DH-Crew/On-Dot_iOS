@@ -6,10 +6,10 @@
 //
 
 struct LocationInfo: Codable, Identifiable {
-    let title: String
-    let roadAddress: String
-    let latitude: Double
-    let longitude: Double
+    var title: String
+    var roadAddress: String
+    var latitude: Double
+    var longitude: Double
     
     var id: String { title + roadAddress }
     static let placeholder = LocationInfo(

@@ -12,6 +12,10 @@ final class HomeViewModel: ObservableObject {
     @Published var isShrunk: Bool = false
     @Published var showDeleteCompletionToast: Bool = false
     
+    // MARK: - EditSchedule State
+    @Published var editableSchedule: ScheduleInfo = .placeholder
+    @Published var lastFocusedField: FocusField = .from
+    
     private var recentlyDeleted: (item: ScheduleModel, index: Int)?
     
     init() {
@@ -34,7 +38,7 @@ final class HomeViewModel: ObservableObject {
             showDeleteCompletionToast = true
             
             let summary = scheduleList.map { "(\($0.id): \($0.title))" }.joined(separator: ", ")
-            print("🧾 Schedule List: [\(summary)]")
+            print("Schedule List: [\(summary)]")
         }
     }
     
@@ -43,7 +47,7 @@ final class HomeViewModel: ObservableObject {
             scheduleList[index].isEnabled = isOn
             
             let summary = scheduleList.map { "(\($0.id): \($0.isEnabled))" }.joined(separator: ", ")
-            print("🧾 Schedule List: [\(summary)]")
+            print("Schedule List: [\(summary)]")
         }
     }
     
@@ -54,7 +58,26 @@ final class HomeViewModel: ObservableObject {
         recentlyDeleted = nil
         showDeleteCompletionToast = false
         
-        print("🧾 복원 완료 → \(backup.item.title) at index \(backup.index)")
+        print("복원 완료 → \(backup.item.title) at index \(backup.index)")
     }
+}
 
+extension HomeViewModel {
+    var appointmentDate: Date? {
+        return try? DateFormatterUtil.parseSimpleDate(from: editableSchedule.appointmentAt)
+    }
+    
+    var formattedDate: String {
+        if let date = appointmentDate {
+            return DateFormatterUtil.formatDate(date, separator: "-")
+        }
+        return "-"
+    }
+    
+    var formattedTime: String {
+        if let date = appointmentDate {
+            return DateFormatterUtil.formatTime(date)
+        }
+        return "-"
+    }
 }

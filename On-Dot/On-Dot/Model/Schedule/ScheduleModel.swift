@@ -9,9 +9,9 @@ import Foundation
 
 struct ScheduleModel: Codable, Identifiable {
     let id: Int
-    let title: String
-    let isRepeat: Bool
-    let repeatDays: [Int]
+    var title: String
+    var isRepeat: Bool
+    var repeatDays: [Int]
     let appointmentAt: Date
     let preparationTriggeredAt: Date?
     let departureTriggeredAt: Date
@@ -27,4 +27,15 @@ struct ScheduleModel: Codable, Identifiable {
         case departureTriggeredAt
         case isEnabled
     }
+    
+    static let placeholder = ScheduleModel(
+        id: -1,
+        title: "",
+        isRepeat: false,
+        repeatDays: [],
+        appointmentAt: Date(),
+        preparationTriggeredAt: nil,
+        departureTriggeredAt: Date(),
+        isEnabled: false
+    )
 }
