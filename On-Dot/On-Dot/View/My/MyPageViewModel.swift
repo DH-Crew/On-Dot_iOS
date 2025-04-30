@@ -16,6 +16,10 @@ final class MyPageViewModel: ObservableObject {
         self.locationRepository = locationRepository
     }
     
+    // MARK: - MyPageView State
+    @Published var isPolicyViewPresented: Bool = false
+    @Published var isTermsViewPresented: Bool = false
+    
     // MARK: - HomeAddressSettingView State
     var homeAddress: HomeAddressInfo = .placeholder
     

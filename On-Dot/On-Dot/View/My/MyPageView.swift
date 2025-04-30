@@ -39,7 +39,15 @@ struct MyPageView: View {
                     MyPageMenuView(
                         title: "도움",
                         content1: "고객센터",
-                        content2: "서비스 정책"
+                        content2: "서비스 이용약관",
+                        content3: "개인정보 처리 방침",
+                        onClickContent1: {
+                            if let url = URL(string: "http://pf.kakao.com/_xfdLfn/chat") {
+                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                            }
+                        },
+                        onClickContent2: { viewModel.isPolicyViewPresented = true },
+                        onClickContent3: { viewModel.isTermsViewPresented = true }
                     )
                     
                     Spacer().frame(height: 16)
@@ -81,6 +89,16 @@ struct MyPageView: View {
                     .enableSwipeBack()
                 }
             }
+            .fullScreenCover(isPresented: $viewModel.isPolicyViewPresented) {
+                if let url = URL(string: "https://ondotdh.notion.site/Ondot-1e1d775a8a04802495c7cc44cac766cc?pvs=4") {
+                    WebViewScreen(url: url)
+                }
+            }
+            .fullScreenCover(isPresented: $viewModel.isTermsViewPresented) {
+                if let url = URL(string: "https://ondotdh.notion.site/Ondot-1e1d775a8a04808782acc823d631d74b?pvs=4") {
+                    WebViewScreen(url: url)
+                }
+            }
         }
     }
 }
@@ -89,9 +107,11 @@ struct MyPageMenuView: View {
     let title: String
     let content1: String
     let content2: String
+    var content3: String = ""
     
     var onClickContent1: () -> Void = {}
     var onClickContent2: () -> Void = {}
+    var onClickContent3: () -> Void = {}
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -111,6 +131,12 @@ struct MyPageMenuView: View {
             Spacer().frame(height: 20)
             
             menuItem(content: content2, onClickContent: onClickContent2)
+            
+            if !content3.isEmpty {
+                Spacer().frame(height: 20)
+                
+                menuItem(content: content3, onClickContent: onClickContent3)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
