@@ -55,13 +55,23 @@ struct MyPageView: View {
                     MyPageMenuView(
                         title: "계정",
                         content1: "회원탈퇴",
-                        content2: "로그아웃"
+                        content2: "로그아웃",
+                        onClickContent1: {},
+                        onClickContent2: { viewModel.showLogoutDialog = true }
                     )
                     
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.horizontal, 22)
+                
+                if viewModel.showLogoutDialog {
+                    OnDotDialog(
+                        onClickBtnPositive: { viewModel.showLogoutDialog = false },
+                        onClickBtnNegative: { viewModel.showLogoutDialog = false },
+                        onDismissRequest: { viewModel.showLogoutDialog = false }
+                    )
+                }
             }
             .navigationDestination(for: MyPageDestination.self) { view in
                 switch view {
