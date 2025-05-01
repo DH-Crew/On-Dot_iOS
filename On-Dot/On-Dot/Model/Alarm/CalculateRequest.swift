@@ -13,15 +13,4 @@ struct CalculateRequest: Codable {
     let startLatitude: Double
     let endLongitude: Double
     let endLatitude: Double
-
-    init(date: Date, startLongitude: Double, startLatitude: Double, endLongitude: Double, endLatitude: Double) {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
-        self.appointmentAt = formatter.string(from: date)
-        self.startLongitude = startLongitude
-        self.startLatitude = startLatitude
-        self.endLongitude = endLongitude
-        self.endLatitude = endLatitude
-    }
 }

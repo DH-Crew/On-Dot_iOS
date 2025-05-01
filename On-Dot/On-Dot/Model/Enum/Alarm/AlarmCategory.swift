@@ -6,7 +6,8 @@
 //
 
 enum AlarmCategory: String, CaseIterable, Identifiable {
-    case category1, category2
+    case category1 = "BRIGHT_ENERGY"
+    case category2 = "FAST_INTENSE"
 
     var id: String { rawValue }
 

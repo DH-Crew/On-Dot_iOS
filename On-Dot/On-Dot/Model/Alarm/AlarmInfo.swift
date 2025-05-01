@@ -34,7 +34,7 @@ struct AlarmInfo: Codable {
 extension AlarmInfo {
     var triggeredDate: Date? {
         do {
-            return try DateFormatterUtil.parseISO8601Date(from: triggeredAt)
+            return try DateFormatterUtil.parseSimpleDate(from: triggeredAt)
         } catch {
             print("triggeredDate 파싱 실패: \(error.localizedDescription)")
             return nil

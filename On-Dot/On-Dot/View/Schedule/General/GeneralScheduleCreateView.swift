@@ -77,7 +77,7 @@ struct GeneralScheduleCreateView: View {
                         content: "다음",
                         action: {
                             if isNextButtonEnabled {
-                                path.append(GeneralSchedule.confirm)
+                                path.append(GeneralSchedule.fromToSearch)
                             }
                         },
                         style: isNextButtonEnabled ? .green500 : .gray300
@@ -122,6 +122,9 @@ struct GeneralScheduleCreateView: View {
                         departureAlarm: viewModel.departureAlarm,
                         preparationAlarm: viewModel.preparationAlarm,
                         onClickCreateButton: {
+                            Task {
+                                await viewModel.createSchedule()
+                            }
                             onClickBtnClose()
                         },
                         onClickBackButton: { path.removeLast() }
