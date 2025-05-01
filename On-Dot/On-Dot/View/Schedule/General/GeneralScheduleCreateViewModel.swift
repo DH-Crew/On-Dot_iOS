@@ -164,9 +164,11 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
                 """)
                 return
             }
+            
+            let appointmentAt = DateFormatterUtil.toISO8601String(from: combinedDate)
 
             let request = CalculateRequest(
-                date: combinedDate,
+                appointmentAt: appointmentAt,
                 startLongitude: selectedFromLocation.longitude,
                 startLatitude: selectedFromLocation.latitude,
                 endLongitude: selectedToLocation.longitude,

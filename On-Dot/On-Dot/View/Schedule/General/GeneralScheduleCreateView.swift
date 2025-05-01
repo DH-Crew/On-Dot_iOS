@@ -77,7 +77,7 @@ struct GeneralScheduleCreateView: View {
                         content: "다음",
                         action: {
                             if isNextButtonEnabled {
-                                path.append(GeneralSchedule.confirm)
+                                path.append(GeneralSchedule.fromToSearch)
                             }
                         },
                         style: isNextButtonEnabled ? .green500 : .gray300

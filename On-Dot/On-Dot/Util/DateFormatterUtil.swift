@@ -95,15 +95,10 @@ struct DateFormatterUtil {
             throw DateParsingError.invalidFormat
         }
     }
-    
-    static func parseISO8601Date(from string: String?) throws -> Date {
-        guard let input = string, !input.isEmpty else {
-            throw DateParsingError.missingValue
-        }
-        let formatter = ISO8601DateFormatter()
-        guard let date = formatter.date(from: input) else {
-            throw DateParsingError.invalidFormat
-        }
-        return date
+
+    // Date → "2025-04-16T18:00:00" 문자열
+    static func toISO8601String(from date: Date) -> String {
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        return dateFormatter.string(from: date)
     }
 }
