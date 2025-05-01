@@ -48,19 +48,19 @@ final class OnboardingViewModel: ObservableObject {
     let totalStep = 5
     let alarmLibrary: [AlarmCategory: [AlarmSound]] = [
         .category1: [
-            AlarmSound(name: "Dancing in the Stardust", fileName: "dancing_in_the_stardust.mp3"),
-            AlarmSound(name: "In The City Lights Mist", fileName: "in_the_city_lights_mist.mp3"),
-            AlarmSound(name: "Fractured Love", fileName: "fractured_love.mp3"),
-            AlarmSound(name: "Chasing Lights", fileName: "chasing_lights.mp3"),
-            AlarmSound(name: "Ashes of Us", fileName: "ashes_of_us.mp3"),
-            AlarmSound(name: "Heating Sun", fileName: "heating_sun.mp3")
+            AlarmSound(name: "Dancing in the Stardust", fileName: "dancing_in_the_stardust.mp3", ringTone: "DANCING_IN_THE_STARDUST"),
+            AlarmSound(name: "In The City Lights Mist", fileName: "in_the_city_lights_mist.mp3", ringTone: "IN_THE_CITY_LIGHTS_MIST"),
+            AlarmSound(name: "Fractured Love", fileName: "fractured_love.mp3", ringTone: "FRACTURED_LOVE"),
+            AlarmSound(name: "Chasing Lights", fileName: "chasing_lights.mp3", ringTone: "CHASING_LIGHTS"),
+            AlarmSound(name: "Ashes of Us", fileName: "ashes_of_us.mp3", ringTone: "ASHES_OF_US"),
+            AlarmSound(name: "Heating Sun", fileName: "heating_sun.mp3", ringTone: "HEATING_SUN")
         ],
         .category2: [
-            AlarmSound(name: "Medal", fileName: "medal.mp3"),
-            AlarmSound(name: "Exciting Sports Competitions", fileName: "exciting_sports_competitions.mp3"),
-            AlarmSound(name: "Positive Way", fileName: "positive_way.mp3"),
-            AlarmSound(name: "Energetic Happy & Upbeat Rock Music", fileName: "energetic_happy_amp_upbeat_rock_music.mp3"),
-            AlarmSound(name: "Energy Catcher (A sport rock)", fileName: "energy_catcher_a_sport_rock.mp3")
+            AlarmSound(name: "Medal", fileName: "medal.mp3", ringTone: "MEDAL"),
+            AlarmSound(name: "Exciting Sports Competitions", fileName: "exciting_sports_competitions.mp3", ringTone: "EXCITING_SPORTS_COMPETITIONS"),
+            AlarmSound(name: "Positive Way", fileName: "positive_way.mp3", ringTone: "POSITIVE_WAY"),
+            AlarmSound(name: "Energetic Happy & Upbeat Rock Music", fileName: "energetic_happy_amp_upbeat_rock_music.mp3", ringTone: "ENERGETIC_HAPPY_UPBEAT_ROCK_MUSIC"),
+            AlarmSound(name: "Energy Catcher (A sport rock)", fileName: "energy_catcher_a_sport_rock.mp3", ringTone: "ENERGY_CATCHER")
         ]
     ]
     var currentAlarmList: [AlarmSound] {
@@ -132,8 +132,8 @@ final class OnboardingViewModel: ObservableObject {
                     roadAddress: address,
                     longitude: coordinate.longitude,
                     latitude: coordinate.latitude,
-                    soundCategory: "DEFAULT",
-                    ringTone: "DEFAULT",
+                    soundCategory: selectedCategory.rawValue,
+                    ringTone: selectedSound?.ringTone ?? "",
                     volume: selectedVolume,
                     questions: [
                         OnboardingRequest.Question(questionId: 1, answerId: selectedExpectationItem?.id ?? -1),

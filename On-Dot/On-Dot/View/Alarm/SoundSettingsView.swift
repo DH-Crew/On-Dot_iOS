@@ -103,7 +103,7 @@ private struct CategoryListView: View {
 }
 
 private struct SoundListView: View {
-    @State private var selectedSound: AlarmSound = AlarmSound(name: "", fileName: "")
+    @State private var selectedSound: AlarmSound = AlarmSound(name: "", fileName: "", ringTone: "")
     
     let alarmSoundList: [AlarmSound]
     
