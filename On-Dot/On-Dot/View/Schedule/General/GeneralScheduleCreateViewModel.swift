@@ -10,13 +10,16 @@ import SwiftUI
 final class GeneralScheduleCreateViewModel: ObservableObject {
     private let locationRepository: LocationRepository
     private let alarmRepository: AlarmRepository
+    private let scheduleRepository: ScheduleRepository
     
     init(
         locationRepository: LocationRepository = LocationRepositoryImpl(),
-        alarmRepository: AlarmRepository = AlarmRepositoryImpl()
+        alarmRepository: AlarmRepository = AlarmRepositoryImpl(),
+        scheduleRepository: ScheduleRepository = ScheduleRepositoryImpl()
     ) {
         self.locationRepository = locationRepository
         self.alarmRepository = alarmRepository
+        self.scheduleRepository = scheduleRepository
     }
     
     // MARK: - RepeatSettingView State
@@ -55,6 +58,27 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     @Published var newScheduleTitle: String = "새로운 일정"
     @Published var departureAlarm: AlarmInfo = .placeholder
     @Published var preparationAlarm: AlarmInfo = .placeholder
+    private var appointmentAt: String = ""
+    
+    // MARK: - GeneralScheduleCreateView Handler
+    func createSchedule() async {
+        do {
+            try await scheduleRepository.createSchedule(
+                schedule: ScheduleInfo(
+                    title: newScheduleTitle,
+                    isRepeat: isRepeatOn,
+                    repeatDays: Array(activeWeekdays),
+                    appointmentAt: appointmentAt,
+                    departurePlace: selectedFromLocation,
+                    arrivalPlace: selectedToLocation,
+                    preparationAlarm: preparationAlarm,
+                    departureAlarm: departureAlarm
+                )
+            )
+        } catch {
+            print("일정 생성 실패: \(error)")
+        }
+    }
     
     // MARK: - DateTimeSettingViewHandler
     func onClickToggle() {
@@ -165,7 +189,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
                 return
             }
             
-            let appointmentAt = DateFormatterUtil.toISO8601String(from: combinedDate)
+            appointmentAt = DateFormatterUtil.toISO8601String(from: combinedDate)
 
             let request = CalculateRequest(
                 appointmentAt: appointmentAt,

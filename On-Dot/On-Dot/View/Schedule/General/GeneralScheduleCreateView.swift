@@ -122,6 +122,9 @@ struct GeneralScheduleCreateView: View {
                         departureAlarm: viewModel.departureAlarm,
                         preparationAlarm: viewModel.preparationAlarm,
                         onClickCreateButton: {
+                            Task {
+                                await viewModel.createSchedule()
+                            }
                             onClickBtnClose()
                         },
                         onClickBackButton: { path.removeLast() }

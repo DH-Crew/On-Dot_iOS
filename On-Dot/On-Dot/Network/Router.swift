@@ -67,6 +67,8 @@ enum Router: URLRequestConvertible {
             return try? request.asDictionary()
         case .calculate(let request):
             return try? request.asDictionary()
+        case .createSchedule(let request):
+            return try? request.asDictionary()
         default: return nil
         }
     }
