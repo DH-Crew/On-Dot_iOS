@@ -7,12 +7,13 @@
 
 import Foundation
 
-struct ScheduleModel: Codable, Identifiable {
+struct HomeScheduleInfo: Codable, Identifiable {
     let id: Int
     var title: String
     var isRepeat: Bool
     var repeatDays: [Int]
     let appointmentAt: Date
+    let nextAlarmAt: Date
     let preparationTriggeredAt: Date?
     let departureTriggeredAt: Date
     var isEnabled: Bool
@@ -21,19 +22,21 @@ struct ScheduleModel: Codable, Identifiable {
         case id = "scheduleId"
         case title = "scheduleTitle"
         case isRepeat
-        case repeatDays = "repeatDay"
+        case repeatDays
         case appointmentAt
+        case nextAlarmAt
         case preparationTriggeredAt
         case departureTriggeredAt
         case isEnabled
     }
     
-    static let placeholder = ScheduleModel(
+    static let placeholder = HomeScheduleInfo(
         id: -1,
         title: "",
         isRepeat: false,
         repeatDays: [],
         appointmentAt: Date(),
+        nextAlarmAt: Date(),
         preparationTriggeredAt: nil,
         departureTriggeredAt: Date(),
         isEnabled: false

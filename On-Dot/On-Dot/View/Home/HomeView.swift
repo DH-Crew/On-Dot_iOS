@@ -101,7 +101,7 @@ struct HomeView: View {
 }
 
 struct ScheduleAlarmListView: View {
-    let scheduleList: [ScheduleModel]
+    let scheduleList: [HomeScheduleInfo]
     
     var onClickToggle: (Int, Bool) -> Void
     var onDelete: (Int) -> Void

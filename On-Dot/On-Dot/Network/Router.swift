@@ -18,6 +18,7 @@ enum Router: URLRequestConvertible {
     
     // MARK: Schedule
     case createSchedule(schedule: ScheduleInfo)
+    case getSchedules
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
@@ -29,7 +30,7 @@ enum Router: URLRequestConvertible {
     var method: HTTPMethod {
         switch self {
         case .login, .createSchedule, .calculate: .post
-        case .searchPlace: .get
+        case .searchPlace, .getSchedules: .get
         case .onboarding: .put
         }
     }
@@ -43,7 +44,7 @@ enum Router: URLRequestConvertible {
         case .searchPlace: "/places/search"
             
         // MARK: Schedule
-        case .createSchedule: "/schedules"
+        case .createSchedule, .getSchedules: "/schedules"
             
         // MARK: Member
         case .onboarding: "/members/onboarding"

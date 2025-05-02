@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SwipeableItemView: View {
-    let item: ScheduleModel
+    let item: HomeScheduleInfo
     var onClickToggle: (Bool) -> Void
     var onDelete: () -> Void
     var onItemSelected: (Int) -> Void = { _ in }

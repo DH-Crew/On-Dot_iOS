@@ -8,7 +8,7 @@
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
-    @Published var scheduleList: [ScheduleModel] = []
+    @Published var scheduleList: [HomeScheduleInfo] = []
     @Published var isShrunk: Bool = false
     @Published var showDeleteCompletionToast: Bool = false
     
@@ -16,7 +16,7 @@ final class HomeViewModel: ObservableObject {
     @Published var editableSchedule: ScheduleInfo = .placeholder
     @Published var lastFocusedField: FocusField = .from
     
-    private var recentlyDeleted: (item: ScheduleModel, index: Int)?
+    private var recentlyDeleted: (item: HomeScheduleInfo, index: Int)?
     
     init() {
         loadSampleData()
@@ -24,9 +24,9 @@ final class HomeViewModel: ObservableObject {
     
     private func loadSampleData() {
         scheduleList = [
-            ScheduleModel(id: 1, title: "일정1", isRepeat: false, repeatDays: [], appointmentAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: true),
-            ScheduleModel(id: 2, title: "일정2", isRepeat: false, repeatDays: [], appointmentAt: Date(), preparationTriggeredAt: nil, departureTriggeredAt: Date(), isEnabled: false),
-            ScheduleModel(id: 3, title: "일정3", isRepeat: true, repeatDays: [1, 7], appointmentAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: false)
+            HomeScheduleInfo(id: 1, title: "일정1", isRepeat: false, repeatDays: [], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: true),
+            HomeScheduleInfo(id: 2, title: "일정2", isRepeat: false, repeatDays: [], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: nil, departureTriggeredAt: Date(), isEnabled: false),
+            HomeScheduleInfo(id: 3, title: "일정3", isRepeat: true, repeatDays: [1, 7], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: false)
         ]
     }
     

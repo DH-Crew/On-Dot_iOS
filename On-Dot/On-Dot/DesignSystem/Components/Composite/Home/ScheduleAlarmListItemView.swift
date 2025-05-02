@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ScheduleAlarmListItemView: View {
-    let item: ScheduleModel
+    let item: HomeScheduleInfo
     
     var onClickToggle: (Bool) -> Void
 
@@ -42,7 +42,7 @@ struct ScheduleAlarmListItemView: View {
 }
 
 private struct ScheduleNameDateView: View {
-    var item: ScheduleModel
+    var item: HomeScheduleInfo
     
     var body: some View {
         HStack(alignment: .center) {
