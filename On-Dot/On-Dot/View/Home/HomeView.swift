@@ -35,7 +35,9 @@ struct HomeView: View {
                             viewModel.updateScheduleAlarmEnabled(id: id, isOn: isOn)
                         },
                         onDelete: { id in
-                            viewModel.deleteSchedule(id: id)
+                            Task {
+                                await viewModel.deleteSchedule(id: id)
+                            }
                         },
                         onScheduleSelected: { id in
                             // TODO: 일정 상세 조회 API 호출

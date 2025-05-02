@@ -26,7 +26,6 @@ final class HomeViewModel: ObservableObject {
     ) {
         self.scheduleRepository = scheduleRepository
         
-//        loadSampleData()
         Task {
             await getSchedules()
         }
@@ -53,15 +52,19 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    func deleteSchedule(id: Int) {
-        if let index = scheduleList.firstIndex(where: { $0.id == id }) {
+    func deleteSchedule(id: Int) async {
+        do {
+            guard let index = scheduleList.firstIndex(where: { $0.id == id }) else { return }
+            
             let deletedItem = scheduleList[index]
             recentlyDeleted = (item: deletedItem, index: index)
             scheduleList.remove(at: index)
             showDeleteCompletionToast = true
             
-            let summary = scheduleList.map { "(\($0.id): \($0.title))" }.joined(separator: ", ")
-            print("Schedule List: [\(summary)]")
+            try await scheduleRepository.deleteSchedule(id: id)
+            await getSchedules()
+        } catch {
+            print("일정 삭제 실패: \(error)")
         }
     }
     
