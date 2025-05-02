@@ -28,7 +28,14 @@ final class NetworkManager {
             }
 
             do {
-                return try JSONDecoder().decode(T.self, from: data)
+                let decoder = JSONDecoder()
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+                formatter.locale = Locale(identifier: "ko_KR")
+                decoder.dateDecodingStrategy = .formatted(formatter)
+
+                return try decoder.decode(T.self, from: data)
             } catch {
                 throw error
             }

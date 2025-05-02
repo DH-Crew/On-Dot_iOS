@@ -8,9 +8,12 @@
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
+    private let scheduleRepository: ScheduleRepository
+    
     @Published var scheduleList: [HomeScheduleInfo] = []
     @Published var isShrunk: Bool = false
     @Published var showDeleteCompletionToast: Bool = false
+    @Published var earliestAlarmAt: Date? = nil
     
     // MARK: - EditSchedule State
     @Published var editableSchedule: ScheduleInfo = .placeholder
@@ -18,8 +21,15 @@ final class HomeViewModel: ObservableObject {
     
     private var recentlyDeleted: (item: HomeScheduleInfo, index: Int)?
     
-    init() {
-        loadSampleData()
+    init(
+        scheduleRepository: ScheduleRepository = ScheduleRepositoryImpl()
+    ) {
+        self.scheduleRepository = scheduleRepository
+        
+//        loadSampleData()
+        Task {
+            await getSchedules()
+        }
     }
     
     private func loadSampleData() {
@@ -28,6 +38,19 @@ final class HomeViewModel: ObservableObject {
             HomeScheduleInfo(id: 2, title: "일정2", isRepeat: false, repeatDays: [], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: nil, departureTriggeredAt: Date(), isEnabled: false),
             HomeScheduleInfo(id: 3, title: "일정3", isRepeat: true, repeatDays: [1, 7], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: false)
         ]
+    }
+    
+    private func getSchedules() async {
+        do {
+            let response = try await scheduleRepository.getSchedules()
+            
+            await MainActor.run {
+                scheduleList = response.scheduleList
+                earliestAlarmAt = response.earliestAlarmAt
+            }
+        } catch {
+            print("홈 일정 조회 실패: \(error)")
+        }
     }
     
     func deleteSchedule(id: Int) {

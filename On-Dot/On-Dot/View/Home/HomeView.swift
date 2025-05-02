@@ -25,7 +25,7 @@ struct HomeView: View {
                     
                     Spacer().frame(height: 16)
                     
-                    RemainingTimeView(day: -1, hour: -1, minute: -1)
+                    RemainingTimeView(alarmDate: viewModel.earliestAlarmAt)
                     
                     Spacer().frame(height: 36)
                     
