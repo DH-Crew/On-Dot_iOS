@@ -199,6 +199,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
                 endLatitude: selectedToLocation.latitude
             )
             
+            print("요청값: \(request)")
+            
             let response = try await alarmRepository.calculateAlarm(request: request)
             
             await MainActor.run {
@@ -211,8 +213,9 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     }
     
     // MARK: - ButtonHandler
-    func onClickButton() {
-        
+    func onCalculatingFinished() {
+        fromLocation = fromLocation.isEmpty ? selectedFromLocation.roadAddress : fromLocation
+        toLocation = toLocation.isEmpty ? selectedToLocation.roadAddress : toLocation
     }
     
     func onClickLocationItem(location: LocationInfo) {

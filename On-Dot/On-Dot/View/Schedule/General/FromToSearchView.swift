@@ -79,9 +79,12 @@ struct FromToSearchView: View {
                                 .onTapGesture {
                                     if focusedField == .from {
                                         viewModel.selectedFromLocation = location
+                                        print("selectedFromLocation: \(viewModel.selectedFromLocation)")
                                     } else if focusedField == .to {
                                         viewModel.selectedToLocation = location
+                                        print("selectedToLocation: \(viewModel.selectedToLocation)")
                                     }
+                                    
                                     viewModel.onClickLocationItem(location: location)
                                 }
                             Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
@@ -102,9 +105,6 @@ struct FromToSearchView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onAppear {
-            focusedField = .from
-        }
         .onChange(of: viewModel.isFromLocationSelected) { _ in
             checkIfLocationSelectionCompleted()
         }
