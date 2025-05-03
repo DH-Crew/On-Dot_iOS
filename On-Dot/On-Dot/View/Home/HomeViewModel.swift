@@ -136,12 +136,14 @@ final class HomeViewModel: ObservableObject {
             
             await MainActor.run {
                 editableSchedule = response
-                activeWeekdays = Set(response.repeatDays)
+                activeWeekdays = Set(response.repeatDays.map { $0 - 1 })
                 selectedDate = response.appointmentAt
                 selectedTime = response.appointmentAt
                 meridiem = DateFormatterUtil.formatMeridiem(response.appointmentAt)
                 (hour, minute) = DateFormatterUtil.extractHourAndMinute(from: response.appointmentAt)
             }
+            
+            print("ㄴㄴㄴㄴ activeWeekdays: \(activeWeekdays)")
         } catch {
             print("일정 상세 조회 실패: \(error)")
         }
