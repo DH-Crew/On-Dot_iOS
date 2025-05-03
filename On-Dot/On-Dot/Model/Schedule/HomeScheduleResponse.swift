@@ -12,11 +12,4 @@ struct HomeScheduleResponse: Codable {
     let earliestAlarmAt: Date
     let hasNext: Bool
     let scheduleList: [HomeScheduleInfo]
-    
-    enum CodingKeys: String, CodingKey {
-        case isOnboardingCompleted
-        case earliestAlarmAt = "earliestAlarmTime"
-        case hasNext
-        case scheduleList
-    }
 }
