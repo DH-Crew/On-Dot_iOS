@@ -62,6 +62,14 @@ struct DateFormatterUtil {
         return dateFormatter.string(from: date)
     }
     
+    // 날짜를 시간과 분으로 분리해서 반환 (예: 7, 20)
+    static func extractHourAndMinute(from date: Date) -> (hour: Int, minute: Int) {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+        let hour = components.hour ?? 0
+        let minute = components.minute ?? 0
+        return (hour, minute)
+    }
+    
     /// 첫 번째 Date에서 날짜를 가져오고, 두 번째 Date에서 시간을 가져와 새로운 Date 생성
     static func combineDateAndTime(date: Date, time: Date) -> Date? {
         var calendar = Calendar.current
