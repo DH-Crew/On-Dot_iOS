@@ -90,9 +90,10 @@ struct HomeAddressEditView: View {
                         ForEach(viewModel.searchResult) { location in
                             LocationSearchItemView(keyword: viewModel.addressInput, title: location.title, detail: location.roadAddress)
                                 .onTapGesture {
-                                    // TODO: 집 주소 변경 API 호출
-                                    viewModel.selectedLocation = location
-                                    onClickBackButton()
+                                    Task {
+                                        await viewModel.editHomeAddress(location: location)
+                                        await MainActor.run { onClickBackButton() }
+                                    }
                                 }
                             Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
                         }

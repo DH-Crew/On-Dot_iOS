@@ -8,4 +8,5 @@
 protocol MemberRepository {
     func saveOnboardingInfo(request: OnboardingRequest) async throws -> Void
     func getHomeAddress() async throws -> HomeAddressInfo
+    func editHomeAddress(address: HomeAddressInfo) async throws -> Void
 }

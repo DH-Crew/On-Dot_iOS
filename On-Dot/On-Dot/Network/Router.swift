@@ -26,6 +26,7 @@ enum Router: URLRequestConvertible {
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
     case getHomeAddress
+    case editHomeAddress(address: HomeAddressInfo)
     
     // MARK: Alarm
     case calculate(calculateRequest: CalculateRequest)
@@ -36,6 +37,7 @@ enum Router: URLRequestConvertible {
         case .login, .createSchedule, .calculate: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
+        case .editHomeAddress: .patch
         case .deleteSchedule: .delete
         }
     }
@@ -55,7 +57,7 @@ enum Router: URLRequestConvertible {
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
-        case .getHomeAddress: "/members/home-address"
+        case .getHomeAddress, .editHomeAddress: "/members/home-address"
             
         // MARK: Alarm
         case .calculate: "/alarms/setting"
@@ -80,6 +82,8 @@ enum Router: URLRequestConvertible {
             return try? request.asDictionary()
         case .editSchedule(_, let schedule):
             return try? schedule.asDictionary()
+        case .editHomeAddress(let address):
+            return try? address.asDictionary()
         default: return nil
         }
     }

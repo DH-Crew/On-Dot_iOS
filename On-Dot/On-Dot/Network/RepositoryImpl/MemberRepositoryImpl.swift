@@ -21,4 +21,8 @@ final class MemberRepositoryImpl: MemberRepository {
     func getHomeAddress() async throws -> HomeAddressInfo {
         return try await networkManager.request(type: HomeAddressInfo.self, api: .getHomeAddress)
     }
+    
+    func editHomeAddress(address: HomeAddressInfo) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .editHomeAddress(address: address))
+    }
 }

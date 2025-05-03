@@ -75,4 +75,25 @@ final class MyPageViewModel: ObservableObject {
             print("집 주소 조회 실패: \(error)")
         }
     }
+    
+    func editHomeAddress(location: LocationInfo) async {
+        do {
+            let newAddress = HomeAddressInfo(
+                roadAddress: location.roadAddress,
+                longitude: location.longitude,
+                latitude: location.latitude
+            )
+            
+            try await memberRepository.editHomeAddress(
+                address: newAddress
+            )
+            
+            await MainActor.run {
+                homeAddress = newAddress
+                addressInput = ""
+            }
+        } catch {
+            print("집 주소 수정 실패: \(error)")
+        }
+    }
 }
