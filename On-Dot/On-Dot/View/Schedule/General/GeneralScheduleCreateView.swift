@@ -107,9 +107,11 @@ struct GeneralScheduleCreateView: View {
                 case .calculate:
                     DepartureTimeCalculatingView(
                         onCalculatingFinished: {
-                            viewModel.onCalculatingFinished()
-                            path.removeLast()
-                            path.append(GeneralSchedule.confirm)
+                            Task { @MainActor in
+                                viewModel.onCalculatingFinished()
+                                path.removeLast()
+                                path.append(GeneralSchedule.confirm)
+                            }
                         }
                     )
                     .navigationBarBackButtonHidden(true)
