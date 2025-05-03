@@ -63,11 +63,13 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     // MARK: - GeneralScheduleCreateView Handler
     func createSchedule() async {
         do {
+            let repeatDays = activeWeekdays.map { $0 + 1 }.sorted()
+            
             try await scheduleRepository.createSchedule(
                 schedule: ScheduleInfo(
                     title: newScheduleTitle,
                     isRepeat: isRepeatOn,
-                    repeatDays: Array(activeWeekdays),
+                    repeatDays: repeatDays,
                     appointmentAt: appointmentAt,
                     departurePlace: selectedFromLocation,
                     arrivalPlace: selectedToLocation,
@@ -176,9 +178,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     func onLocationSelected() async {
         do {
             guard
-                let date = selectedDate,
                 let time = selectedTime,
-                let combinedDate = DateFormatterUtil.combineDateAndTime(date: date, time: time)
+                let combinedDate = DateFormatterUtil.combineDateAndTime(date: selectedDate ?? Date(), time: time)
             else {
                 print("""
                 ❌ 필수 데이터 부족
