@@ -7,4 +7,5 @@
 
 protocol MemberRepository {
     func saveOnboardingInfo(request: OnboardingRequest) async throws -> Void
+    func getHomeAddress() async throws -> HomeAddressInfo
 }

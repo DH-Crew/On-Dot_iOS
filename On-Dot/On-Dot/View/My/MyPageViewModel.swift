@@ -9,11 +9,18 @@ import SwiftUI
 
 final class MyPageViewModel: ObservableObject {
     private let locationRepository: LocationRepository
+    private let memberRepository: MemberRepository
     
     init(
-        locationRepository: LocationRepository = LocationRepositoryImpl()
+        locationRepository: LocationRepository = LocationRepositoryImpl(),
+        memberRepository: MemberRepository = MemberRepositoryImpl()
     ) {
         self.locationRepository = locationRepository
+        self.memberRepository = memberRepository
+        
+        Task {
+            await getHomeAddress()
+        }
     }
     
     // MARK: - MyPageView State
@@ -54,6 +61,18 @@ final class MyPageViewModel: ObservableObject {
             }
         } catch {
             print("Search Location Failed: \(error)")
+        }
+    }
+    
+    func getHomeAddress() async {
+        do {
+            let response = try await memberRepository.getHomeAddress()
+            
+            await MainActor.run {
+                homeAddress = response
+            }
+        } catch {
+            print("집 주소 조회 실패: \(error)")
         }
     }
 }

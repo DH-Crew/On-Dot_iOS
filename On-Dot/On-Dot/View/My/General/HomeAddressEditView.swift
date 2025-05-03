@@ -86,6 +86,7 @@ struct HomeAddressEditView: View {
                 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 16) {
+                        Spacer().frame(height: 20)
                         ForEach(viewModel.searchResult) { location in
                             LocationSearchItemView(keyword: viewModel.addressInput, title: location.title, detail: location.roadAddress)
                                 .onTapGesture {
