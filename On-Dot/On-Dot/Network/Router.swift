@@ -20,6 +20,7 @@ enum Router: URLRequestConvertible {
     case createSchedule(schedule: ScheduleInfo)
     case getSchedules
     case deleteSchedule(scheduleId: Int)
+    case getScheduleDetail(scheduleId: Int)
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
@@ -31,7 +32,7 @@ enum Router: URLRequestConvertible {
     var method: HTTPMethod {
         switch self {
         case .login, .createSchedule, .calculate: .post
-        case .searchPlace, .getSchedules: .get
+        case .searchPlace, .getSchedules, .getScheduleDetail: .get
         case .onboarding: .put
         case .deleteSchedule: .delete
         }
@@ -47,7 +48,7 @@ enum Router: URLRequestConvertible {
             
         // MARK: Schedule
         case .createSchedule, .getSchedules: "/schedules"
-        case .deleteSchedule(let scheduleId): "/schedules/\(scheduleId)"
+        case .deleteSchedule(let scheduleId), .getScheduleDetail(let scheduleId): "/schedules/\(scheduleId)"
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
@@ -125,7 +126,16 @@ enum Router: URLRequestConvertible {
 
 extension Encodable {
     func asDictionary() throws -> [String: Any] {
-        let data = try JSONEncoder().encode(self)
+        let encoder = JSONEncoder()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        encoder.dateEncodingStrategy = .formatted(formatter)
+        
+        let data = try encoder.encode(self)
         let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
         guard let result = dictionary as? [String: Any] else {
             throw RequestError.decode

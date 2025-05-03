@@ -8,7 +8,7 @@
 import Foundation
 
 struct CalculateRequest: Codable {
-    let appointmentAt: String
+    let appointmentAt: Date
     let startLongitude: Double
     let startLatitude: Double
     let endLongitude: Double

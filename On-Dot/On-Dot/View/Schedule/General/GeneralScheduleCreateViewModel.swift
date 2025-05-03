@@ -58,7 +58,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     @Published var newScheduleTitle: String = "새로운 일정"
     @Published var departureAlarm: AlarmInfo = .placeholder
     @Published var preparationAlarm: AlarmInfo = .placeholder
-    private var appointmentAt: String = ""
+    private var appointmentAt: Date = Date()
     
     // MARK: - GeneralScheduleCreateView Handler
     func createSchedule() async {
@@ -189,7 +189,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
                 return
             }
             
-            appointmentAt = DateFormatterUtil.toISO8601String(from: combinedDate)
+            appointmentAt = combinedDate
 
             let request = CalculateRequest(
                 appointmentAt: appointmentAt,

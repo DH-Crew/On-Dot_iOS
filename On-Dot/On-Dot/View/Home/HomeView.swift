@@ -98,6 +98,11 @@ struct HomeView: View {
                     .enableSwipeBack()
                 }
             }
+            .onAppear {
+                Task {
+                    await viewModel.getSchedules()
+                }
+            }
         }
     }
 }

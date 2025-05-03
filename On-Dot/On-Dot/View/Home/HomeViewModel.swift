@@ -25,10 +25,6 @@ final class HomeViewModel: ObservableObject {
         scheduleRepository: ScheduleRepository = ScheduleRepositoryImpl()
     ) {
         self.scheduleRepository = scheduleRepository
-        
-        Task {
-            await getSchedules()
-        }
     }
     
     private func loadSampleData() {
@@ -39,7 +35,7 @@ final class HomeViewModel: ObservableObject {
         ]
     }
     
-    private func getSchedules() async {
+    func getSchedules() async {
         do {
             let response = try await scheduleRepository.getSchedules()
             
@@ -54,12 +50,14 @@ final class HomeViewModel: ObservableObject {
     
     func deleteSchedule(id: Int) async {
         do {
-            guard let index = scheduleList.firstIndex(where: { $0.id == id }) else { return }
-            
-            let deletedItem = scheduleList[index]
-            recentlyDeleted = (item: deletedItem, index: index)
-            scheduleList.remove(at: index)
-            showDeleteCompletionToast = true
+            await MainActor.run {
+                guard let index = scheduleList.firstIndex(where: { $0.id == id }) else { return }
+                
+                let deletedItem = scheduleList[index]
+                recentlyDeleted = (item: deletedItem, index: index)
+                scheduleList.remove(at: index)
+                showDeleteCompletionToast = true
+            }
             
             try await scheduleRepository.deleteSchedule(id: id)
             await getSchedules()
@@ -89,21 +87,15 @@ final class HomeViewModel: ObservableObject {
 }
 
 extension HomeViewModel {
-    var appointmentDate: Date? {
-        return try? DateFormatterUtil.parseSimpleDate(from: editableSchedule.appointmentAt)
-    }
+//    var appointmentDate: Date? {
+//        return try? DateFormatterUtil.parseSimpleDate(from: editableSchedule.appointmentAt)
+//    }
     
     var formattedDate: String {
-        if let date = appointmentDate {
-            return DateFormatterUtil.formatDate(date, separator: "-")
-        }
-        return "-"
+        return DateFormatterUtil.formatDate(editableSchedule.appointmentAt, separator: "-")
     }
     
     var formattedTime: String {
-        if let date = appointmentDate {
-            return DateFormatterUtil.formatTime(date)
-        }
-        return "-"
+        return DateFormatterUtil.formatTime(editableSchedule.appointmentAt)
     }
 }
