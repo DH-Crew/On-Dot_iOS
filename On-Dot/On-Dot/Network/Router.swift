@@ -46,7 +46,8 @@ enum Router: URLRequestConvertible {
         case .searchPlace: "/places/search"
             
         // MARK: Schedule
-        case .createSchedule, .getSchedules, .deleteSchedule: "/schedules"
+        case .createSchedule, .getSchedules: "/schedules"
+        case .deleteSchedule(let scheduleId): "/schedules/\(scheduleId)"
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
@@ -86,10 +87,6 @@ enum Router: URLRequestConvertible {
         case .searchPlace(let query):
             return [
                 URLQueryItem(name: "query", value: query)
-            ]
-        case .deleteSchedule(let scheduleId):
-            return [
-                URLQueryItem(name: "scheduleId", value: String(scheduleId))
             ]
         default: return nil
         }
