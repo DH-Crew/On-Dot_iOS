@@ -11,12 +11,13 @@ struct OnDotToastView: View {
     let isDelete: Bool
     var minute: Int = 0
     var dateTime: String = ""
+    var message: String = ""
     
     var onClickBtnRevert: () -> Void = {}
     
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
-            Image(isDelete ? "ic_check_bg_red" : "ic_check_bg_green")
+            Image(isDelete ? "ic_check_bg_red" : message.isEmpty ? "ic_check_bg_green" : "ic_check_bg_red")
                 .resizable()
                 .frame(width: 16, height: 16)
             
@@ -35,9 +36,9 @@ struct OnDotToastView: View {
                         .foregroundStyle(Color.gray200)
                 }
             } else {
-                Text("소요시간이 \(minute)분이 예상되어,\n[\(dateTime)]에 알람이 설정되었습니다.")
+                Text(message.isEmpty ? "소요시간이 \(minute)분이 예상되어,\n[\(dateTime)]에 알람이 설정되었습니다." : message)
                     .font(OnDotTypo.bodyLargeSB)
-                    .foregroundStyle(Color.green700)
+                    .foregroundStyle(message.isEmpty ? Color.green700 : Color.red)
                 
                 Spacer()
             }
@@ -56,6 +57,7 @@ private struct ToastModifier: ViewModifier {
     let isDelete: Bool
     var minute: Int = 0
     var dateTime: String = ""
+    var message: String = ""
     
     var onClickBtnRevert: () -> Void
 
@@ -66,7 +68,7 @@ private struct ToastModifier: ViewModifier {
             if isPresented {
                 VStack {
                     Spacer()
-                    OnDotToastView(isDelete: isDelete, minute: minute, dateTime: dateTime, onClickBtnRevert: onClickBtnRevert)
+                    OnDotToastView(isDelete: isDelete, minute: minute, dateTime: dateTime, message: message, onClickBtnRevert: onClickBtnRevert)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .padding(.bottom, 40)
                         .onAppear {
@@ -86,10 +88,11 @@ extension View {
     func toast(
         isPresented: Binding<Bool>,
         isDelete: Bool,
-        minute: Int,
-        dateTime: String,
-        onClickBtnRevert: @escaping () -> Void
+        minute: Int = 0,
+        dateTime: String = "",
+        message: String = "",
+        onClickBtnRevert: @escaping () -> Void = {}
     ) -> some View {
-        self.modifier(ToastModifier(isPresented: isPresented, isDelete: isDelete, minute: minute, dateTime: dateTime, onClickBtnRevert: onClickBtnRevert))
+        self.modifier(ToastModifier(isPresented: isPresented, isDelete: isDelete, minute: minute, dateTime: dateTime, message: message, onClickBtnRevert: onClickBtnRevert))
     }
 }

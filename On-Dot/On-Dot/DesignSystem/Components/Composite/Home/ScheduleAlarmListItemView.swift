@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ScheduleAlarmListItemView: View {
-    let item: ScheduleModel
+    let item: HomeScheduleInfo
     
     var onClickToggle: (Bool) -> Void
 
@@ -17,8 +17,8 @@ struct ScheduleAlarmListItemView: View {
             ScheduleNameDateView(item: item)
             
             ScheduleTimeAlarmView(
-                meridiem: DateFormatterUtil.formatMeridiem(item.appointmentAt),
-                hourMinute: DateFormatterUtil.formatHourMinute(item.appointmentAt),
+                meridiem: DateFormatterUtil.formatMeridiem(item.departureTriggeredAt),
+                hourMinute: DateFormatterUtil.formatHourMinute(item.departureTriggeredAt),
                 isEnabled: item.isEnabled,
                 onClickToggle: onClickToggle
             )
@@ -42,7 +42,7 @@ struct ScheduleAlarmListItemView: View {
 }
 
 private struct ScheduleNameDateView: View {
-    var item: ScheduleModel
+    var item: HomeScheduleInfo
     
     var body: some View {
         HStack(alignment: .center) {

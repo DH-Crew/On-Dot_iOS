@@ -25,7 +25,7 @@ final class KeychainManager {
             kSecValueData: data
         ] as CFDictionary
         
-        let deleteStatus = SecItemDelete(query)
+        _ = SecItemDelete(query)
         let addStatus = SecItemAdd(query, nil)
         
         if addStatus != errSecSuccess {

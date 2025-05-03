@@ -44,13 +44,6 @@ struct FromToLocationView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-//            Spacer().frame(width: 10)
-            
-//            Image("ic_swap_vertical")
-//                .onTapGesture { swapLocation() }
-//            
-//            Spacer().frame(width: 10)
-            
             VStack(alignment: .leading, spacing: 0) {
                 locationView(image: "ic_from_location", title: "출발지", content: $fromLocation, focusType: .from)
                 Spacer().frame(height: 16)
@@ -120,10 +113,9 @@ struct FromToLocationView: View {
                     Image("ic_close")
                         .resizable()
                         .renderingMode(.template)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 16, height: 16)
                         .foregroundStyle(closeButtonColor)
                 }
-                Spacer().frame(width: 20)
             }
         }
         .frame(maxWidth: .infinity)

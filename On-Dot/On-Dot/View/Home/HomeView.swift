@@ -25,7 +25,7 @@ struct HomeView: View {
                     
                     Spacer().frame(height: 16)
                     
-                    RemainingTimeView(day: -1, hour: -1, minute: -1)
+                    RemainingTimeView(alarmDate: viewModel.earliestAlarmAt)
                     
                     Spacer().frame(height: 36)
                     
@@ -35,11 +35,16 @@ struct HomeView: View {
                             viewModel.updateScheduleAlarmEnabled(id: id, isOn: isOn)
                         },
                         onDelete: { id in
-                            viewModel.deleteSchedule(id: id)
+                            Task {
+                                await viewModel.deleteSchedule(id: id)
+                            }
                         },
                         onScheduleSelected: { id in
-                            // TODO: 일정 상세 조회 API 호출
-                            path.append(HomeViewDestination.edit)
+                            Task {
+                                await MainActor.run { viewModel.editableScheduleId = id }
+                                await viewModel.getScheduleDetail(id: id)
+                                await MainActor.run { path.append(HomeViewDestination.edit) }
+                            }
                         }
                     )
                 }
@@ -79,21 +84,54 @@ struct HomeView: View {
                         lastFocusedField: $viewModel.lastFocusedField,
                         fromLocation: $viewModel.editableSchedule.departurePlace.title,
                         toLocation: $viewModel.editableSchedule.arrivalPlace.title,
-                        selectedDate: viewModel.formattedDate,
-                        selectedTime: viewModel.formattedTime,
-                        selectedWeekdays: Set(viewModel.editableSchedule.repeatDays),
+                        isRepeatOn: $viewModel.editableSchedule.isRepeat,
+                        isChecked: $viewModel.isChecked,
+                        meridiem: $viewModel.meridiem,
+                        hour: $viewModel.hour,
+                        minute: $viewModel.minute,
+                        formattedSelectedDate: viewModel.formattedDate,
+                        formattedSelectedTime: viewModel.formattedTime,
+                        selectedWeekdays: viewModel.activeWeekdays,
                         isConfirmMode: false,
                         departureAlarm: viewModel.editableSchedule.departureAlarm,
                         preparationAlarm: viewModel.editableSchedule.preparationAlarm,
-                        onClickCreateButton: { path.removeLast() },
+                        activeCheckChip: viewModel.activeCheckChip,
+                        selectedDate: viewModel.selectedDate,
+                        selectedTime: viewModel.selectedTime,
+                        referenceDate: viewModel.referenceDate,
+                        onClickCreateButton: {
+                            Task {
+                                await viewModel.editSchedule()
+                                await MainActor.run {
+                                    path.removeLast()
+                                }
+                            }
+                        },
                         onClickBackButton: { path.removeLast() },
                         onClickDeleteButton: {
+                            Task {
+                                await viewModel.deleteSchedule(id: viewModel.editableScheduleId)
+                                viewModel.editableScheduleId = -1
+                            }
                             path.removeLast()
-                        }
+                        },
+                        onClickToggle: { viewModel.onClickToggle() },
+                        onClickCheckTextChip: { index in viewModel.onClickTextCheckChip(index: index) },
+                        onClickTextChip: { newValue in viewModel.onClickTextChip(index: newValue) },
+                        increaseMonth: { viewModel.increaseMonth() },
+                        decreaseMonth: { viewModel.decreaseMonth() },
+                        onClickDate: { date in viewModel.onClickDate(date: date) },
+                        updateSelectedTime: { viewModel.updateSelectedTime() }
                     )
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                     .toolbar(.hidden, for: .tabBar)
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()
+                }
+            }
+            .onAppear {
+                Task {
+                    await viewModel.getSchedules()
                 }
             }
         }
@@ -101,7 +139,7 @@ struct HomeView: View {
 }
 
 struct ScheduleAlarmListView: View {
-    let scheduleList: [ScheduleModel]
+    let scheduleList: [HomeScheduleInfo]
     
     var onClickToggle: (Int, Bool) -> Void
     var onDelete: (Int) -> Void

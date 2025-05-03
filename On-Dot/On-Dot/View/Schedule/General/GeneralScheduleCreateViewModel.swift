@@ -58,16 +58,18 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     @Published var newScheduleTitle: String = "새로운 일정"
     @Published var departureAlarm: AlarmInfo = .placeholder
     @Published var preparationAlarm: AlarmInfo = .placeholder
-    private var appointmentAt: String = ""
+    private var appointmentAt: Date = Date()
     
     // MARK: - GeneralScheduleCreateView Handler
     func createSchedule() async {
         do {
+            let repeatDays = activeWeekdays.map { $0 + 1 }.sorted()
+            
             try await scheduleRepository.createSchedule(
                 schedule: ScheduleInfo(
                     title: newScheduleTitle,
                     isRepeat: isRepeatOn,
-                    repeatDays: Array(activeWeekdays),
+                    repeatDays: repeatDays,
                     appointmentAt: appointmentAt,
                     departurePlace: selectedFromLocation,
                     arrivalPlace: selectedToLocation,
@@ -176,9 +178,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     func onLocationSelected() async {
         do {
             guard
-                let date = selectedDate,
                 let time = selectedTime,
-                let combinedDate = DateFormatterUtil.combineDateAndTime(date: date, time: time)
+                let combinedDate = DateFormatterUtil.combineDateAndTime(date: selectedDate ?? Date(), time: time)
             else {
                 print("""
                 ❌ 필수 데이터 부족
@@ -189,7 +190,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
                 return
             }
             
-            appointmentAt = DateFormatterUtil.toISO8601String(from: combinedDate)
+            appointmentAt = combinedDate
 
             let request = CalculateRequest(
                 appointmentAt: appointmentAt,
@@ -198,6 +199,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
                 endLongitude: selectedToLocation.longitude,
                 endLatitude: selectedToLocation.latitude
             )
+            
+            print("요청값: \(request)")
             
             let response = try await alarmRepository.calculateAlarm(request: request)
             
@@ -211,8 +214,9 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     }
     
     // MARK: - ButtonHandler
-    func onClickButton() {
-        
+    func onCalculatingFinished() {
+        fromLocation = fromLocation.isEmpty ? selectedFromLocation.roadAddress : fromLocation
+        toLocation = toLocation.isEmpty ? selectedToLocation.roadAddress : toLocation
     }
     
     func onClickLocationItem(location: LocationInfo) {

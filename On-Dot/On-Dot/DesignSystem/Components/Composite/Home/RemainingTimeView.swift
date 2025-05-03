@@ -8,25 +8,36 @@
 import SwiftUI
 
 struct RemainingTimeView: View {
-    var day: Int = 0
-    var hour: Int = 0
-    var minute: Int = 0
+    var alarmDate: Date?
     
     var body: some View {
-        Text(formatRemainingTimeText())
+        Text(formattedRemainingTime())
             .font(OnDotTypo.titleMediumSB)
             .foregroundStyle(Color.gray0)
     }
     
-    private func formatRemainingTimeText() -> String {
-        if day == 0 && hour == 0 && minute == 0 {
-            return "곧 알람이 울려요"
-        }
-        
-        if day == -1 && hour == -1 && minute == -1 {
+    private func formattedRemainingTime() -> String {
+        guard let alarmDate else {
             return "등록된 알람이 없어요"
         }
+
+        let now = Date()
+        let interval = alarmDate.timeIntervalSince(now)
         
-        return "\(day)일 \(hour)시간 \(minute)분 후에 울려요"
+        if interval <= 0 {
+            return "곧 알람이 울려요"
+        }
+
+        let totalMinutes = Int(interval) / 60
+        let days = totalMinutes / (24 * 60)
+        let hours = (totalMinutes % (24 * 60)) / 60
+        let minutes = totalMinutes % 60
+
+        if days == 0 && hours == 0 && minutes == 0 {
+            return "곧 알람이 울려요"
+        }
+
+        return "\(days)일 \(hours)시간 \(minutes)분 후에 울려요"
     }
 }
+
