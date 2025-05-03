@@ -41,10 +41,10 @@ struct HomeView: View {
                         },
                         onScheduleSelected: { id in
                             Task {
-                                viewModel.editableScheduleId = id
+                                await MainActor.run { viewModel.editableScheduleId = id }
                                 await viewModel.getScheduleDetail(id: id)
+                                await MainActor.run { path.append(HomeViewDestination.edit) }
                             }
-                            path.append(HomeViewDestination.edit)
                         }
                     )
                 }
