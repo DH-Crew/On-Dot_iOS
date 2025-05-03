@@ -37,8 +37,7 @@ struct OnDotBottomSheet<Content: View>: View {
     }
 }
 
-private On-Dot/On-Dot/DesignSystem/Components/Composite/BottomSheet/OnDotBottomSheet.swift
-struct RoundedCorner: Shape {
+private struct RoundedCorner: Shape {
     var radius: CGFloat
     var corners: UIRectCorner
 
