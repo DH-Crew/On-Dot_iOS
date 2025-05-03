@@ -28,6 +28,7 @@ enum Router: URLRequestConvertible {
     case getHomeAddress
     case editHomeAddress(address: HomeAddressInfo)
     case withdrawal(request: WithdrawalRequest)
+    case editMapProvider(request: MapProvider)
     
     // MARK: Alarm
     case calculate(calculateRequest: CalculateRequest)
@@ -38,7 +39,7 @@ enum Router: URLRequestConvertible {
         case .login, .createSchedule, .calculate, .withdrawal: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
-        case .editHomeAddress: .patch
+        case .editHomeAddress, .editMapProvider: .patch
         case .deleteSchedule: .delete
         }
     }
@@ -60,6 +61,7 @@ enum Router: URLRequestConvertible {
         case .onboarding: "/members/onboarding"
         case .getHomeAddress, .editHomeAddress: "/members/home-address"
         case .withdrawal: "/members/deactivate"
+        case .editMapProvider: "/members/map-provider"
             
         // MARK: Alarm
         case .calculate: "/alarms/setting"
@@ -87,6 +89,8 @@ enum Router: URLRequestConvertible {
         case .editHomeAddress(let address):
             return try? address.asDictionary()
         case .withdrawal(let request):
+            return try? request.asDictionary()
+        case .editMapProvider(let request):
             return try? request.asDictionary()
         default: return nil
         }

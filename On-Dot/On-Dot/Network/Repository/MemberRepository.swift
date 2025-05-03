@@ -10,4 +10,5 @@ protocol MemberRepository {
     func getHomeAddress() async throws -> HomeAddressInfo
     func editHomeAddress(address: HomeAddressInfo) async throws -> Void
     func deleteAccount(request: WithdrawalRequest) async throws -> Void
+    func editMapProvider(request: MapProvider) async throws -> Void
 }

@@ -29,4 +29,8 @@ final class MemberRepositoryImpl: MemberRepository {
     func deleteAccount(request: WithdrawalRequest) async throws {
         _ = try await networkManager.request(type: EmptyResponse.self, api: .withdrawal(request: request))
     }
+    
+    func editMapProvider(request: MapProvider) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .editMapProvider(request: request))
+    }
 }

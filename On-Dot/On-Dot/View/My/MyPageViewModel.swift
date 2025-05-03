@@ -110,4 +110,13 @@ final class MyPageViewModel: ObservableObject {
             print("회원 탈퇴 실패: \(error)")
         }
     }
+    
+    // MARK: - DefaultMapSettingView Handler
+    func editMapProvider() async {
+        do {
+            try await memberRepository.editMapProvider(request: MapProvider(mapProvider: selectedMapType))
+        } catch {
+            print("지도 공급자 변경 실패: \(error)")
+        }
+    }
 }
