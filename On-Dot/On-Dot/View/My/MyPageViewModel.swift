@@ -10,13 +10,16 @@ import SwiftUI
 final class MyPageViewModel: ObservableObject {
     private let locationRepository: LocationRepository
     private let memberRepository: MemberRepository
+    private let authRepository: AuthRepository
     
     init(
         locationRepository: LocationRepository = LocationRepositoryImpl(),
-        memberRepository: MemberRepository = MemberRepositoryImpl()
+        memberRepository: MemberRepository = MemberRepositoryImpl(),
+        authRepository: AuthRepository = AuthRepositoryImpl()
     ) {
         self.locationRepository = locationRepository
         self.memberRepository = memberRepository
+        self.authRepository = authRepository
         
         Task {
             await getHomeAddress()
@@ -50,6 +53,15 @@ final class MyPageViewModel: ObservableObject {
     
     // MARK: - DefaultMapSettingView State
     @Published var selectedMapType: MapProvider.MapType = .naver
+    
+    // MARK: - MyPageView State
+    func logout() async {
+        do {
+            try await authRepository.logout()
+        } catch {
+            print("로그아웃 실패: \(error)")
+        }
+    }
     
     // MARK: - HomeAddressEditView Handler
     func onValueChanged(newValue: String) async {

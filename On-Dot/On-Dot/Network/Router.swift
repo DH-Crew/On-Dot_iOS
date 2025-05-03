@@ -12,6 +12,7 @@ enum Router: URLRequestConvertible {
     
     // MARK: Auth
     case login(provider: String, accessToken: String)
+    case logout
 
     // MARK: Location
     case searchPlace(query: String)
@@ -36,7 +37,7 @@ enum Router: URLRequestConvertible {
     // MARK: -
     var method: HTTPMethod {
         switch self {
-        case .login, .createSchedule, .calculate, .withdrawal: .post
+        case .login, .createSchedule, .calculate, .withdrawal, .logout: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
         case .editHomeAddress, .editMapProvider: .patch
@@ -48,6 +49,7 @@ enum Router: URLRequestConvertible {
         switch self {
         // MARK: Auth
         case .login: "/auth/login/oauth"
+        case .logout: "/auth/logout"
         
         // MARK: Location
         case .searchPlace: "/places/search"

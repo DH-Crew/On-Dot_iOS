@@ -12,6 +12,8 @@ struct MyPageView: View {
     
     @State private var path = NavigationPath()
     
+    var navigateToLoginView: () -> Void
+    
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
@@ -71,7 +73,15 @@ struct MyPageView: View {
                         content: "정말 로그아웃 하시겠어요?",
                         positiveButtonText: "네",
                         negativeButtonText: "아니요",
-                        onClickBtnPositive: { viewModel.showLogoutDialog = false },
+                        onClickBtnPositive: {
+                            Task {
+                                await viewModel.logout()
+                                await MainActor.run {
+                                    viewModel.showLogoutDialog = false
+                                    navigateToLoginView()
+                                }
+                            }
+                        },
                         onClickBtnNegative: { viewModel.showLogoutDialog = false },
                         onDismissRequest: { viewModel.showLogoutDialog = false }
                     )
