@@ -19,8 +19,8 @@ struct DateTimeSettingView: View {
     @Binding var hour: Int
     @Binding var minute: Int
     
-    var onClickSelectedDateView: () -> Void
-    var onClickSelectedTimeView: () -> Void
+    var onClickSelectedDateView: () -> Void = {}
+    var onClickSelectedTimeView: () -> Void = {}
     var increaseMonth: () -> Void
     var decreaseMonth: () -> Void
     var onClickDate: (Date) -> Void

@@ -14,10 +14,10 @@ struct RepeatSettingView: View {
     var activeCheckChip: Int?
     var activeWeekdays: Set<Int>
     
-    var onClickToggle: () -> Void
+    var onClickToggle: () -> Void = {}
     var onClickCheckTextChip: (Int) -> Void
     var onClickTextChip: (Int) -> Void
-    var onClickCheckBox: () -> Void
+    var onClickCheckBox: () -> Void = {}
     
     var body: some View {
         VStack(spacing: 0) {
