@@ -157,7 +157,10 @@ final class HomeViewModel: ObservableObject {
                 }
             }
             
+            guard let time = selectedTime else { return }
+            
             let repeatDays = activeWeekdays.map { $0 + 1 }.sorted()
+            guard let combinedDate = DateFormatterUtil.combineDateAndTime(date: selectedDate ?? Date(), time: time) else { return }
             
             try await scheduleRepository.editSchedule(
                 id: editableScheduleId,
@@ -165,7 +168,7 @@ final class HomeViewModel: ObservableObject {
                     title: editableSchedule.title,
                     isRepeat: editableSchedule.isRepeat,
                     repeatDays: repeatDays,
-                    appointmentAt: selectedDate!,
+                    appointmentAt: combinedDate,
                     departurePlace: editableSchedule.departurePlace,
                     arrivalPlace: editableSchedule.arrivalPlace,
                     preparationAlarm: editableSchedule.preparationAlarm,
