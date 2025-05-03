@@ -80,12 +80,33 @@ struct AccountWithdrawalView: View {
                 
                 OnDotButton(
                     content: "탈퇴하기",
-                    action: { viewModel.showWithdrawalCompletedDialog = true },
+                    action: {
+                        if viewModel.selectedReason.id != -1 {
+                            viewModel.showWithdrawalCompletedDialog = true
+                        }
+                    },
                     style: viewModel.selectedReason.id == -1 && viewModel.withdrawalReason.isEmpty ? .gray300 : .green500
                 )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 22)
+            
+            if viewModel.showWithdrawalCompletedDialog {
+                OnDotDialog(
+                    title: "회원탈퇴 완료",
+                    content: "그동안 온닷을 이용해주셔서\n감사합니다. 더 좋은 서비스를\n제공하기 위해 노력하겠습니다.",
+                    positiveButtonText: "확인",
+                    negativeButtonText: "취소",
+                    onClickBtnPositive: {
+                        Task {
+                            await viewModel.deleteAccount()
+                            await MainActor.run { viewModel.showWithdrawalCompletedDialog = false }
+                        }
+                    },
+                    onClickBtnNegative: { viewModel.showWithdrawalCompletedDialog = false },
+                    onDismissRequest: { viewModel.showWithdrawalCompletedDialog = false }
+                )
+            }
         }
     }
     

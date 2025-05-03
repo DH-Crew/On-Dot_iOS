@@ -96,4 +96,18 @@ final class MyPageViewModel: ObservableObject {
             print("집 주소 수정 실패: \(error)")
         }
     }
+    
+    // MARK: - AccountWithdrawalView Handler
+    func deleteAccount() async {
+        do {
+            let request = WithdrawalRequest(
+                withdrawalReasonId: selectedReason.id,
+                customReason: selectedReason.content
+            )
+            
+            try await memberRepository.deleteAccount(request: request)
+        } catch {
+            print("회원 탈퇴 실패: \(error)")
+        }
+    }
 }
