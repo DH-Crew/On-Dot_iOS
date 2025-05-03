@@ -9,11 +9,21 @@ import SwiftUI
 
 final class MyPageViewModel: ObservableObject {
     private let locationRepository: LocationRepository
+    private let memberRepository: MemberRepository
+    private let authRepository: AuthRepository
     
     init(
-        locationRepository: LocationRepository = LocationRepositoryImpl()
+        locationRepository: LocationRepository = LocationRepositoryImpl(),
+        memberRepository: MemberRepository = MemberRepositoryImpl(),
+        authRepository: AuthRepository = AuthRepositoryImpl()
     ) {
         self.locationRepository = locationRepository
+        self.memberRepository = memberRepository
+        self.authRepository = authRepository
+        
+        Task {
+            await getHomeAddress()
+        }
     }
     
     // MARK: - MyPageView State
@@ -44,6 +54,15 @@ final class MyPageViewModel: ObservableObject {
     // MARK: - DefaultMapSettingView State
     @Published var selectedMapType: MapProvider.MapType = .naver
     
+    // MARK: - MyPageView State
+    func logout() async {
+        do {
+            try await authRepository.logout()
+        } catch {
+            print("로그아웃 실패: \(error)")
+        }
+    }
+    
     // MARK: - HomeAddressEditView Handler
     func onValueChanged(newValue: String) async {
         do {
@@ -54,6 +73,62 @@ final class MyPageViewModel: ObservableObject {
             }
         } catch {
             print("Search Location Failed: \(error)")
+        }
+    }
+    
+    func getHomeAddress() async {
+        do {
+            let response = try await memberRepository.getHomeAddress()
+            
+            await MainActor.run {
+                homeAddress = response
+            }
+        } catch {
+            print("집 주소 조회 실패: \(error)")
+        }
+    }
+    
+    func editHomeAddress(location: LocationInfo) async {
+        do {
+            let newAddress = HomeAddressInfo(
+                roadAddress: location.roadAddress,
+                longitude: location.longitude,
+                latitude: location.latitude
+            )
+            
+            try await memberRepository.editHomeAddress(
+                address: newAddress
+            )
+            
+            await MainActor.run {
+                homeAddress = newAddress
+                addressInput = ""
+            }
+        } catch {
+            print("집 주소 수정 실패: \(error)")
+        }
+    }
+    
+    // MARK: - AccountWithdrawalView Handler
+    func deleteAccount() async {
+        do {
+            let request = WithdrawalRequest(
+                withdrawalReasonId: selectedReason.id,
+                customReason: selectedReason.content
+            )
+            
+            try await memberRepository.deleteAccount(request: request)
+        } catch {
+            print("회원 탈퇴 실패: \(error)")
+        }
+    }
+    
+    // MARK: - DefaultMapSettingView Handler
+    func editMapProvider() async {
+        do {
+            try await memberRepository.editMapProvider(request: MapProvider(mapProvider: selectedMapType))
+        } catch {
+            print("지도 공급자 변경 실패: \(error)")
         }
     }
 }

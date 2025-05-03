@@ -15,4 +15,8 @@ final class AuthRepositoryImpl: AuthRepository {
     func login(provider: String, accessToken: String) async throws -> LoginResponse {
         try await networkManager.request(type: LoginResponse.self, api: .login(provider: provider, accessToken: accessToken))
     }
+    
+    func logout() async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .logout)
+    }
 }

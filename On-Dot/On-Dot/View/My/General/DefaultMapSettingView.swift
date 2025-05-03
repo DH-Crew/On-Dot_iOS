@@ -46,6 +46,16 @@ struct DefaultMapSettingView: View {
                 .frame(maxWidth: .infinity)
                 
                 Spacer()
+                
+                OnDotButton(
+                    content: "저장",
+                    action: {
+                        Task {
+                            await viewModel.editMapProvider()
+                        }
+                    },
+                    style: .green500
+                )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 22)

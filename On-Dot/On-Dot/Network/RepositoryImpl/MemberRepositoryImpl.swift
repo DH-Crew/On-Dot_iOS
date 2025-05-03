@@ -17,4 +17,20 @@ final class MemberRepositoryImpl: MemberRepository {
     func saveOnboardingInfo(request: OnboardingRequest) async throws {
         _ = try await networkManager.request(type: EmptyResponse.self, api: .onboarding(onboardingRequest: request))
     }
+    
+    func getHomeAddress() async throws -> HomeAddressInfo {
+        return try await networkManager.request(type: HomeAddressInfo.self, api: .getHomeAddress)
+    }
+    
+    func editHomeAddress(address: HomeAddressInfo) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .editHomeAddress(address: address))
+    }
+    
+    func deleteAccount(request: WithdrawalRequest) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .withdrawal(request: request))
+    }
+    
+    func editMapProvider(request: MapProvider) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .editMapProvider(request: request))
+    }
 }
