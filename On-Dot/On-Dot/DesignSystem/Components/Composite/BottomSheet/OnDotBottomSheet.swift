@@ -12,6 +12,14 @@ struct OnDotBottomSheet<Content: View>: View {
     
     let content: Content
     
+    init(
+        onDismissRequest: @escaping () -> Void,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.onDismissRequest = onDismissRequest
+        self.content = content()
+    }
+    
     var body: some View {
         ZStack {
             Color.black.opacity(0.4)
@@ -22,9 +30,9 @@ struct OnDotBottomSheet<Content: View>: View {
                 Spacer()
                 
                 content
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: 600)
                     .padding(.horizontal, 22)
-                    .padding(.top, 32)
+                    .padding(.top, 16)
                     .padding(.bottom, 16)
                     .background(
                         Color.gray700
