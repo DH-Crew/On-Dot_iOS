@@ -40,7 +40,9 @@ struct HomeView: View {
                             }
                         },
                         onScheduleSelected: { id in
-                            // TODO: 일정 상세 조회 API 호출
+                            Task {
+                                await viewModel.getScheduleDetail(id: id)
+                            }
                             path.append(HomeViewDestination.edit)
                         }
                     )

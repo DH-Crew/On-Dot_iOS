@@ -25,4 +25,8 @@ final class ScheduleRepositoryImpl: ScheduleRepository {
     func deleteSchedule(id: Int) async throws {
         _ = try await networkManager.request(type: EmptyResponse.self, api: .deleteSchedule(scheduleId: id))
     }
+    
+    func getScheduleDetail(id: Int) async throws -> ScheduleInfo {
+        return try await networkManager.request(type: ScheduleInfo.self, api: .getScheduleDetail(scheduleId: id))
+    }
 }

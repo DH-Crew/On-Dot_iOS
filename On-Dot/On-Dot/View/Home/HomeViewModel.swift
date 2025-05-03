@@ -48,6 +48,18 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
+    func getScheduleDetail(id: Int) async {
+        do {
+            let response = try await scheduleRepository.getScheduleDetail(id: id)
+            
+            await MainActor.run {
+                editableSchedule = response
+            }
+        } catch {
+            print("일정 상세 조회 실패: \(error)")
+        }
+    }
+    
     func deleteSchedule(id: Int) async {
         do {
             await MainActor.run {
@@ -87,10 +99,6 @@ final class HomeViewModel: ObservableObject {
 }
 
 extension HomeViewModel {
-//    var appointmentDate: Date? {
-//        return try? DateFormatterUtil.parseSimpleDate(from: editableSchedule.appointmentAt)
-//    }
-    
     var formattedDate: String {
         return DateFormatterUtil.formatDate(editableSchedule.appointmentAt, separator: "-")
     }
