@@ -84,13 +84,29 @@ struct HomeView: View {
                         lastFocusedField: $viewModel.lastFocusedField,
                         fromLocation: $viewModel.editableSchedule.departurePlace.title,
                         toLocation: $viewModel.editableSchedule.arrivalPlace.title,
-                        selectedDate: viewModel.formattedDate,
-                        selectedTime: viewModel.formattedTime,
-                        selectedWeekdays: Set(viewModel.editableSchedule.repeatDays),
+                        isRepeatOn: $viewModel.editableSchedule.isRepeat,
+                        isChecked: $viewModel.isChecked,
+                        meridiem: $viewModel.meridiem,
+                        hour: $viewModel.hour,
+                        minute: $viewModel.minute,
+                        formattedSelectedDate: viewModel.formattedDate,
+                        formattedSelectedTime: viewModel.formattedTime,
+                        selectedWeekdays: viewModel.activeWeekdays,
                         isConfirmMode: false,
                         departureAlarm: viewModel.editableSchedule.departureAlarm,
                         preparationAlarm: viewModel.editableSchedule.preparationAlarm,
-                        onClickCreateButton: { path.removeLast() },
+                        activeCheckChip: viewModel.activeCheckChip,
+                        selectedDate: viewModel.selectedDate,
+                        selectedTime: viewModel.selectedTime,
+                        referenceDate: viewModel.referenceDate,
+                        onClickCreateButton: {
+                            Task {
+                                await viewModel.editSchedule()
+                                await MainActor.run {
+                                    path.removeLast()
+                                }
+                            }
+                        },
                         onClickBackButton: { path.removeLast() },
                         onClickDeleteButton: {
                             Task {
@@ -98,8 +114,16 @@ struct HomeView: View {
                                 viewModel.editableScheduleId = -1
                             }
                             path.removeLast()
-                        }
+                        },
+                        onClickToggle: { viewModel.onClickToggle() },
+                        onClickCheckTextChip: { index in viewModel.onClickTextCheckChip(index: index) },
+                        onClickTextChip: { newValue in viewModel.onClickTextChip(index: newValue) },
+                        increaseMonth: { viewModel.increaseMonth() },
+                        decreaseMonth: { viewModel.decreaseMonth() },
+                        onClickDate: { date in viewModel.onClickDate(date: date) },
+                        updateSelectedTime: { viewModel.updateSelectedTime() }
                     )
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                     .toolbar(.hidden, for: .tabBar)
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()

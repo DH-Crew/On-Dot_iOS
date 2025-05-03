@@ -119,17 +119,28 @@ struct GeneralScheduleCreateView: View {
                         lastFocusedField: $viewModel.lastFocusedField,
                         fromLocation: $viewModel.fromLocation,
                         toLocation: $viewModel.toLocation,
-                        selectedDate: viewModel.formattedSelectedDate,
-                        selectedTime: viewModel.formattedSelectedTime,
+                        isRepeatOn: $viewModel.isRepeatOn,
+                        isChecked: $viewModel.isChecked,
+                        meridiem: $viewModel.meridiem,
+                        hour: $viewModel.hour,
+                        minute: $viewModel.minute,
+                        formattedSelectedDate: viewModel.formattedSelectedDate,
+                        formattedSelectedTime: viewModel.formattedSelectedTime,
                         selectedWeekdays: viewModel.activeWeekdays,
                         isConfirmMode: true,
                         departureAlarm: viewModel.departureAlarm,
                         preparationAlarm: viewModel.preparationAlarm,
+                        activeCheckChip: viewModel.activeCheckChip,
+                        selectedDate: viewModel.selectedDate,
+                        selectedTime: viewModel.selectedTime,
+                        referenceDate: viewModel.referenceDate,
                         onClickCreateButton: {
                             Task {
                                 await viewModel.createSchedule()
+                                await MainActor.run {
+                                    onClickBtnClose()
+                                }
                             }
-                            onClickBtnClose()
                         },
                         onClickBackButton: { path.removeLast() }
                     )

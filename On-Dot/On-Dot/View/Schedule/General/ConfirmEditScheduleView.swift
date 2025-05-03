@@ -9,22 +9,42 @@ import SwiftUI
 
 struct ConfirmEditScheduleView: View {
     @State private var showDeleteScheduleDialog: Bool = false
+    @State private var showDateBottomSheet: Bool = false
+    @State private var showTimeBottomSheet: Bool = false
+    @State private var showEmptyDateToast: Bool = false
     @Binding var scheduleTitle: String
     @Binding var lastFocusedField: FocusField
     @Binding var fromLocation: String
     @Binding var toLocation: String
+    @Binding var isRepeatOn: Bool
+    @Binding var isChecked: Bool
+    @Binding var meridiem: String
+    @Binding var hour: Int
+    @Binding var minute: Int
     @FocusState private var focusedField: FocusField?
+    @FocusState private var focusState: Bool
     
-    let selectedDate: String?
-    let selectedTime: String
+    let formattedSelectedDate: String?
+    let formattedSelectedTime: String
     let selectedWeekdays: Set<Int>
     let isConfirmMode: Bool
     let departureAlarm: AlarmInfo
     let preparationAlarm: AlarmInfo
+    let activeCheckChip: Int?
+    let selectedDate: Date?
+    let selectedTime: Date?
+    let referenceDate: Date
     
     var onClickCreateButton: () -> Void
     var onClickBackButton: () -> Void
     var onClickDeleteButton: () -> Void = {}
+    var onClickToggle: () -> Void = {}
+    var onClickCheckTextChip: (Int) -> Void = { _ in }
+    var onClickTextChip: (Int) -> Void = { _ in }
+    var increaseMonth: () -> Void = {}
+    var decreaseMonth: () -> Void = {}
+    var onClickDate: (Date) -> Void = { _ in }
+    var updateSelectedTime: () -> Void = {}
     
     var body: some View {
         ZStack {
@@ -32,16 +52,25 @@ struct ConfirmEditScheduleView: View {
             Color.gray900.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                ConfirmEditScheduleTopBar(scheduleTitle: $scheduleTitle, onClickBackButton: onClickBackButton)
+                ConfirmEditScheduleTopBar(scheduleTitle: $scheduleTitle, focusState: $focusState, onClickBackButton: onClickBackButton)
                 
                 ScrollView {
                     VStack(spacing: 16) {
                         SelectedDateTimeView(
-                            selectedDate: selectedDate,
-                            selectedTime: selectedTime,
+                            selectedDate: isRepeatOn ? nil : formattedSelectedDate,
+                            selectedTime: formattedSelectedTime,
                             selectedWeekdays: selectedWeekdays,
                             isConfirmMode: true,
                             backgroundColor: .green900
+                        )
+                        .simultaneousGesture(
+                            TapGesture().onEnded {
+                                if !isConfirmMode {
+                                    withAnimation {
+                                        showDateBottomSheet = true
+                                    }
+                                }
+                            }
                         )
                         
                         FromToLocationView(
@@ -98,7 +127,13 @@ struct ConfirmEditScheduleView: View {
                 
                 OnDotButton(
                     content: isConfirmMode ? "일정 생성" : "저장",
-                    action: onClickCreateButton,
+                    action: {
+                        if selectedDate == nil && selectedWeekdays.isEmpty {
+                            showEmptyDateToast = true
+                        } else {
+                            onClickCreateButton()
+                        }
+                    },
                     style: isConfirmMode ? .outline : .green500
                 )
                 .padding(.horizontal, 22)
@@ -116,13 +151,74 @@ struct ConfirmEditScheduleView: View {
                     onDismissRequest: { showDeleteScheduleDialog = false }
                 )
             }
+            
+            if showDateBottomSheet {
+                OnDotBottomSheet(
+                    onDismissRequest: {
+                        withAnimation {
+                            showDateBottomSheet = false
+                        }
+                    }
+                ) {
+                    VStack {
+                        ScrollView {
+                            RepeatSettingView(
+                                isOn: $isRepeatOn,
+                                isChecked: $isChecked,
+                                activeCheckChip: activeCheckChip,
+                                activeWeekdays: selectedWeekdays,
+                                onClickToggle: onClickToggle,
+                                onClickCheckTextChip: onClickCheckTextChip,
+                                onClickTextChip: onClickTextChip
+                            )
+                            
+                            DateTimeSettingView(
+                                selectedDate: selectedDate,
+                                selectedTime: selectedTime,
+                                referenceDate: referenceDate,
+                                isActiveCalendar: true,
+                                isActiveTimePicker: true,
+                                activeWeekdays: selectedWeekdays,
+                                meridiem: $meridiem,
+                                hour: $hour,
+                                minute: $minute,
+                                increaseMonth: increaseMonth,
+                                decreaseMonth: decreaseMonth,
+                                onClickDate: onClickDate,
+                                updateSelectedTime: updateSelectedTime
+                            )
+                            
+                        }
+                        
+                        Spacer().frame(height: 20)
+                        
+                        OnDotButton(
+                            content: "완료",
+                            action: {
+                                withAnimation {
+                                    showDateBottomSheet = false
+                                }
+                            },
+                            style: .green500
+                        )
+                    }
+                }
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .toast(isPresented: $showEmptyDateToast, isDelete: false, message: "날짜를 선택해주세요")
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded {
+                    if focusState { focusState = false }
+                }
+        )
     }
 }
 
 private struct ConfirmEditScheduleTopBar: View {
     @Binding var scheduleTitle: String
+    @FocusState.Binding var focusState: Bool
     
     var onClickBackButton: () -> Void
     
@@ -139,17 +235,31 @@ private struct ConfirmEditScheduleTopBar: View {
             
             Spacer().frame(width: 20)
             
-            Text(scheduleTitle)
-                .font(OnDotTypo.titleSmallM)
-                .foregroundStyle(Color.gray800)
-            
-            Spacer().frame(width: 4)
-            
-            Image("ic_pencil")
-                .resizable()
-                .renderingMode(.template)
-                .foregroundStyle(Color.gray800)
-                .frame(width: 20, height: 20)
+            HStack(spacing: 4) {
+                ZStack(alignment: .leading) {
+                    if !focusState {
+                        Text(scheduleTitle)
+                            .font(OnDotTypo.titleSmallM)
+                            .foregroundStyle(Color.gray800)
+                    }
+                    TextField("", text: $scheduleTitle)
+                        .focused($focusState)
+                        .font(OnDotTypo.titleSmallM)
+                        .foregroundColor(Color.gray800)
+                        .accentColor(.gray800)
+                        .opacity(focusState ? 1 : 0)
+                        .lineLimit(1)
+                }
+
+                Image("ic_pencil")
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundStyle(Color.gray800)
+                    .frame(width: 20, height: 20)
+                    .onTapGesture {
+                        focusState = true
+                    }
+            }
             
             Spacer()
         }

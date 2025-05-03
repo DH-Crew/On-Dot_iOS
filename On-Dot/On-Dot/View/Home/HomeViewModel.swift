@@ -18,6 +18,18 @@ final class HomeViewModel: ObservableObject {
     // MARK: - EditSchedule State
     @Published var editableSchedule: ScheduleInfo = .placeholder
     @Published var lastFocusedField: FocusField = .from
+    @Published var isChecked: Bool = false
+    @Published var activeCheckChip: Int? = nil
+    @Published var activeWeekdays: Set<Int> = []  // 일(0) ~ 토(6)
+    @Published var referenceDate: Date = Date()
+    @Published var selectedDate: Date? = nil
+    @Published var selectedTime: Date? = nil
+    @Published var meridiem: String = "오전"
+    @Published var hour: Int = 1
+    @Published var minute: Int = 0
+    let fullWeek = Array(0...6)
+    let weekdays = Array(1...5)
+    let weekend = [0, 6]
     var editableScheduleId: Int = -1
     
     private var recentlyDeleted: (item: HomeScheduleInfo, index: Int)?
@@ -26,6 +38,71 @@ final class HomeViewModel: ObservableObject {
         scheduleRepository: ScheduleRepository = ScheduleRepositoryImpl()
     ) {
         self.scheduleRepository = scheduleRepository
+    }
+    
+    // MARK: - DateTimeSettingViewHandler
+    func onClickToggle() {
+        if !editableSchedule.isRepeat {
+            activeCheckChip = nil
+            activeWeekdays.removeAll()
+        } else {
+            selectedDate = nil
+            referenceDate = Date()
+        }
+    }
+    
+    func onClickTextCheckChip(index: Int) {
+        activeCheckChip = index
+        switch index {
+        case 0: activeWeekdays = Set(fullWeek)     // 매일
+        case 1: activeWeekdays = Set(weekdays)     // 평일
+        case 2: activeWeekdays = Set(weekend)      // 주말
+        default: break
+        }
+    }
+    
+    func onClickTextChip(index: Int) {
+        if activeWeekdays.contains(index) {
+            activeWeekdays.remove(index)
+        } else {
+            activeWeekdays.insert(index)
+        }
+        
+        // 요일 수동 변경 시 자동 선택 해제
+        if activeWeekdays == Set(fullWeek) {
+            activeCheckChip = 0
+        } else if activeWeekdays == Set(weekdays) {
+            activeCheckChip = 1
+        } else if activeWeekdays == Set(weekend) {
+            activeCheckChip = 2
+        } else {
+            activeCheckChip = nil
+        }
+    }
+    
+    func increaseMonth() {
+        referenceDate = Calendar.current.date(byAdding: .month, value: +1, to: referenceDate)!
+    }
+    
+    func decreaseMonth() {
+        referenceDate = Calendar.current.date(byAdding: .month, value: -1, to: referenceDate)!
+    }
+    
+    func onClickDate(date: Date) {
+        selectedDate = date
+        referenceDate = date
+    }
+    
+    func updateSelectedTime() {
+        var components = DateComponents()
+        components.hour = meridiem == "오전" ? hour % 12 : (hour % 12 + 12)
+        components.minute = minute
+        
+        let baseDate = selectedTime ?? Date()
+        guard let hour = components.hour, let minute = components.minute else { return }
+        let date = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: baseDate)
+        
+        selectedTime = date
     }
     
     private func loadSampleData() {
@@ -55,6 +132,11 @@ final class HomeViewModel: ObservableObject {
             
             await MainActor.run {
                 editableSchedule = response
+                activeWeekdays = Set(response.repeatDays)
+                selectedDate = response.appointmentAt
+                selectedTime = response.appointmentAt
+                meridiem = DateFormatterUtil.formatMeridiem(response.appointmentAt)
+                (hour, minute) = DateFormatterUtil.extractHourAndMinute(from: response.appointmentAt)
             }
         } catch {
             print("일정 상세 조회 실패: \(error)")
@@ -63,7 +145,27 @@ final class HomeViewModel: ObservableObject {
     
     func editSchedule() async {
         do {
-            try await scheduleRepository.editSchedule(id: editableScheduleId, schedule: editableSchedule)
+            await MainActor.run {
+                if editableSchedule.isRepeat {
+                    selectedDate = Date()
+                }
+            }
+            
+            let repeatDays = activeWeekdays.map { $0 + 1 }.sorted()
+            
+            try await scheduleRepository.editSchedule(
+                id: editableScheduleId,
+                schedule: ScheduleInfo(
+                    title: editableSchedule.title,
+                    isRepeat: editableSchedule.isRepeat,
+                    repeatDays: repeatDays,
+                    appointmentAt: selectedDate!,
+                    departurePlace: editableSchedule.departurePlace,
+                    arrivalPlace: editableSchedule.arrivalPlace,
+                    preparationAlarm: editableSchedule.preparationAlarm,
+                    departureAlarm: editableSchedule.departureAlarm
+                )
+            )
         } catch {
             print("일정 수정 실패: \(error)")
         }
@@ -109,10 +211,18 @@ final class HomeViewModel: ObservableObject {
 
 extension HomeViewModel {
     var formattedDate: String {
-        return DateFormatterUtil.formatDate(editableSchedule.appointmentAt, separator: "-")
+        if let date = selectedDate {
+            return DateFormatterUtil.formatDate(date, separator: "-")
+        } else {
+            return "-"
+        }
     }
     
     var formattedTime: String {
-        return DateFormatterUtil.formatTime(editableSchedule.appointmentAt)
+        if let time = selectedTime {
+            return DateFormatterUtil.formatTime(time)
+        } else {
+            return "-"
+        }
     }
 }
