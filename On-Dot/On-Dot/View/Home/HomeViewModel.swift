@@ -18,6 +18,7 @@ final class HomeViewModel: ObservableObject {
     // MARK: - EditSchedule State
     @Published var editableSchedule: ScheduleInfo = .placeholder
     @Published var lastFocusedField: FocusField = .from
+    var editableScheduleId: Int = -1
     
     private var recentlyDeleted: (item: HomeScheduleInfo, index: Int)?
     

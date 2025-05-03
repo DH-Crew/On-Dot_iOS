@@ -41,6 +41,7 @@ struct HomeView: View {
                         },
                         onScheduleSelected: { id in
                             Task {
+                                viewModel.editableScheduleId = id
                                 await viewModel.getScheduleDetail(id: id)
                             }
                             path.append(HomeViewDestination.edit)
@@ -92,6 +93,10 @@ struct HomeView: View {
                         onClickCreateButton: { path.removeLast() },
                         onClickBackButton: { path.removeLast() },
                         onClickDeleteButton: {
+                            Task {
+                                await viewModel.deleteSchedule(id: viewModel.editableScheduleId)
+                                viewModel.editableScheduleId = -1
+                            }
                             path.removeLast()
                         }
                     )
