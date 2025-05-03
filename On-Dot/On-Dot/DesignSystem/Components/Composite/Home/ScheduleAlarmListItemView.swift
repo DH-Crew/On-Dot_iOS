@@ -17,8 +17,8 @@ struct ScheduleAlarmListItemView: View {
             ScheduleNameDateView(item: item)
             
             ScheduleTimeAlarmView(
-                meridiem: DateFormatterUtil.formatMeridiem(item.appointmentAt),
-                hourMinute: DateFormatterUtil.formatHourMinute(item.appointmentAt),
+                meridiem: DateFormatterUtil.formatMeridiem(item.departureTriggeredAt),
+                hourMinute: DateFormatterUtil.formatHourMinute(item.departureTriggeredAt),
                 isEnabled: item.isEnabled,
                 onClickToggle: onClickToggle
             )
