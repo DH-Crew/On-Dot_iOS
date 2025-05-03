@@ -61,6 +61,14 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
+    func editSchedule() async {
+        do {
+            try await scheduleRepository.editSchedule(id: editableScheduleId, schedule: editableSchedule)
+        } catch {
+            print("일정 수정 실패: \(error)")
+        }
+    }
+    
     func deleteSchedule(id: Int) async {
         do {
             await MainActor.run {

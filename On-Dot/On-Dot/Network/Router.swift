@@ -21,6 +21,7 @@ enum Router: URLRequestConvertible {
     case getSchedules
     case deleteSchedule(scheduleId: Int)
     case getScheduleDetail(scheduleId: Int)
+    case editSchedule(scheduleId: Int, schedule: ScheduleInfo)
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
@@ -33,7 +34,7 @@ enum Router: URLRequestConvertible {
         switch self {
         case .login, .createSchedule, .calculate: .post
         case .searchPlace, .getSchedules, .getScheduleDetail: .get
-        case .onboarding: .put
+        case .onboarding, .editSchedule: .put
         case .deleteSchedule: .delete
         }
     }
@@ -49,6 +50,7 @@ enum Router: URLRequestConvertible {
         // MARK: Schedule
         case .createSchedule, .getSchedules: "/schedules"
         case .deleteSchedule(let scheduleId), .getScheduleDetail(let scheduleId): "/schedules/\(scheduleId)"
+        case .editSchedule(let scheduleId, _): "/schedules/\(scheduleId)"
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
@@ -74,6 +76,8 @@ enum Router: URLRequestConvertible {
             return try? request.asDictionary()
         case .createSchedule(let request):
             return try? request.asDictionary()
+        case .editSchedule(_, let schedule):
+            return try? schedule.asDictionary()
         default: return nil
         }
     }

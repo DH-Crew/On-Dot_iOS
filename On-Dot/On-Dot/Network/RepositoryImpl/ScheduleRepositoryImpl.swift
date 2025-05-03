@@ -29,4 +29,8 @@ final class ScheduleRepositoryImpl: ScheduleRepository {
     func getScheduleDetail(id: Int) async throws -> ScheduleInfo {
         return try await networkManager.request(type: ScheduleInfo.self, api: .getScheduleDetail(scheduleId: id))
     }
+    
+    func editSchedule(id: Int, schedule: ScheduleInfo) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .editSchedule(scheduleId: id, schedule: schedule))
+    }
 }
