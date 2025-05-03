@@ -81,11 +81,15 @@ final class HomeViewModel: ObservableObject {
     }
     
     func increaseMonth() {
-        referenceDate = Calendar.current.date(byAdding: .month, value: +1, to: referenceDate)!
+        if let newDate = Calendar.current.date(byAdding: .month, value: 1, to: referenceDate) {
+            referenceDate = newDate
+        }
     }
     
     func decreaseMonth() {
-        referenceDate = Calendar.current.date(byAdding: .month, value: -1, to: referenceDate)!
+        if let newDate = Calendar.current.date(byAdding: .month, value: -1, to: referenceDate) {
+            referenceDate = newDate
+        }
     }
     
     func onClickDate(date: Date) {
