@@ -26,7 +26,7 @@ struct SelectedDateTimeView: View {
                     ForEach(0..<7, id: \.self) { index in
                         Text(AppConstants.weekdaySymbolsKR[index])
                             .font(OnDotTypo.bodyMediumR)
-                            .foregroundColor(selectedWeekdays.contains(index) ? .gray50 : .gray400)
+                            .foregroundColor(selectedWeekdays.contains(index) ? .gray50 : isConfirmMode ? .green800 : .gray400)
                             .frame(width: 20, height: 24)
                     }
                 }
