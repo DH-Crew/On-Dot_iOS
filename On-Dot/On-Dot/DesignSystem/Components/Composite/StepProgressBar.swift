@@ -13,7 +13,7 @@ struct StepProgressBar: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let barWidth = (geometry.size.width - CGFloat(totalStep - 1) * 4) / CGFloat(totalStep)
+            let barWidth = max(0, (geometry.size.width - CGFloat(totalStep - 1) * 4) / CGFloat(totalStep))
             
             HStack(spacing: 4) {
                 ForEach(0..<totalStep, id: \.self) { index in
