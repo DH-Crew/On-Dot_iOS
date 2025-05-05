@@ -13,7 +13,7 @@ enum Router: URLRequestConvertible {
     // MARK: Auth
     case login(provider: String, accessToken: String)
     case logout
-    case refresh(token: JwtTokenModel)
+    case refresh
 
     // MARK: Location
     case searchPlace(query: String)
@@ -51,7 +51,7 @@ enum Router: URLRequestConvertible {
         // MARK: Auth
         case .login: "/auth/login/oauth"
         case .logout: "/auth/logout"
-        case .refresh: "/auth/refresh"
+        case .refresh: "/auth/reissue"
         
         // MARK: Location
         case .searchPlace: "/places/search"
@@ -74,9 +74,17 @@ enum Router: URLRequestConvertible {
 
     var headers: HTTPHeaders {
         var headers: HTTPHeaders = ["Content-Type": "application/json"]
-        if let token = KeychainManager.shared.readToken(for: "accessToken") {
-            headers.add(name: "Authorization", value: "Bearer \(token)")
+        switch self {
+        case .refresh:
+            if let token = KeychainManager.shared.readToken(for: "refreshToken") {
+                headers.add(name: "Authorization", value: "Bearer \(token)")
+            }
+        default:
+            if let token = KeychainManager.shared.readToken(for: "accessToken") {
+                headers.add(name: "Authorization", value: "Bearer \(token)")
+            }
         }
+        
         return headers
     }
 
@@ -96,8 +104,6 @@ enum Router: URLRequestConvertible {
             return try? request.asDictionary()
         case .editMapProvider(let request):
             return try? request.asDictionary()
-        case .refresh(let token):
-            return try? token.asDictionary()
         default: return nil
         }
     }

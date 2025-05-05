@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct SplashView: View {
-    var onSplashCompleted: () -> Void
+    @ObservedObject private var viewModel = SplashViewModel()
+    
+    var onSplashCompleted: (Bool) -> Void
     
     var body: some View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
             
-            LottieView(name: "Splash", loopMode: .playOnce, onCompleted: onSplashCompleted)
+            LottieView(name: "Splash", loopMode: .playOnce, onCompleted: { onSplashCompleted(viewModel.skipLogin) })
                 .frame(width: 206, height: 40)
         }
     }

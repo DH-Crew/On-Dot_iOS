@@ -72,11 +72,8 @@ final class NetworkManager {
     
     @discardableResult
     func refreshToken() async -> Bool {
-        guard let accessToken = keychainManager.readToken(for: "accessToken") else { return false }
-        guard let refreshToken = keychainManager.readToken(for: "refreshToken") else { return false }
-        
         do {
-            let response = try await AuthRepositoryImpl().refreshToken(request: JwtTokenModel(accessToken: accessToken, refreshToken: refreshToken))
+            let response = try await AuthRepositoryImpl().refreshToken()
             
             KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
             KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
