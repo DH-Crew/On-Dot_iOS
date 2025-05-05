@@ -72,7 +72,7 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 //            object: nil,
 //            userInfo: response.notification.request.content.userInfo
 //        )
-        return []
+        return [.banner, .sound]
     }
 
     // 알림 탭했을 때 (잠금 해제 포함)
