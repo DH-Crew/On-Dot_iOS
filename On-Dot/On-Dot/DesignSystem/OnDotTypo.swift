@@ -20,6 +20,7 @@ struct OnDotTypo {
     
     // Title
     static let titleLargeL: Font = .custom(pretendardLight, size: 42).weight(.light)
+    static let titleLargeM: Font = .custom(pretendardMedium, size: 60).weight(.medium)
     
     static let titleMediumSB: Font = .custom(pretendardSemiBold, size: 24).weight(.semibold)
     static let titleMediumM: Font = .custom(pretendardMedium, size: 24).weight(.medium)

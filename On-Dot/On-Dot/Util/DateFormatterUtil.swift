@@ -48,6 +48,12 @@ struct DateFormatterUtil {
         return dateFormatter.string(from: date)
     }
     
+    /// 날짜를 "M월 d일 h:mm" 형식으로 반환 (예: "6월 13일 7:00")
+    static func formatShortKoreanMonthDay(_ date: Date) -> String {
+        dateFormatter.dateFormat = "M월 d일"
+        return dateFormatter.string(from: date)
+    }
+    
     /// 날짜를 "오전/오후" 형식으로 반환 (예: 오전)
     static func formatMeridiem(_ date: Date) -> String {
         dateFormatter.dateFormat = "a"

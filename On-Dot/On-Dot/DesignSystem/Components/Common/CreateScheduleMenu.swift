@@ -13,10 +13,11 @@ struct CreateScheduleMenu: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            MenuItem(image: "ic_bolt", title: "빠른 일정 생성", action: onClickQuickSchedule)
+//            MenuItem(image: "ic_bolt", title: "빠른 일정 생성", action: onClickQuickSchedule)
             MenuItem(image: "ic_clock", title: "일반 일정 생성", action: onClickGeneralSchedule)
         }
-        .frame(width: 162, height: 92)
+//        .frame(width: 162, height: 92)
+        .frame(width: 162, height: 52)
         .background(Color.gray600)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }

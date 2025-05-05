@@ -48,19 +48,18 @@ final class OnboardingViewModel: ObservableObject {
     let totalStep = 5
     let alarmLibrary: [AlarmCategory: [AlarmSound]] = [
         .category1: [
-            AlarmSound(name: "Dancing in the Stardust", fileName: "dancing_in_the_stardust.mp3", ringTone: "DANCING_IN_THE_STARDUST"),
-            AlarmSound(name: "In The City Lights Mist", fileName: "in_the_city_lights_mist.mp3", ringTone: "IN_THE_CITY_LIGHTS_MIST"),
-            AlarmSound(name: "Fractured Love", fileName: "fractured_love.mp3", ringTone: "FRACTURED_LOVE"),
-            AlarmSound(name: "Chasing Lights", fileName: "chasing_lights.mp3", ringTone: "CHASING_LIGHTS"),
-            AlarmSound(name: "Ashes of Us", fileName: "ashes_of_us.mp3", ringTone: "ASHES_OF_US"),
-            AlarmSound(name: "Heating Sun", fileName: "heating_sun.mp3", ringTone: "HEATING_SUN")
+            AlarmSound(name: "Dancing in the Stardust", fileName: "dancing_in_the_stardust.caf", ringTone: "DANCING_IN_THE_STARDUST"),
+            AlarmSound(name: "In The City Lights Mist", fileName: "in_the_city_lights_mist.caf", ringTone: "IN_THE_CITY_LIGHTS_MIST"),
+            AlarmSound(name: "Fractured Love", fileName: "fractured_love.caf", ringTone: "FRACTURED_LOVE"),
+            AlarmSound(name: "Chasing Lights", fileName: "chasing_lights.caf", ringTone: "CHASING_LIGHTS"),
+            AlarmSound(name: "Ashes of Us", fileName: "ashes_of_us.caf", ringTone: "ASHES_OF_US"),
+            AlarmSound(name: "Heating Sun", fileName: "heating_sun.caf", ringTone: "HEATING_SUN")
         ],
         .category2: [
-            AlarmSound(name: "Medal", fileName: "medal.mp3", ringTone: "MEDAL"),
-            AlarmSound(name: "Exciting Sports Competitions", fileName: "exciting_sports_competitions.mp3", ringTone: "EXCITING_SPORTS_COMPETITIONS"),
-            AlarmSound(name: "Positive Way", fileName: "positive_way.mp3", ringTone: "POSITIVE_WAY"),
-            AlarmSound(name: "Energetic Happy & Upbeat Rock Music", fileName: "energetic_happy_amp_upbeat_rock_music.mp3", ringTone: "ENERGETIC_HAPPY_UPBEAT_ROCK_MUSIC"),
-            AlarmSound(name: "Energy Catcher (A sport rock)", fileName: "energy_catcher_a_sport_rock.mp3", ringTone: "ENERGY_CATCHER")
+            AlarmSound(name: "Medal", fileName: "medal.caf", ringTone: "MEDAL"),
+            AlarmSound(name: "Exciting Sports Competitions", fileName: "exciting_sports_competitions.caf", ringTone: "EXCITING_SPORTS_COMPETITIONS"),
+            AlarmSound(name: "Energetic Happy & Upbeat Rock Music", fileName: "energetic_happy_amp_upbeat_rock_music.caf", ringTone: "ENERGETIC_HAPPY_UPBEAT_ROCK_MUSIC"),
+            AlarmSound(name: "Energy Catcher (A sport rock)", fileName: "energy_catcher_a_sport_rock.caf", ringTone: "ENERGY_CATCHER")
         ]
     ]
     var currentAlarmList: [AlarmSound] {

@@ -124,6 +124,7 @@ final class HomeViewModel: ObservableObject {
             await MainActor.run {
                 scheduleList = response.scheduleList
                 earliestAlarmAt = response.earliestAlarmAt
+                AlarmService.shared.scheduleAlarms(for: scheduleList)
             }
         } catch {
             print("홈 일정 조회 실패: \(error)")

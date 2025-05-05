@@ -24,4 +24,11 @@ final class AppRouter: ObservableObject {
             path.removeLast()
         }
     }
+    
+    func handleNotificationPayload(_ userInfo: [AnyHashable: Any]) {
+        if let target = userInfo["navigate"] as? String, target == "alarmRing", let type = userInfo["type"] as? String {
+            if type == "prep" { state = .preparation }
+            else if type == "depart" { state = .departure }
+        }
+    }
 }

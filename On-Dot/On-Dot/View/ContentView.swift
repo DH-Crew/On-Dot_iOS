@@ -44,8 +44,23 @@ struct ContentView: View {
                 GeneralScheduleCreateView(
                     onClickBtnClose: { router.state = .main }
                 )
+            case .preparation:
+                PreparationAlarmRingView(
+                    onPreparationStarted: { router.state = .splash }
+                )
+            case .departure:
+                DepartureAlarmRingView(
+                    
+                )
             default:
                 Color.clear
+            }
+        }
+        .onAppear {
+            NotificationCenter.default.addObserver(forName: .didReceivePush, object: nil, queue: .main) { notification in
+                if let userInfo = notification.userInfo {
+                    router.handleNotificationPayload(userInfo)
+                }
             }
         }
         .onOpenURL { url in
