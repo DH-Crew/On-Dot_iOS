@@ -95,7 +95,6 @@ struct GeneralScheduleCreateView: View {
                         selectedTime: viewModel.formattedSelectedTime,
                         onClickBack: { path.removeLast() },
                         isLocationSelected: {
-                            path.removeLast()
                             path.append(GeneralSchedule.calculate)
                             Task {
                                 await viewModel.onLocationSelected()
