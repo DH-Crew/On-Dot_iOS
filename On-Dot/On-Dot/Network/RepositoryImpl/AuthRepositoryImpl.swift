@@ -19,4 +19,8 @@ final class AuthRepositoryImpl: AuthRepository {
     func logout() async throws {
         _ = try await networkManager.request(type: EmptyResponse.self, api: .logout)
     }
+    
+    func refreshToken(request: JwtTokenModel) async throws -> JwtTokenModel {
+        try await networkManager.request(type: JwtTokenModel.self, api: .refresh(token: request))
+    }
 }

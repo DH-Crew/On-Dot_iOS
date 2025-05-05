@@ -13,6 +13,7 @@ enum Router: URLRequestConvertible {
     // MARK: Auth
     case login(provider: String, accessToken: String)
     case logout
+    case refresh(token: JwtTokenModel)
 
     // MARK: Location
     case searchPlace(query: String)
@@ -37,7 +38,7 @@ enum Router: URLRequestConvertible {
     // MARK: -
     var method: HTTPMethod {
         switch self {
-        case .login, .createSchedule, .calculate, .withdrawal, .logout: .post
+        case .login, .createSchedule, .calculate, .withdrawal, .logout, .refresh: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
         case .editHomeAddress, .editMapProvider: .patch
@@ -50,6 +51,7 @@ enum Router: URLRequestConvertible {
         // MARK: Auth
         case .login: "/auth/login/oauth"
         case .logout: "/auth/logout"
+        case .refresh: "/auth/refresh"
         
         // MARK: Location
         case .searchPlace: "/places/search"
@@ -94,6 +96,8 @@ enum Router: URLRequestConvertible {
             return try? request.asDictionary()
         case .editMapProvider(let request):
             return try? request.asDictionary()
+        case .refresh(let token):
+            return try? token.asDictionary()
         default: return nil
         }
     }

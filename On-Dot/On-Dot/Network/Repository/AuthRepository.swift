@@ -8,4 +8,5 @@
 protocol AuthRepository {
     func login(provider: String, accessToken: String) async throws -> LoginResponse
     func logout() async throws -> Void
+    func refreshToken(request: JwtTokenModel) async throws -> JwtTokenModel
 }
