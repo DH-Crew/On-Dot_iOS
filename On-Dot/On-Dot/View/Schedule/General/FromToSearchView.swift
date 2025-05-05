@@ -77,10 +77,10 @@ struct FromToSearchView: View {
                         ForEach(viewModel.searchResult) { location in
                             LocationSearchItemView(keyword: viewModel.currentKeyword, title: location.title, detail: location.roadAddress)
                                 .onTapGesture {
-                                    if focusedField == .from {
+                                    if viewModel.lastFocusedField == .from {
                                         viewModel.selectedFromLocation = location
                                         print("selectedFromLocation: \(viewModel.selectedFromLocation)")
-                                    } else if focusedField == .to {
+                                    } else if viewModel.lastFocusedField == .to {
                                         viewModel.selectedToLocation = location
                                         print("selectedToLocation: \(viewModel.selectedToLocation)")
                                     }
