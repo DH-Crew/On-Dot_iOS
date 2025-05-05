@@ -136,7 +136,24 @@ struct OnboardingView: View {
                 }
             }
             .fullScreenCover(isPresented: $showAddressWebView) {
-                AddressWebView(isPresented: $showAddressWebView, address: $viewModel.address)
+                ZStack {
+                    AddressWebView(isPresented: $showAddressWebView, address: $viewModel.address)
+                    
+                    VStack {
+                        Spacer()
+                        
+                        Button(action: {
+                            showAddressWebView = false
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .padding(.bottom, 100)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+                .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             .navigationDestination(for: Onboarding.self) { view in
                 switch view {
