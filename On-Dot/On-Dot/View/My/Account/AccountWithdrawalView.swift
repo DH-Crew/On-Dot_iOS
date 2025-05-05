@@ -11,6 +11,7 @@ struct AccountWithdrawalView: View {
     @EnvironmentObject private var viewModel: MyPageViewModel
     
     var onClickBackButton: () -> Void
+    var navigateToLoginView: () -> Void
     
     var body: some View {
         ZStack {
@@ -100,7 +101,10 @@ struct AccountWithdrawalView: View {
                     onClickBtnPositive: {
                         Task {
                             await viewModel.deleteAccount()
-                            await MainActor.run { viewModel.showWithdrawalCompletedDialog = false }
+                            await MainActor.run {
+                                navigateToLoginView()
+                                viewModel.showWithdrawalCompletedDialog = false
+                            }
                         }
                     },
                     onClickBtnNegative: { viewModel.showWithdrawalCompletedDialog = false },
