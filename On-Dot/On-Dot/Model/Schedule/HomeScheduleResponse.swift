@@ -9,7 +9,7 @@ import Foundation
 
 struct HomeScheduleResponse: Codable {
     let isOnboardingCompleted: Bool
-    let earliestAlarmAt: Date
+    let earliestAlarmAt: Date?
     let hasNext: Bool
     let scheduleList: [HomeScheduleInfo]
 }

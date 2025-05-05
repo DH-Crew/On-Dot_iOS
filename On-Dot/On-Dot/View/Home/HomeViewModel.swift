@@ -123,7 +123,10 @@ final class HomeViewModel: ObservableObject {
             
             await MainActor.run {
                 scheduleList = response.scheduleList
-                earliestAlarmAt = response.earliestAlarmAt
+                
+                if let alarm = response.earliestAlarmAt { earliestAlarmAt = alarm }
+                else if !response.scheduleList.isEmpty { earliestAlarmAt = response.scheduleList[0].nextAlarmAt }
+                
                 AlarmService.shared.scheduleAlarms(for: scheduleList)
             }
         } catch {
