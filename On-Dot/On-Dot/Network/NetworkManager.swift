@@ -10,7 +10,13 @@ import Foundation
 
 final class NetworkManager {
     static let shared = NetworkManager()
-    private init() {}
+    private let keychainManager: KeychainManager
+    
+    private init(
+        keychainManager: KeychainManager = KeychainManager.shared
+    ) {
+        self.keychainManager = keychainManager
+    }
 
     func request<T: Decodable>(type: T.Type, api: Router) async throws -> T {
         let request = try api.asURLRequest()
@@ -42,12 +48,46 @@ final class NetworkManager {
         case .failure(let error):
             if let statusCode = response.response?.statusCode {
                 if statusCode == 401 {
-                    throw RequestError.unauthorized
+                    print("401 Unauthorized: 토큰 갱신 시도")
+                    let didRefresh = await refreshToken()
+                    if didRefresh {
+                        print("토큰 갱신 성공, 재시도 중...")
+                        return try await self.request(type: type, api: api)
+                    } else {
+                        print("토큰 갱신 실패")
+                        throw RequestError.unauthorized
+                    }
                 } else {
                     throw RequestError.unexpectedStatusCode(statusCode)
                 }
             }
+            
+            if let statusCode = response.response?.statusCode {
+                throw RequestError.unexpectedStatusCode(statusCode)
+            }
+            
             throw error
+        }
+    }
+    
+    @discardableResult
+    func refreshToken() async -> Bool {
+        guard let accessToken = keychainManager.readToken(for: "accessToken") else { return false }
+        guard let refreshToken = keychainManager.readToken(for: "refreshToken") else { return false }
+        
+        do {
+            let response = try await AuthRepositoryImpl().refreshToken(request: JwtTokenModel(accessToken: accessToken, refreshToken: refreshToken))
+            
+            KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
+            KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+            
+            print("토큰 갱신 성공")
+            
+            return true
+        } catch {
+            print("토큰 갱신 실패: \(error)")
+            
+            return false
         }
     }
     
