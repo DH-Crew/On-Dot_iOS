@@ -68,16 +68,25 @@ extension LoginViewModel: ASAuthorizationControllerDelegate, ASAuthorizationCont
         didCompleteWithAuthorization authorization: ASAuthorization
     ) {
         guard let appleID = authorization.credential as? ASAuthorizationAppleIDCredential,
-              let data = appleID.identityToken,
-              let tokenString = String(data: data, encoding: .utf8)
+              let data = appleID.identityToken
         else {
             print("AppleIDCredential or token parsing failed")
             return
         }
         
+        guard let authorizationCode = appleID.authorizationCode else { return }
+        guard let authorizationCodeString = String(data: authorizationCode, encoding: .utf8) else { return }
+        
+        let fullName = appleID.fullName
+        let email = appleID.email
+        
+        print("Apple 로그인 성공")
+        print("email: \(email ?? "nil")")
+        print("fullName: \(fullName?.formatted() ?? "nil")")
+        
         // 받은 토큰으로 서버 로그인
         Task {
-            await appleLogin(token: tokenString)
+            await appleLogin(token: authorizationCodeString)
         }
     }
     
