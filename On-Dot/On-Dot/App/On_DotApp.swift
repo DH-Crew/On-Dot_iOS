@@ -100,17 +100,22 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationDelegate()
 
     // 포그라운드 수신 시: 사운드 재생
+    @MainActor
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         AlarmService.shared.playAlarm()
         let ui = notification.request.content.userInfo
-        NotificationCenter.default.post(
-            name: .didReceivePush,
-            object: nil,
-            userInfo: ui
-        )
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(
+                name: .didReceivePush,
+                object: nil,
+                userInfo: ui
+            )
+        }
+        
         AppRouter.shared.handleNotificationPayload(ui)
 
         return [.banner, .sound]
