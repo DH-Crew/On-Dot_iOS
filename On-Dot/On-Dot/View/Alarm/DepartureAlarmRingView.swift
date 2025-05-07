@@ -112,7 +112,10 @@ struct DepartureAlarmRingView: View {
             .padding(.horizontal, 22)
         }
         .onAppear {
-            if isSnoozed { startCountdown() }
+            if isSnoozed {
+                remainingSeconds = interval * 60
+                startCountdown()
+            }
         }
         .onDisappear {
             stopCountdown()
