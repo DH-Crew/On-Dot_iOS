@@ -23,7 +23,7 @@ final class AppRouter: ObservableObject {
         appStorageManager: AppStorageManager = AppStorageManager.shared
     ) {
         self.appStorageManager = appStorageManager
-        self.state = .departure
+        self.state = .splash
         self.isSnoozed = appStorageManager.getIsSnoozed()
         
         if let userInfo = PendingPushManager.shared.userInfo {
