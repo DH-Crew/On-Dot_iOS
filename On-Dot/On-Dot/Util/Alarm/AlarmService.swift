@@ -14,7 +14,7 @@ final class AlarmService {
 
     private var timers: [String: Timer] = [:]  // key = "\(scheduleId)-prep/departure"
 
-    /// 홈뷰에서 스케줄 목록을 받아 호출
+    // 홈뷰에서 스케줄 목록을 받아 호출
     func scheduleAlarms(for schedules: [HomeScheduleInfo]) {
         cancelAll()
 
@@ -22,17 +22,21 @@ final class AlarmService {
             let id = info.id
             // 준비 알람 (Optional)
             if let prepDate = info.preparationTriggeredAt {
+                AppStorageManager.shared.save(info)
                 scheduleTimer(id: id, type: "prep", at: prepDate)
                 scheduleLocalNotification(id: id, type: "prep", at: prepDate)
             }
             // 출발 알람 (필수)
-            let depDate = info.departureTriggeredAt
-            scheduleTimer(id: id, type: "depart", at: depDate)
-            scheduleLocalNotification(id: id, type: "depart", at: depDate)
+            if info.isEnabled {
+                AppStorageManager.shared.save(info)
+                let depDate = info.departureTriggeredAt
+                scheduleTimer(id: id, type: "depart", at: depDate)
+                scheduleLocalNotification(id: id, type: "depart", at: depDate)
+            }
         }
     }
 
-    /// 모든 타이머/노티 취소
+    // 모든 타이머/노티 취소
     func cancelAll() {
         timers.values.forEach { $0.invalidate() }
         timers.removeAll()
@@ -41,7 +45,7 @@ final class AlarmService {
 
     // MARK: - 1) 포그라운드용 Timer
 
-    private func scheduleTimer(id: Int, type: String, at date: Date) {
+    func scheduleTimer(id: Int, type: String, at date: Date) {
         let key = "\(id)-\(type)"
         let interval = date.timeIntervalSinceNow
         guard interval > 0 else { return }
@@ -57,54 +61,58 @@ final class AlarmService {
 
     // MARK: - 2) 백그라운드용 Local Notification
 
-    private func scheduleLocalNotification(id: Int, type: String, at date: Date) {
+    func scheduleLocalNotification(id: Int, type: String, at date: Date) {
         let content = UNMutableNotificationContent()
         content.title = "⏰ \(type == "prep" ? "준비 시간입니다" : "출발 시간입니다")"
         content.body  = ""
-        content.userInfo = ["navigate": "alarmRing", "type": type]
+        content.userInfo = ["navigate": "alarmRing", "type": type, "id": id]
         
         let fileName = AppStorageManager.shared.getSelectedSound() ?? "chasing_lights.caf"
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: fileName))
+        
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
 
-        // identifier를 같게 해두면 중복 스케줄을 덮어쓰기 좋습니다
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date),
+            repeats: false
+        )
+
         let request = UNNotificationRequest(
             identifier: "\(id)-\(type)",
             content: content,
-            trigger: UNCalendarNotificationTrigger(
-                dateMatching: Calendar.current.dateComponents(
-                    [.year, .month, .day, .hour, .minute, .second],
-                    from: date
-                ),
-                repeats: false
-            )
+            trigger: trigger
         )
         
-        print("[알림 등록] \(id)-\(type) → \(date)")
-        
-        UNUserNotificationCenter.current().add(request)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("알림 등록 실패: \(error.localizedDescription)")
+            } else {
+                print("알림 등록 성공: \(id)-\(type) → \(trigger)")
+            }
+        }
     }
 
     // MARK: - 공통 재생 로직
 
     func playAlarm() {
         // 1) 무음 모드 체크
-//        if AppStorageManager.shared.getMuteMode() { return }
-//
-//        // 2) 볼륨, 반복 횟수, 간격
-//        let volume     = AppStorageManager.shared.getSelectedVolume()
-//        let loops      = AppStorageManager.shared.getRepeatCount()?.count ?? 3
-//        let interval   = AppStorageManager.shared.getInterval()?.rawValue ?? 5
-//
-//        // 3) 사운드 파일 결정
-//        let fileName = AppStorageManager.shared.getSelectedSound() ?? "chasing_lights.caf"
-//
-//        AlarmPlayer.shared.setVolume(volume)
-//        AlarmPlayer.shared.play(soundFileName: fileName, numberOfLoops: loops)
-//
-//        // 4) 만약 ‘반복 간격’을 추가로 지원하려면…
-//        guard loops > 0, interval > 0 else { return }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + Double(interval) * Double(loops)) {
-//            AlarmPlayer.shared.play(soundFileName: fileName, numberOfLoops: 0)
-//        }
+        if AppStorageManager.shared.getMuteMode() { return }
+
+        // 2) 볼륨, 반복 횟수, 간격
+        let volume     = AppStorageManager.shared.getSelectedVolume()
+        let loops      = AppStorageManager.shared.getRepeatCount()?.count ?? 3
+        let interval   = AppStorageManager.shared.getInterval()?.rawValue ?? 5
+        
+        // 3) 사운드 파일 결정
+        let fileName = AppStorageManager.shared.getSelectedSound() ?? "chasing_lights.caf"
+        
+        print("volume: \(volume)")
+        print("loops: \(loops)")
+        print("interval: \(interval)")
+        print("fileName: \(fileName)")
+        
+        AlarmPlayer.shared.play(soundFileName: fileName, numberOfLoops: 0)
+        AlarmPlayer.shared.setVolume(volume)
     }
 }
