@@ -87,6 +87,7 @@ struct PreparationAlarmRingView: View {
                         )
                         .onTapGesture {
                             onClickDelayButton()
+                            startCountdown()
                         }
                     
                     Spacer().frame(height: 140)
@@ -105,12 +106,6 @@ struct PreparationAlarmRingView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, 22)
-        }
-        .onAppear {
-            if isSnoozed {
-                remainingSeconds = interval * 60
-                startCountdown()
-            }
         }
         .onDisappear {
             stopCountdown()
