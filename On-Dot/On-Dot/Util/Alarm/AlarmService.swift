@@ -22,13 +22,13 @@ final class AlarmService {
             let id = info.id
             // 준비 알람 (Optional)
             if let prepDate = info.preparationTriggeredAt {
-                AppStorageManager.shared.save(info)
+                AppStorageManager.shared.saveSchedule(info)
                 scheduleTimer(id: id, type: "prep", at: prepDate)
                 scheduleLocalNotification(id: id, type: "prep", at: prepDate)
             }
             // 출발 알람 (필수)
             if info.isEnabled {
-                AppStorageManager.shared.save(info)
+                AppStorageManager.shared.saveSchedule(info)
                 let depDate = info.departureTriggeredAt
                 scheduleTimer(id: id, type: "depart", at: depDate)
                 scheduleLocalNotification(id: id, type: "depart", at: depDate)
