@@ -17,12 +17,14 @@ final class AppRouter: ObservableObject {
     @Published var repeatCount: Int = -1
     @Published var alarmType: String = ""
     @Published var isSnoozed = false
+    @Published var showPreparationStartAnimation: Bool = false
     
     init(
         appStorageManager: AppStorageManager = AppStorageManager.shared
     ) {
         self.appStorageManager = appStorageManager
-        self.state = .splash
+        self.state = .departure
+        self.isSnoozed = appStorageManager.getIsSnoozed()
         
         if let userInfo = PendingPushManager.shared.userInfo {
             handleNotificationPayload(userInfo)
@@ -51,7 +53,7 @@ final class AppRouter: ObservableObject {
            let id = userInfo["id"] as? Int {
             
             if let scheduleInfo = appStorageManager.getSchedule(id: id) {
-                schedule = scheduleInfo
+                self.schedule = scheduleInfo
             }
             
             if type == "prep" { state = .preparation }
@@ -65,5 +67,27 @@ final class AppRouter: ObservableObject {
 
             print("scheduleInfo: \(schedule)")
         }
+    }
+    
+    func onClickDelayButton() {
+        isSnoozed = true
+        appStorageManager.saveIsSnoozed(isSnoozed)
+        let snoozedTime = Date().addingTimeInterval(TimeInterval(interval * 60))
+        AlarmPlayer.shared.stop()
+        AlarmService.shared.scheduleTimer(id: schedule.id, type: alarmType, at: snoozedTime)
+        AlarmService.shared.scheduleLocalNotification(id: schedule.id, type: alarmType, at: snoozedTime)
+    }
+    
+    func onPreparationStarted() {
+        isSnoozed = false
+        appStorageManager.saveIsSnoozed(isSnoozed)
+        state = .splash
+        showPreparationStartAnimation = true
+    }
+    
+    func onClickNavigateButton() {
+        isSnoozed = false
+        appStorageManager.saveIsSnoozed(isSnoozed)
+        state = .splash
     }
 }
