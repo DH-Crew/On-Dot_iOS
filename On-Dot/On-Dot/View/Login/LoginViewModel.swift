@@ -76,9 +76,6 @@ extension LoginViewModel: ASAuthorizationControllerDelegate, ASAuthorizationCont
         guard let authorizationCode = appleID.authorizationCode else { return }
         guard let authorizationCodeString = String(data: authorizationCode, encoding: .utf8) else { return }
         
-        let fullName = appleID.fullName
-        let email = appleID.email
-        
         // 받은 토큰으로 서버 로그인
         Task {
             await appleLogin(token: authorizationCodeString)
