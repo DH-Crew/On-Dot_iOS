@@ -8,8 +8,27 @@
 import SwiftUI
 
 final class AppRouter: ObservableObject {
-    @Published var state: AppState = .splash
+    static let shared = AppRouter() 
+    private let appStorageManager: AppStorageManager
+    @Published var state: AppState
     @Published var path: [AppState] = []
+    @Published var schedule: HomeScheduleInfo = .placeholder
+    @Published var interval: Int = 0
+    @Published var repeatCount: Int = -1
+    @Published var alarmType: String = ""
+    @Published var isSnoozed = false
+    
+    init(
+        appStorageManager: AppStorageManager = AppStorageManager.shared
+    ) {
+        self.appStorageManager = appStorageManager
+        self.state = .splash
+        
+        if let userInfo = PendingPushManager.shared.userInfo {
+            handleNotificationPayload(userInfo)
+            PendingPushManager.shared.userInfo = nil
+        }
+    }
     
     func navigate(to newState: AppState) {
         path.append(newState)
@@ -26,9 +45,25 @@ final class AppRouter: ObservableObject {
     }
     
     func handleNotificationPayload(_ userInfo: [AnyHashable: Any]) {
-        if let target = userInfo["navigate"] as? String, target == "alarmRing", let type = userInfo["type"] as? String {
+        if let target = userInfo["navigate"] as? String,
+           target == "alarmRing",
+           let type = userInfo["type"] as? String,
+           let id = userInfo["id"] as? Int {
+            
+            if let scheduleInfo = appStorageManager.getSchedule(id: id) {
+                schedule = scheduleInfo
+            }
+            
             if type == "prep" { state = .preparation }
-            else if type == "depart" { state = .departure }
+            else if type == "depart" { state = .preparation }
+            
+            alarmType = type
+            interval = appStorageManager.getInterval()?.rawValue ?? 3
+            repeatCount = appStorageManager.getRepeatCount()?.count ?? 0
+            
+            self.state = .preparation
+
+            print("scheduleInfo: \(schedule)")
         }
     }
 }
