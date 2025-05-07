@@ -16,6 +16,7 @@ final class AppStorageManager {
     private let volumeKey = "volume"
     private let intervalKey = "interval"
     private let repeatCountKey = "repeatCount"
+    private let isSnoozedKey = "isSnoozed"
     
     private init() {}
     
@@ -66,15 +67,23 @@ final class AppStorageManager {
         return RepeatCount(rawValue: savedValue)
     }
     
-    // 일정 정보 저장
+    // MARK: - 일정 정보 저장, 조회
     func saveSchedule(_ info: HomeScheduleInfo) {
         let data = try? JSONEncoder().encode(info)
         UserDefaults.standard.set(data, forKey: "schedule-\(info.id)")
     }
 
-    // 일정 정보 조회
     func getSchedule(id: Int) -> HomeScheduleInfo? {
         guard let data = UserDefaults.standard.data(forKey: "schedule-\(id)") else { return nil }
         return try? JSONDecoder().decode(HomeScheduleInfo.self, from: data)
+    }
+    
+    // MARK: - 알람 미루기 여부 저장, 조회
+    func saveIsSnoozed(_ isSnoozed: Bool) {
+        UserDefaults.standard.set(isSnoozed, forKey: isSnoozedKey)
+    }
+    
+    func getIsSnoozed() -> Bool {
+        return UserDefaults.standard.bool(forKey: isSnoozedKey)
     }
 }
