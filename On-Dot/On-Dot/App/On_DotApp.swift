@@ -75,7 +75,7 @@ struct On_DotApp: App {
                 .onReceive(
                   NotificationCenter.default.publisher(for: .didReceivePush)
                 ) { note in
-                  if let userInfo = note.userInfo as? [AnyHashable:Any] {
+                  if let userInfo = note.userInfo {
                       router.handleNotificationPayload(userInfo)
                   }
                 }
