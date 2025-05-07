@@ -31,7 +31,7 @@ struct MyPageView: View {
                     MyPageMenuView(
                         title: "일반",
                         content1: "집 주소 설정",
-                        content2: "길 안내 지도 설정",
+//                        content2: "길 안내 지도 설정",
                         onClickContent1: { path.append(MyPageDestination.homeAddress) },
                         onClickContent2: { path.append(MyPageDestination.defaultMap) }
                     )
@@ -142,7 +142,7 @@ struct MyPageView: View {
 struct MyPageMenuView: View {
     let title: String
     let content1: String
-    let content2: String
+    var content2: String = ""
     var content3: String = ""
     
     var onClickContent1: () -> Void = {}
@@ -164,9 +164,10 @@ struct MyPageMenuView: View {
             
             menuItem(content: content1, onClickContent: onClickContent1)
             
-            Spacer().frame(height: 20)
-            
-            menuItem(content: content2, onClickContent: onClickContent2)
+            if !content2.isEmpty {
+                Spacer().frame(height: 20)
+                menuItem(content: content2, onClickContent: onClickContent2)
+            }
             
             if !content3.isEmpty {
                 Spacer().frame(height: 20)
