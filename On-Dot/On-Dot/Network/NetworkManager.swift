@@ -18,7 +18,7 @@ final class NetworkManager {
         self.keychainManager = keychainManager
     }
 
-    func request<T: Decodable>(type: T.Type, api: Router) async throws -> T {
+    func request<T: Decodable>(type: T.Type, api: Router, retryCount: Int = 0) async throws -> T {
         let request = try api.asURLRequest()
         logRequest(request)
 
@@ -50,9 +50,9 @@ final class NetworkManager {
                 if statusCode == 401 {
                     print("401 Unauthorized: 토큰 갱신 시도")
                     let didRefresh = await refreshToken()
-                    if didRefresh {
+                    if didRefresh, retryCount < 1 {
                         print("토큰 갱신 성공, 재시도 중...")
-                        return try await self.request(type: type, api: api)
+                        return try await self.request(type: type, api: api, retryCount: retryCount + 1)
                     } else {
                         print("토큰 갱신 실패")
                         throw RequestError.unauthorized
