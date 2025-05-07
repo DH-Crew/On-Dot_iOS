@@ -51,21 +51,34 @@ struct ContentView: View {
                 )
             case .preparation:
                 PreparationAlarmRingView(
+                    isSnoozed: router.isSnoozed,
                     schedule: router.schedule,
                     interval: router.interval,
                     repeatCount: router.repeatCount,
                     type: router.alarmType,
-                    onPreparationStarted: { snoozed in
-                        router.isSnoozed = snoozed
-                        router.state = .splash
-                    },
+                    onPreparationStarted: router.onPreparationStarted,
+                    onClickDelayButton: router.onClickDelayButton
                 )
             case .departure:
                 DepartureAlarmRingView(
-                    
+                    isSnoozed: router.isSnoozed,
+                    schedule: router.schedule,
+                    interval: router.interval,
+                    repeatCount: router.repeatCount,
+                    type: router.alarmType,
+                    onClickNavigateButton: router.onClickNavigateButton,
+                    onClickDelayButton: router.onClickDelayButton
                 )
             default:
                 Color.clear
+            }
+            
+            if router.showPreparationStartAnimation {
+                ZStack {
+                    Color.gray900.ignoresSafeArea()
+                    
+                    LottieView(name: "preparation_start", loopMode: .playOnce, onCompleted: { router.showPreparationStartAnimation = false })
+                }
             }
         }
         .onOpenURL { url in
