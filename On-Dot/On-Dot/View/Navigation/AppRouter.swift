@@ -57,11 +57,12 @@ final class AppRouter: ObservableObject {
             }
             
             if type == "prep" { state = .preparation }
-            else if type == "depart" { state = .preparation }
+            else if type == "depart" { state = .departure }
             
             alarmType = type
             interval = appStorageManager.getInterval()?.rawValue ?? 3
             repeatCount = appStorageManager.getRepeatCount()?.count ?? 0
+            isSnoozed = false
             
             self.state = .preparation
 
