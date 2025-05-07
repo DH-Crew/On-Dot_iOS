@@ -116,7 +116,8 @@ struct MyPageView: View {
                     .enableSwipeBack()
                 case .withdrawal:
                     AccountWithdrawalView(
-                        onClickBackButton: { path.removeLast() }
+                        onClickBackButton: { path.removeLast() },
+                        navigateToLoginView: navigateToLoginView
                     )
                     .toolbar(.hidden, for: .tabBar)
                     .environmentObject(viewModel)

@@ -13,6 +13,7 @@ enum Router: URLRequestConvertible {
     // MARK: Auth
     case login(provider: String, accessToken: String)
     case logout
+    case refresh
 
     // MARK: Location
     case searchPlace(query: String)
@@ -37,7 +38,7 @@ enum Router: URLRequestConvertible {
     // MARK: -
     var method: HTTPMethod {
         switch self {
-        case .login, .createSchedule, .calculate, .withdrawal, .logout: .post
+        case .login, .createSchedule, .calculate, .withdrawal, .logout, .refresh: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
         case .editHomeAddress, .editMapProvider: .patch
@@ -50,6 +51,7 @@ enum Router: URLRequestConvertible {
         // MARK: Auth
         case .login: "/auth/login/oauth"
         case .logout: "/auth/logout"
+        case .refresh: "/auth/reissue"
         
         // MARK: Location
         case .searchPlace: "/places/search"
@@ -72,9 +74,17 @@ enum Router: URLRequestConvertible {
 
     var headers: HTTPHeaders {
         var headers: HTTPHeaders = ["Content-Type": "application/json"]
-        if let token = KeychainManager.shared.readToken(for: "accessToken") {
-            headers.add(name: "Authorization", value: "Bearer \(token)")
+        switch self {
+        case .refresh:
+            if let token = KeychainManager.shared.readToken(for: "refreshToken") {
+                headers.add(name: "Authorization", value: "Bearer \(token)")
+            }
+        default:
+            if let token = KeychainManager.shared.readToken(for: "accessToken") {
+                headers.add(name: "Authorization", value: "Bearer \(token)")
+            }
         }
+        
         return headers
     }
 

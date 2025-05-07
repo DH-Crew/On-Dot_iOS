@@ -11,15 +11,18 @@ final class MyPageViewModel: ObservableObject {
     private let locationRepository: LocationRepository
     private let memberRepository: MemberRepository
     private let authRepository: AuthRepository
+    private let keychainManager: KeychainManager
     
     init(
         locationRepository: LocationRepository = LocationRepositoryImpl(),
         memberRepository: MemberRepository = MemberRepositoryImpl(),
-        authRepository: AuthRepository = AuthRepositoryImpl()
+        authRepository: AuthRepository = AuthRepositoryImpl(),
+        keychainManager: KeychainManager = KeychainManager.shared
     ) {
         self.locationRepository = locationRepository
         self.memberRepository = memberRepository
         self.authRepository = authRepository
+        self.keychainManager = keychainManager
         
         Task {
             await getHomeAddress()
@@ -58,6 +61,11 @@ final class MyPageViewModel: ObservableObject {
     func logout() async {
         do {
             try await authRepository.logout()
+            
+            await MainActor.run {
+                keychainManager.deleteToken(for: "accessToken")
+                keychainManager.deleteToken(for: "refreshToken")
+            }
         } catch {
             print("로그아웃 실패: \(error)")
         }
@@ -118,6 +126,11 @@ final class MyPageViewModel: ObservableObject {
             )
             
             try await memberRepository.deleteAccount(request: request)
+            
+            await MainActor.run {
+                keychainManager.deleteToken(for: "accessToken")
+                keychainManager.deleteToken(for: "refreshToken")
+            }
         } catch {
             print("회원 탈퇴 실패: \(error)")
         }

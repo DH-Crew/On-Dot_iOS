@@ -21,7 +21,8 @@ struct HomeAddressEditView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 TopBar(
-                    image: "ic_back"
+                    image: "ic_back",
+                    onClickButton: onClickBackButton
                 )
                 .padding(.horizontal, 16)
                 
@@ -104,12 +105,6 @@ struct HomeAddressEditView: View {
                 .onTapGesture {
                     focusState = false
                 }
-                .gesture(
-                    DragGesture()
-                        .onChanged { _ in
-                            focusState = false
-                        }
-                )
             }
             .frame(maxWidth: .infinity)
         }

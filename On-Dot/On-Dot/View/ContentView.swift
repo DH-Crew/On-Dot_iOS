@@ -17,8 +17,12 @@ struct ContentView: View {
             
             switch router.state {
             case .splash:
-                SplashView(onSplashCompleted: {
-                    router.state = .auth
+                SplashView(onSplashCompleted: { skipLogin in
+                    if skipLogin {
+                        router.state = .main
+                    } else {
+                        router.state = .auth
+                    }
                 })
             case .auth:
                 LoginView(

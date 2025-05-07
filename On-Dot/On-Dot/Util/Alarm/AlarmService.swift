@@ -78,6 +78,9 @@ final class AlarmService {
                 repeats: false
             )
         )
+        
+        print("[알림 등록] \(id)-\(type) → \(date)")
+        
         UNUserNotificationCenter.current().add(request)
     }
 

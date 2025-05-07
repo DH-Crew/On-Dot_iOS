@@ -126,4 +126,12 @@ extension Color {
         startPoint: .top,
         endPoint: .bottom
     )
+    static let gradientLogin = LinearGradient(
+        gradient: Gradient(colors: [
+            Color(hex: 0xFF1B1B1B),
+            Color(hex: 0xFF2A340D)
+        ]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }

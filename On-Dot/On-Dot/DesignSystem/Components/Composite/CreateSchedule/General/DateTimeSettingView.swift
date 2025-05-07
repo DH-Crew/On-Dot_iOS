@@ -33,9 +33,11 @@ struct DateTimeSettingView: View {
                 isActive: isActiveCalendar
             )
             .padding(.horizontal, 20)
-            .onTapGesture {
-                onClickSelectedDateView()
-            }
+            .simultaneousGesture (
+                TapGesture().onEnded {
+                    onClickSelectedDateView()
+                }
+            )
             
             Spacer().frame(height: 16)
             
@@ -70,9 +72,12 @@ struct DateTimeSettingView: View {
                 isActive: isActiveTimePicker
             )
             .padding(.horizontal, 20)
-            .onTapGesture {
-                onClickSelectedTimeView()
-            }
+            .simultaneousGesture (
+                TapGesture().onEnded {
+                    onClickSelectedTimeView()
+                }   
+            )
+                
             
             if isActiveTimePicker {
                 Spacer().frame(height: 16)
