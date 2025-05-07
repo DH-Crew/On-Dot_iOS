@@ -65,4 +65,16 @@ final class AppStorageManager {
         guard let savedValue = UserDefaults.standard.string(forKey: repeatCountKey) else { return nil }
         return RepeatCount(rawValue: savedValue)
     }
+    
+    // 일정 정보 저장
+    func saveSchedule(_ info: HomeScheduleInfo) {
+        let data = try? JSONEncoder().encode(info)
+        UserDefaults.standard.set(data, forKey: "schedule-\(info.id)")
+    }
+
+    // 일정 정보 조회
+    func getSchedule(id: Int) -> HomeScheduleInfo? {
+        guard let data = UserDefaults.standard.data(forKey: "schedule-\(id)") else { return nil }
+        return try? JSONDecoder().decode(HomeScheduleInfo.self, from: data)
+    }
 }
