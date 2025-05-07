@@ -33,4 +33,8 @@ final class ScheduleRepositoryImpl: ScheduleRepository {
     func editSchedule(id: Int, schedule: ScheduleInfo) async throws {
         _ = try await networkManager.request(type: EmptyResponse.self, api: .editSchedule(scheduleId: id, schedule: schedule))
     }
+    
+    func updateAlarmEnabled(id: Int, request: AlarmEnabled) async throws {
+        _ = try await networkManager.request(type: EmptyResponse.self, api: .updateAlarmEnabled(scheduleId: id, request: request))
+    }
 }
