@@ -117,17 +117,16 @@ final class HomeViewModel: ObservableObject {
         ]
     }
     
-    func getSchedules() async {
+    func getSchedules(isSnoozed: Bool = false) async {
         do {
             let response = try await scheduleRepository.getSchedules()
             
             await MainActor.run {
                 scheduleList = response.scheduleList
                 
-                if let alarm = response.earliestAlarmAt { earliestAlarmAt = alarm }
-                else if !response.scheduleList.isEmpty { earliestAlarmAt = response.scheduleList[0].nextAlarmAt }
+                earliestAlarmAt = response.earliestAlarmAt
                 
-                AlarmService.shared.scheduleAlarms(for: scheduleList)
+                if !isSnoozed { AlarmService.shared.scheduleAlarms(for: scheduleList) }
             }
         } catch {
             print("홈 일정 조회 실패: \(error)")
@@ -202,12 +201,20 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    func updateScheduleAlarmEnabled(id: Int, isOn: Bool) {
-        if let index = scheduleList.firstIndex(where: { $0.id == id }) {
-            scheduleList[index].isEnabled = isOn
+    func updateScheduleAlarmEnabled(id: Int, isOn: Bool) async {
+        do {
+            try await scheduleRepository.updateAlarmEnabled(id: id, request: AlarmEnabled(isEnabled: isOn))
             
-            let summary = scheduleList.map { "(\($0.id): \($0.isEnabled))" }.joined(separator: ", ")
-            print("Schedule List: [\(summary)]")
+            await MainActor.run {
+                if let index = scheduleList.firstIndex(where: { $0.id == id }) {
+                    scheduleList[index].isEnabled = isOn
+                    
+                    let summary = scheduleList.map { "(\($0.id): \($0.isEnabled))" }.joined(separator: ", ")
+                    print("Schedule List: [\(summary)]")
+                }
+            }
+        } catch {
+            print("알람 온/오프 변경 실패: \(error)")
         }
     }
     
