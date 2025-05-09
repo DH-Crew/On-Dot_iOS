@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
+    @State var isSnoozed: Bool
     
     var convertAppState: (AppState) -> Void
     
@@ -16,7 +17,7 @@ struct MainView: View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
             
-            OnDotTabView(selectedTab: $viewModel.selectedTab, convertAppState: convertAppState)
+            OnDotTabView(selectedTab: $viewModel.selectedTab, isSnoozed: isSnoozed, convertAppState: convertAppState)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -24,14 +25,17 @@ struct MainView: View {
 
 struct OnDotTabView: View {
     @Binding var selectedTab: Int
+    let isSnoozed: Bool
     
     var convertAppState: (AppState) -> Void
     
     init(
         selectedTab: Binding<Int>,
+        isSnoozed: Bool,
         convertAppState: @escaping (AppState) -> Void
     ) {
         self._selectedTab = selectedTab
+        self.isSnoozed = isSnoozed
         self.convertAppState = convertAppState
 
         let appearance = UITabBarAppearance()
@@ -50,6 +54,7 @@ struct OnDotTabView: View {
             TabView(selection: $selectedTab) {
                 
                 HomeView(
+                    isSnoozed: isSnoozed,
                     navigateToGeneralScheduleCreateView: { convertAppState(AppState.general) }
                 )
                 .tabItem {

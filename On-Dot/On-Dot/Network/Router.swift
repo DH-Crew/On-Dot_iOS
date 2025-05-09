@@ -24,6 +24,7 @@ enum Router: URLRequestConvertible {
     case deleteSchedule(scheduleId: Int)
     case getScheduleDetail(scheduleId: Int)
     case editSchedule(scheduleId: Int, schedule: ScheduleInfo)
+    case updateAlarmEnabled(scheduleId: Int, request: AlarmEnabled)
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
@@ -41,7 +42,7 @@ enum Router: URLRequestConvertible {
         case .login, .createSchedule, .calculate, .withdrawal, .logout, .refresh: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
-        case .editHomeAddress, .editMapProvider: .patch
+        case .editHomeAddress, .editMapProvider, .updateAlarmEnabled: .patch
         case .deleteSchedule: .delete
         }
     }
@@ -60,6 +61,7 @@ enum Router: URLRequestConvertible {
         case .createSchedule, .getSchedules: "/schedules"
         case .deleteSchedule(let scheduleId), .getScheduleDetail(let scheduleId): "/schedules/\(scheduleId)"
         case .editSchedule(let scheduleId, _): "/schedules/\(scheduleId)"
+        case .updateAlarmEnabled(let scheduleId, _): "/schedules/\(scheduleId)/alarm"
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
@@ -103,6 +105,8 @@ enum Router: URLRequestConvertible {
         case .withdrawal(let request):
             return try? request.asDictionary()
         case .editMapProvider(let request):
+            return try? request.asDictionary()
+        case .updateAlarmEnabled(_ , let request):
             return try? request.asDictionary()
         default: return nil
         }

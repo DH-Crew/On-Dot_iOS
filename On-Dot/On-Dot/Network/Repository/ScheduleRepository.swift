@@ -11,4 +11,5 @@ protocol ScheduleRepository {
     func deleteSchedule(id: Int) async throws -> Void
     func getScheduleDetail(id: Int) async throws -> ScheduleInfo
     func editSchedule(id: Int, schedule: ScheduleInfo) async throws -> Void
+    func updateAlarmEnabled(id: Int, request: AlarmEnabled) async throws -> Void
 }

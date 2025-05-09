@@ -78,6 +78,11 @@ final class AlarmPlayer {
     }
     
     func play(soundFileName: String, numberOfLoops: Int) {
+        if player?.isPlaying == true {
+            print("⏸️ 이미 다른 알람이 재생 중입니다. 새로운 알람은 실행되지 않습니다.")
+            return
+        }
+        
         guard let url = Bundle.main.url(forResource: soundFileName, withExtension: nil) else {
             print("파일을 찾을 수 없습니다: \(soundFileName)")
             return

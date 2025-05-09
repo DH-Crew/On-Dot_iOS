@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel = HomeViewModel()
     @State private var path = NavigationPath()
+    let isSnoozed: Bool
     
     var navigateToGeneralScheduleCreateView: () -> Void
     
@@ -32,7 +33,9 @@ struct HomeView: View {
                     ScheduleAlarmListView(
                         scheduleList: viewModel.scheduleList,
                         onClickToggle: { id, isOn in
-                            viewModel.updateScheduleAlarmEnabled(id: id, isOn: isOn)
+                            Task {
+                                await viewModel.updateScheduleAlarmEnabled(id: id, isOn: isOn)
+                            }
                         },
                         onDelete: { id in
                             Task {
@@ -131,7 +134,7 @@ struct HomeView: View {
             }
             .onAppear {
                 Task {
-                    await viewModel.getSchedules()
+                    await viewModel.getSchedules(isSnoozed: isSnoozed)
                 }
             }
         }

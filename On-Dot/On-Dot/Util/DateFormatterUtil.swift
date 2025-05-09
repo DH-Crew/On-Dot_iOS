@@ -33,6 +33,26 @@ struct DateFormatterUtil {
         dateFormatter.pmSymbol = "오후"
         return dateFormatter.string(from: date)
     }
+    
+    /// 시간을 "h:mm" 형식으로 반환
+    static func formatTimeNumber(_ date: Date) -> String {
+        dateFormatter.dateFormat = "hh:mm"
+        return dateFormatter.string(from: date)
+    }
+    
+    // 남은 시간을 계산하는 메서드
+    static func timeLeftUntil(_ futureDate: Date) -> String {
+        let now = Date()
+        let interval = futureDate.timeIntervalSince(now)
+
+        guard interval > 0 else { return "0:00" }
+
+        let totalMinutes = Int(interval / 60)
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+
+        return "\(hours):\(String(format: "%02d", minutes))"
+    }
 
     /// 날짜 + 시간 형식으로 반환 (예: "2025.04.08 오전 9:00")
     static func formatDateTime(_ date: Date) -> String {

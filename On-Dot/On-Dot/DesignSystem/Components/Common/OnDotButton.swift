@@ -20,25 +20,24 @@ struct OnDotButton: View {
     }
     
     var body: some View {
-        Text(content)
-            .font(OnDotTypo.titleSmallSB)
-            .foregroundColor(style.foregroundColor)
-            .padding(.vertical, 18)
-            .frame(maxWidth: .infinity)
-            .background(style.backgroundColor)
-            .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(
-                        style == .outline
-                        ? AnyShapeStyle(Color.gradient)
-                        : AnyShapeStyle(Color.clear),
-                        lineWidth: 1
-                    )
-            )
-            .onTapGesture {
-                action()
-            }
+        Button(action: action) {
+            Text(content)
+                .font(OnDotTypo.titleSmallSB)
+                .foregroundColor(style.foregroundColor)
+                .padding(.vertical, 18)
+                .frame(maxWidth: .infinity)
+                .background(style.backgroundColor)
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(
+                            style == .outline
+                            ? AnyShapeStyle(Color.gradient)
+                            : AnyShapeStyle(Color.clear),
+                            lineWidth: 1
+                        )
+                )
+        }
     }
 }
 
