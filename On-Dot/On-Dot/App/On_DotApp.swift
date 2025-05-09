@@ -22,7 +22,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
-        // 🔥 ADDED: 백그라운드 오디오 허용을 위한 설정 (Info.plist에도 UIBackgroundModes=audio 필요)
         let _ = AlarmPlayer.shared // 싱글톤 초기화 → 무음 재생 시작
         let center = UNUserNotificationCenter.current()
         center.delegate = NotificationDelegate.shared
