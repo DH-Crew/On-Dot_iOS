@@ -19,7 +19,7 @@ final class AppRouter: ObservableObject {
     @Published var isSnoozed = false
     @Published var showPreparationStartAnimation: Bool = false
     
-    init(
+    private init(
         appStorageManager: AppStorageManager = AppStorageManager.shared
     ) {
         self.appStorageManager = appStorageManager
