@@ -168,6 +168,7 @@ struct OnboardingView: View {
                         onClickToggle: { newValue in viewModel.isMuteMode = newValue },
                         onSoundSelected: { newValue in
                             viewModel.selectedSound = newValue
+                            AlarmPlayer.shared.stop()
                             AlarmPlayer.shared.play(soundFileName: newValue.fileName, numberOfLoops: 0)
                         }
                     )
