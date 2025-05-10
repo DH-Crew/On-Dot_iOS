@@ -86,6 +86,7 @@ struct FromToSearchView: View {
                                     }
                                     
                                     viewModel.onClickLocationItem(location: location)
+                                    focusedField = nil
                                 }
                             Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
                         }
@@ -93,24 +94,23 @@ struct FromToSearchView: View {
                     .padding(.horizontal, 22)
                 }
                 .contentShape(Rectangle())
-                .onTapGesture {
-                    focusedField = nil
-                }
-                .gesture(
+                .simultaneousGesture(
                     DragGesture()
                         .onChanged { _ in
                             focusedField = nil
                         }
                 )
+                
+                OnDotButton(
+                    content: "다음",
+                    action: checkIfLocationSelectionCompleted,
+                    style: viewModel.isFromLocationSelected && viewModel.isToLocationSelected ? .green500 : .gray300
+                )
+                .padding(.horizontal, 22)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: viewModel.isFromLocationSelected) { _ in
-            checkIfLocationSelectionCompleted()
-        }
-        .onChange(of: viewModel.isToLocationSelected) { _ in
-            checkIfLocationSelectionCompleted()
-        }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     private func checkIfLocationSelectionCompleted() {
