@@ -37,39 +37,64 @@ struct GeneralScheduleCreateView: View {
                     
                     Spacer().frame(height: 48)
                     
-                    ScrollView {
-                        RepeatSettingView(
-                            isOn: $viewModel.isRepeatOn,
-                            isChecked: $viewModel.isChecked,
-                            activeCheckChip: viewModel.activeCheckChip,
-                            activeWeekdays: viewModel.activeWeekdays,
-                            onClickToggle: { viewModel.onClickToggle() },
-                            onClickCheckTextChip: { index in viewModel.onClickTextCheckChip(index: index)},
-                            onClickTextChip: { index in viewModel.onClickTextChip(index: index) },
-                            onClickCheckBox: { viewModel.onClickCheckBox() }
-                        )
-                        
-                        Spacer().frame(height: 20)
-                        
-                        DateTimeSettingView(
-                            selectedDate: viewModel.selectedDate,
-                            selectedTime: viewModel.selectedTime,
-                            referenceDate: viewModel.referenceDate,
-                            isActiveCalendar: viewModel.isActiveCalendar,
-                            isActiveTimePicker: viewModel.isActiveTimePicker,
-                            activeWeekdays: viewModel.activeWeekdays,
-                            meridiem: $viewModel.meridiem,
-                            hour: $viewModel.hour,
-                            minute: $viewModel.minute,
-                            onClickSelectedDateView: { viewModel.onClickSelectedDateView() },
-                            onClickSelectedTimeView: { viewModel.onClickSelectedTimeView() },
-                            increaseMonth: { viewModel.increaseMonth() },
-                            decreaseMonth: { viewModel.decreaseMonth() },
-                            onClickDate: { date in viewModel.onClickDate(date: date) },
-                            updateSelectedTime: { viewModel.updateSelectedTime() }
-                        )
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            RepeatSettingView(
+                                isOn: $viewModel.isRepeatOn,
+                                isChecked: $viewModel.isChecked,
+                                activeCheckChip: viewModel.activeCheckChip,
+                                activeWeekdays: viewModel.activeWeekdays,
+                                onClickToggle: { viewModel.onClickToggle() },
+                                onClickCheckTextChip: { index in
+                                    viewModel.onClickTextCheckChip(index: index)
+                                },
+                                onClickTextChip: { index in
+                                    viewModel.onClickTextChip(index: index)
+                                },
+                                onClickCheckBox: { viewModel.onClickCheckBox() }
+                            )
+                            
+                            Spacer().frame(height: 20)
+                            
+                            DateTimeSettingView(
+                                selectedDate: viewModel.selectedDate,
+                                selectedTime: viewModel.selectedTime,
+                                referenceDate: viewModel.referenceDate,
+                                isActiveCalendar: viewModel.isActiveCalendar,
+                                isActiveTimePicker: viewModel.isActiveTimePicker,
+                                activeWeekdays: viewModel.activeWeekdays,
+                                meridiem: $viewModel.meridiem,
+                                hour: $viewModel.hour,
+                                minute: $viewModel.minute,
+                                onClickSelectedDateView: { viewModel.onClickSelectedDateView() },
+                                onClickSelectedTimeView: { viewModel.onClickSelectedTimeView() },
+                                increaseMonth: { viewModel.increaseMonth() },
+                                decreaseMonth: { viewModel.decreaseMonth() },
+                                onClickDate: { date in viewModel.onClickDate(date: date) },
+                                updateSelectedTime: { viewModel.updateSelectedTime() }
+                            )
+                            .id("BottomAnchor")
+                        }
+                        .scrollIndicators(.hidden)
+                        .onChange(of: viewModel.isActiveCalendar) { isActive in
+                            if isActive {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    withAnimation {
+                                        proxy.scrollTo("BottomAnchor", anchor: .bottom)
+                                    }
+                                }
+                            }
+                        }
+                        .onChange(of: viewModel.isActiveTimePicker) { isActive in
+                            if isActive {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    withAnimation {
+                                        proxy.scrollTo("BottomAnchor", anchor: .bottom)
+                                    }
+                                }
+                            }
+                        }
                     }
-                    .scrollIndicators(.hidden)
                     
                     Spacer().frame(height: 16)
                     
@@ -143,7 +168,10 @@ struct GeneralScheduleCreateView: View {
                                 }
                             }
                         },
-                        onClickBackButton: { path.removeLast() }
+                        onClickBackButton: { path.removeLast() },
+                        updateTriggeredAt: { type, meridiem, hour, minute in
+                            viewModel.updateTriggeredAt(type: type, meridiem: meridiem, hour: hour, minute: minute)
+                        }
                     )
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()

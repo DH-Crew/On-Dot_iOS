@@ -121,10 +121,14 @@ struct HomeView: View {
                         onClickToggle: { viewModel.onClickToggle() },
                         onClickCheckTextChip: { index in viewModel.onClickTextCheckChip(index: index) },
                         onClickTextChip: { newValue in viewModel.onClickTextChip(index: newValue) },
+                        onClickAlarmToggle: { newValue in viewModel.editableSchedule.preparationAlarm.isEnabled = newValue },
                         increaseMonth: { viewModel.increaseMonth() },
                         decreaseMonth: { viewModel.decreaseMonth() },
                         onClickDate: { date in viewModel.onClickDate(date: date) },
-                        updateSelectedTime: { viewModel.updateSelectedTime() }
+                        updateSelectedTime: { viewModel.updateSelectedTime() },
+                        updateTriggeredAt: { type, meridiem, hour, minute in
+                            viewModel.updateTriggeredAt(type: type, meridiem: meridiem, hour: hour, minute: minute)
+                        }
                     )
                     .ignoresSafeArea(.keyboard, edges: .bottom)
                     .toolbar(.hidden, for: .tabBar)

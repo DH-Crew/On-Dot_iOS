@@ -227,6 +227,24 @@ final class HomeViewModel: ObservableObject {
         
         print("복원 완료 → \(backup.item.title) at index \(backup.index)")
     }
+    
+    // 알람 종류에 따른 알람 시간 변경 메서드
+    func updateTriggeredAt(type: AlarmType, meridiem: String, hour: Int, minute: Int) {
+        switch type {
+        case .departure:
+            let newDate = DateFormatterUtil.combineDateWithTime(
+                date: editableSchedule.departureAlarm.triggeredDate ?? Date(), meridiem: meridiem, hour: hour, minute: minute
+            )
+            let newTriggeredAt = DateFormatterUtil.toISO8601String(from: newDate)
+            editableSchedule.departureAlarm.triggeredAt = newTriggeredAt
+        case .preparation:
+            let newDate = DateFormatterUtil.combineDateWithTime(
+                date: editableSchedule.preparationAlarm.triggeredDate ?? Date(), meridiem: meridiem, hour: hour, minute: minute
+            )
+            let newTriggeredAt = DateFormatterUtil.toISO8601String(from: newDate)
+            editableSchedule.preparationAlarm.triggeredAt = newTriggeredAt
+        }
+    }
 }
 
 extension HomeViewModel {

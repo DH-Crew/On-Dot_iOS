@@ -12,9 +12,19 @@ struct DialTimePickerView: View {
     @Binding var hour: Int
     @Binding var minute: Int
     
+    var by: Int = 5
+    
     private let meridiems = ["오전", "오후"]
     private let hours = Array(1...12)
-    private let minutes = stride(from: 0, through: 55, by: 5).map { $0 }
+    private var minutes: [Int] = []
+    
+    init(meridiem: Binding<String>, hour: Binding<Int>, minute: Binding<Int>, by: Int = 5) {
+        self._meridiem = meridiem
+        self._hour = hour
+        self._minute = minute
+        self.by = by
+        self.minutes = stride(from: 0, through: 55, by: by).map { $0 }
+    }
     
     var body: some View {
         ZStack {
