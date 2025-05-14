@@ -121,6 +121,7 @@ struct HomeView: View {
                         onClickToggle: { viewModel.onClickToggle() },
                         onClickCheckTextChip: { index in viewModel.onClickTextCheckChip(index: index) },
                         onClickTextChip: { newValue in viewModel.onClickTextChip(index: newValue) },
+                        onClickAlarmToggle: { newValue in viewModel.editableSchedule.preparationAlarm.isEnabled = newValue },
                         increaseMonth: { viewModel.increaseMonth() },
                         decreaseMonth: { viewModel.decreaseMonth() },
                         onClickDate: { date in viewModel.onClickDate(date: date) },

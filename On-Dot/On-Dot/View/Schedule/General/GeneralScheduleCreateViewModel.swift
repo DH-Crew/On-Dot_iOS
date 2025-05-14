@@ -97,6 +97,7 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     
     func onClickTextCheckChip(index: Int) {
         activeCheckChip = index
+        isActiveCalendar = true
         switch index {
         case 0: activeWeekdays = Set(fullWeek)     // 매일
         case 1: activeWeekdays = Set(weekdays)     // 평일
@@ -106,6 +107,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     }
     
     func onClickTextChip(index: Int) {
+        isActiveCalendar = true
+        
         if activeWeekdays.contains(index) {
             activeWeekdays.remove(index)
         } else {

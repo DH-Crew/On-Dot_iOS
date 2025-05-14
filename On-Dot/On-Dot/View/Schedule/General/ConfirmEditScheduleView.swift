@@ -41,6 +41,7 @@ struct ConfirmEditScheduleView: View {
     var onClickToggle: () -> Void = {}
     var onClickCheckTextChip: (Int) -> Void = { _ in }
     var onClickTextChip: (Int) -> Void = { _ in }
+    var onClickAlarmToggle: (Bool) -> Void = {_ in}
     var increaseMonth: () -> Void = {}
     var decreaseMonth: () -> Void = {}
     var onClickDate: (Date) -> Void = { _ in }
@@ -102,7 +103,8 @@ struct ConfirmEditScheduleView: View {
                     ConfirmEditAlarmView(
                         isOn: preparationAlarm.isEnabled ?? true,
                         type: .preparation,
-                        alarmInfo: preparationAlarm
+                        alarmInfo: preparationAlarm,
+                        onClickToggle: onClickAlarmToggle
                     )
                     
                     if !isConfirmMode {
@@ -187,7 +189,6 @@ struct ConfirmEditScheduleView: View {
                                 onClickDate: onClickDate,
                                 updateSelectedTime: updateSelectedTime
                             )
-                            
                         }
                         
                         Spacer().frame(height: 20)
@@ -277,6 +278,8 @@ private struct ConfirmEditAlarmView: View {
     let type: AlarmType
     let alarmInfo: AlarmInfo
     
+    var onClickToggle: (Bool) -> Void = {_ in}
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -299,7 +302,7 @@ private struct ConfirmEditAlarmView: View {
                 
                 Spacer()
                 
-                if type == AlarmType.preparation { OnDotToggle(isOn: $isOn) }
+                if type == AlarmType.preparation { OnDotToggle(isOn: $isOn, action: { onClickToggle(isOn) }) }
             }
             .padding(.horizontal, 20)
         }
