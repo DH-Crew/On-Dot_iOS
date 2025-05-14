@@ -82,6 +82,24 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
         }
     }
     
+    // 알람 종류에 따른 알람 시간 변경 메서드
+    func updateTriggeredAt(type: AlarmType, meridiem: String, hour: Int, minute: Int) {
+        switch type {
+        case .departure:
+            let newDate = DateFormatterUtil.combineDateWithTime(
+                date: departureAlarm.triggeredDate ?? Date(), meridiem: meridiem, hour: hour, minute: minute
+            )
+            let newTriggeredAt = DateFormatterUtil.toISO8601String(from: newDate)
+            departureAlarm.triggeredAt = newTriggeredAt
+        case .preparation:
+            let newDate = DateFormatterUtil.combineDateWithTime(
+                date: preparationAlarm.triggeredDate ?? Date(), meridiem: meridiem, hour: hour, minute: minute
+            )
+            let newTriggeredAt = DateFormatterUtil.toISO8601String(from: newDate)
+            preparationAlarm.triggeredAt = newTriggeredAt
+        }
+    }
+    
     // MARK: - DateTimeSettingViewHandler
     func onClickToggle() {
         isRepeatOn.toggle()

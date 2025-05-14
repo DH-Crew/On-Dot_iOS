@@ -168,7 +168,10 @@ struct GeneralScheduleCreateView: View {
                                 }
                             }
                         },
-                        onClickBackButton: { path.removeLast() }
+                        onClickBackButton: { path.removeLast() },
+                        updateTriggeredAt: { type, meridiem, hour, minute in
+                            viewModel.updateTriggeredAt(type: type, meridiem: meridiem, hour: hour, minute: minute)
+                        }
                     )
                     .navigationBarBackButtonHidden(true)
                     .enableSwipeBack()
