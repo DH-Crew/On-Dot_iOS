@@ -10,7 +10,7 @@ import Foundation
 struct AlarmInfo: Codable {
     let alarmMode: String
     var isEnabled: Bool?
-    let triggeredAt: String
+    var triggeredAt: String
     let isSnoozeEnabled: Bool
     let snoozeInterval: Int
     let snoozeCount: Int
