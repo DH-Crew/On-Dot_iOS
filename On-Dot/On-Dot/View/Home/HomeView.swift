@@ -125,7 +125,10 @@ struct HomeView: View {
                         increaseMonth: { viewModel.increaseMonth() },
                         decreaseMonth: { viewModel.decreaseMonth() },
                         onClickDate: { date in viewModel.onClickDate(date: date) },
-                        updateSelectedTime: { viewModel.updateSelectedTime() }
+                        updateSelectedTime: { viewModel.updateSelectedTime() },
+                        updateTriggeredAt: { type, meridiem, hour, minute in
+                            viewModel.updateTriggeredAt(type: type, meridiem: meridiem, hour: hour, minute: minute)
+                        }
                     )
                     .ignoresSafeArea(.keyboard, edges: .bottom)
                     .toolbar(.hidden, for: .tabBar)

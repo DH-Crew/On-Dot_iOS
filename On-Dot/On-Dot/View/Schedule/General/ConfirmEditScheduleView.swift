@@ -12,6 +12,11 @@ struct ConfirmEditScheduleView: View {
     @State private var showDateBottomSheet: Bool = false
     @State private var showTimeBottomSheet: Bool = false
     @State private var showEmptyDateToast: Bool = false
+    @State private var showTimePickerBottomSheet: Bool = false
+    @State private var timePickerAlarmType: AlarmType = .departure  // TimePicker를 렌더링할 때 선택된 알람이 준비 알람인지, 출발 알람인지 구분
+    @State private var alarmMeridiem: String = "" // TimePicker에서 사용되는 meridiem
+    @State private var alarmHour: Int = 0 // TimePicker에서 사용되는 hour
+    @State private var alarmMinute: Int = 0 // TimePicker에서 사용되는 minute
     @Binding var scheduleTitle: String
     @Binding var lastFocusedField: FocusField
     @Binding var fromLocation: String
@@ -46,6 +51,7 @@ struct ConfirmEditScheduleView: View {
     var decreaseMonth: () -> Void = {}
     var onClickDate: (Date) -> Void = { _ in }
     var updateSelectedTime: () -> Void = {}
+    var updateTriggeredAt: (AlarmType, String, Int, Int) -> Void = {_, _, _, _ in}
     
     var body: some View {
         ZStack {
@@ -95,7 +101,15 @@ struct ConfirmEditScheduleView: View {
                     ConfirmEditAlarmView(
                         isOn: departureAlarm.isEnabled ?? true,
                         type: .departure,
-                        alarmInfo: departureAlarm
+                        alarmInfo: departureAlarm,
+                        onClickAlarmView: { type, meri, h, m in
+                            timePickerAlarmType = type
+                            alarmMeridiem = meri
+                            alarmHour = h
+                            alarmMinute = m
+                            
+                            showTimePickerBottomSheet = true
+                        }
                     )
                     
                     Spacer().frame(height: 20)
@@ -104,7 +118,15 @@ struct ConfirmEditScheduleView: View {
                         isOn: preparationAlarm.isEnabled ?? true,
                         type: .preparation,
                         alarmInfo: preparationAlarm,
-                        onClickToggle: onClickAlarmToggle
+                        onClickToggle: onClickAlarmToggle,
+                        onClickAlarmView: { type, meri, h, m in
+                            timePickerAlarmType = type
+                            alarmMeridiem = meri
+                            alarmHour = h
+                            alarmMinute = m
+                            
+                            showTimePickerBottomSheet = true
+                        }
                     )
                     
                     if !isConfirmMode {
@@ -205,6 +227,24 @@ struct ConfirmEditScheduleView: View {
                     }
                 }
             }
+            
+            if showTimePickerBottomSheet {
+                OnDotBottomSheet(
+                    maxHeight: 300,
+                    onDismissRequest: { showTimePickerBottomSheet = false },
+                    content: {
+                        TimePickerBottomSheetContentView(
+                            meridiem: $alarmMeridiem,
+                            hour: $alarmHour,
+                            minute: $alarmMinute,
+                            onClickCompletionButton: {
+                                updateTriggeredAt(timePickerAlarmType, alarmMeridiem, alarmHour, alarmMinute)
+                                showTimePickerBottomSheet = false
+                            }
+                        )
+                    }
+                )
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toast(isPresented: $showEmptyDateToast, isDelete: false, message: "날짜를 선택해주세요")
@@ -279,6 +319,7 @@ private struct ConfirmEditAlarmView: View {
     let alarmInfo: AlarmInfo
     
     var onClickToggle: (Bool) -> Void = {_ in}
+    var onClickAlarmView: (AlarmType, String, Int, Int) -> Void = {_, _, _, _ in}
     
     var body: some View {
         VStack(spacing: 0) {
@@ -311,6 +352,11 @@ private struct ConfirmEditAlarmView: View {
         .background(Color.gray700)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 22)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            let (meridiem, hour, minute) = DateFormatterUtil.extractMeridiemHourMinute(from: alarmInfo.triggeredDate ?? Date())
+            onClickAlarmView(type, meridiem, hour, minute)
+        }
     }
     
     @ViewBuilder
@@ -338,5 +384,37 @@ private struct ConfirmEditAlarmView: View {
                 .frame(width: 20, height: 20)
         }
         .padding(.horizontal, 20)
+    }
+}
+
+private struct TimePickerBottomSheetContentView: View {
+    @Binding var meridiem: String
+    @Binding var hour: Int
+    @Binding var minute: Int
+    
+    var onClickCompletionButton: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+            Text("알람 시간 수정")
+                .font(OnDotTypo.bodyLargeR1)
+                .foregroundStyle(Color.gray0)
+            
+            Spacer().frame(height: 16)
+            
+            Rectangle().fill(Color.gray600).frame(height: 0.5).padding(.horizontal, 4)
+            
+            Spacer().frame(height: 16)
+            
+            DialTimePickerView(meridiem: $meridiem, hour: $hour, minute: $minute, by: 1)
+            
+            Spacer().frame(height: 16)
+            
+            OnDotButton(
+                content: "완료",
+                action: onClickCompletionButton,
+                style: .green500
+            )
+        }
     }
 }
