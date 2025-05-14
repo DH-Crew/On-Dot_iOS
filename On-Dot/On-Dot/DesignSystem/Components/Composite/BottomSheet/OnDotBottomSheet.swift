@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct OnDotBottomSheet<Content: View>: View {
+    var maxHeight: CGFloat = 600
+    
     var onDismissRequest: () -> Void
     
     let content: Content
     
+    @State private var contentHeight: CGFloat = .zero
+    
     init(
+        maxHeight: CGFloat = 600,
         onDismissRequest: @escaping () -> Void,
         @ViewBuilder content: () -> Content
     ) {
+        self.maxHeight = maxHeight
         self.onDismissRequest = onDismissRequest
         self.content = content()
     }
@@ -30,7 +36,7 @@ struct OnDotBottomSheet<Content: View>: View {
                 Spacer()
                 
                 content
-                    .frame(maxWidth: .infinity, maxHeight: 600)
+                    .frame(maxWidth: .infinity, maxHeight: maxHeight)
                     .padding(.horizontal, 22)
                     .padding(.top, 16)
                     .padding(.bottom, 16)
@@ -39,6 +45,7 @@ struct OnDotBottomSheet<Content: View>: View {
                             .clipShape(
                                 RoundedCorner(radius: 20, corners: [.topLeft, .topRight])
                             )
+                            .ignoresSafeArea()
                     )
             }
         }
