@@ -58,22 +58,22 @@ struct RepeatSettingView: View {
                     )
                     .padding(.horizontal, 20)
                     
-                    Spacer().frame(height: 16)
-                    
-                    Rectangle().fill(Color.gray600).frame(maxWidth: .infinity).frame(height: 0.5).padding(.horizontal, 4)
-                    
-                    Spacer().frame(height: 16)
-                    
-                    HStack {
-                        Text("공휴일에는 울리지 않기")
-                            .font(OnDotTypo.bodyMediumR)
-                            .foregroundStyle(Color.gray200)
-                        
-                        Spacer()
-                        
-                        OnDotCheckBox(isChecked: $isChecked, action: onClickCheckBox)
-                    }
-                    .padding(.horizontal, 20)
+//                    Spacer().frame(height: 16)
+//                    
+//                    Rectangle().fill(Color.gray600).frame(maxWidth: .infinity).frame(height: 0.5).padding(.horizontal, 4)
+//                    
+//                    Spacer().frame(height: 16)
+//                    
+//                    HStack {
+//                        Text("공휴일에는 울리지 않기")
+//                            .font(OnDotTypo.bodyMediumR)
+//                            .foregroundStyle(Color.gray200)
+//                        
+//                        Spacer()
+//                        
+//                        OnDotCheckBox(isChecked: $isChecked, action: onClickCheckBox)
+//                    }
+//                    .padding(.horizontal, 20)
                 }
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
