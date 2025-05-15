@@ -85,11 +85,11 @@ struct HomeAddressEditView: View {
                 
                 Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 8)
                 
-                if viewModel.searchResult.isEmpty {
-                    Spacer().frame(height: 80)
-                    EmptySearchResultView()
-                } else {
-                    ScrollView {
+                ScrollView {
+                    if viewModel.searchResult.isEmpty {
+                        Spacer().frame(height: 80)
+                        EmptySearchResultView()
+                    } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             Spacer().frame(height: 20)
                             ForEach(viewModel.searchResult) { location in
@@ -105,10 +105,10 @@ struct HomeAddressEditView: View {
                         }
                         .padding(.horizontal, 22)
                     }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        focusState = false
-                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    focusState = false
                 }
                 
                 Spacer()

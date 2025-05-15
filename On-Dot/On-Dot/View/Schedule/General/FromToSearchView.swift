@@ -72,12 +72,12 @@ struct FromToSearchView: View {
                 
                 Spacer().frame(height: 20)
                 
-                if viewModel.searchResult.isEmpty {
-                    Spacer().frame(height: 60)
-                    
-                    EmptySearchResultView()
-                } else {
-                    ScrollView {
+                ScrollView {
+                    if viewModel.searchResult.isEmpty {
+                        Spacer().frame(height: 60)
+                        
+                        EmptySearchResultView()
+                    } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(viewModel.searchResult) { location in
                                 LocationSearchItemView(keyword: viewModel.currentKeyword, title: location.title, detail: location.roadAddress)
@@ -98,14 +98,14 @@ struct FromToSearchView: View {
                         }
                         .padding(.horizontal, 22)
                     }
-                    .contentShape(Rectangle())
-                    .simultaneousGesture(
-                        DragGesture()
-                            .onChanged { _ in
-                                focusedField = nil
-                            }
-                    )
                 }
+                .contentShape(Rectangle())
+                .simultaneousGesture(
+                    DragGesture()
+                        .onChanged { _ in
+                            focusedField = nil
+                        }
+                )
                 
                 Spacer()
                 
