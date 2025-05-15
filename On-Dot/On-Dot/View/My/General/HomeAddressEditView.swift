@@ -85,26 +85,33 @@ struct HomeAddressEditView: View {
                 
                 Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 8)
                 
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 16) {
-                        Spacer().frame(height: 20)
-                        ForEach(viewModel.searchResult) { location in
-                            LocationSearchItemView(keyword: viewModel.addressInput, title: location.title, detail: location.roadAddress)
-                                .onTapGesture {
-                                    Task {
-                                        await viewModel.editHomeAddress(location: location)
-                                        await MainActor.run { onClickBackButton() }
+                if viewModel.searchResult.isEmpty {
+                    Spacer().frame(height: 80)
+                    EmptySearchResultView()
+                } else {
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 16) {
+                            Spacer().frame(height: 20)
+                            ForEach(viewModel.searchResult) { location in
+                                LocationSearchItemView(keyword: viewModel.addressInput, title: location.title, detail: location.roadAddress)
+                                    .onTapGesture {
+                                        Task {
+                                            await viewModel.editHomeAddress(location: location)
+                                            await MainActor.run { onClickBackButton() }
+                                        }
                                     }
-                                }
-                            Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
+                                Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
+                            }
                         }
+                        .padding(.horizontal, 22)
                     }
-                    .padding(.horizontal, 22)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        focusState = false
+                    }
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    focusState = false
-                }
+                
+                Spacer()
             }
             .frame(maxWidth: .infinity)
         }

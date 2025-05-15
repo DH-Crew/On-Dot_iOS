@@ -10,8 +10,6 @@ import SwiftUI
 struct EmptySearchResultView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Spacer().frame(height: 80)
-            
             Image("ic_caution")
                 .resizable()
                 .renderingMode(.template)
