@@ -37,16 +37,20 @@ struct DepartureAlarmRingView: View {
                 
                 if isSnoozed {
                     HStack(spacing: 0) {
-                        Text("출발하기까지 ")
+                        Text("일정까지 ")
                             .font(OnDotTypo.titleMediumSB)
                             .foregroundStyle(Color.gray0)
                         
                         Text(DateFormatterUtil.timeLeftUntil(schedule.departureTriggeredAt))
                             .font(OnDotTypo.titleMediumSB)
                             .foregroundStyle(Color.green500)
+                        
+                        Text(" 전")
+                            .font(OnDotTypo.titleMediumSB)
+                            .foregroundStyle(Color.gray0)
                     }
                     
-                    Text(isSnoozed ? "어서 준비를 시작하세요!" : "준비를 시작하세요!")
+                    Text("어서 출발하세요!")
                         .font(OnDotTypo.titleMediumSB)
                         .foregroundStyle(Color.gray0)
                     
