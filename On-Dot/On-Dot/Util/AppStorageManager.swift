@@ -78,6 +78,10 @@ final class AppStorageManager {
         return try? JSONDecoder().decode(HomeScheduleInfo.self, from: data)
     }
     
+    func removeSchedule(id: Int) {
+        UserDefaults.standard.removeObject(forKey: "schedule-\(id)")
+    }
+    
     // MARK: - 알람 미루기 여부 저장, 조회
     func saveIsSnoozed(_ isSnoozed: Bool) {
         UserDefaults.standard.set(isSnoozed, forKey: isSnoozedKey)
