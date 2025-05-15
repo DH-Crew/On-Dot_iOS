@@ -22,7 +22,7 @@ struct MyPageView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Spacer().frame(height: 24)
                     
-                    Text("마이")
+                    Text("세팅")
                         .font(OnDotTypo.titleMediumSB)
                         .foregroundStyle(Color.gray0)
                     
