@@ -79,6 +79,7 @@ struct CalendarContentView: View {
                             .aspectRatio(1, contentMode: .fit)
                             .background(isSelected ? Color.green900 : Color.clear)
                             .clipShape(Circle())
+                            .contentShape(Circle())
                             .onTapGesture {
                                 if activeWeekdays.isEmpty {
                                     onClickDate(date)
