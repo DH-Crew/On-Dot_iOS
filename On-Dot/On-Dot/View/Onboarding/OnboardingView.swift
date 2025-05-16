@@ -19,11 +19,19 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack(path: $path) {
-            ZStack {
+            ZStack(alignment: .top) {
                 Color.black.ignoresSafeArea()
                 
                 Color.gray900.ignoresSafeArea().onTapGesture {
                     focusState = nil
+                }
+                
+                if viewModel.currentStep > 1 {
+                    TopBar(
+                        image: "ic_back",
+                        onClickButton: viewModel.onClickBackButton
+                    )
+                    .padding(.horizontal, 22)
                 }
                 
                 VStack(spacing: 0) {
@@ -40,8 +48,8 @@ struct OnboardingView: View {
                             )
                             .transition(
                                 .asymmetric(
-                                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                                    removal: .move(edge: .leading).combined(with: .opacity)
+                                    insertion: .move(edge: viewModel.isBackNavigation ? .leading : .trailing).combined(with: .opacity),
+                                    removal: .move(edge: viewModel.isBackNavigation ? .trailing : .leading).combined(with: .opacity)
                                 )
                             )
                         } else if viewModel.currentStep == 2 {
@@ -51,25 +59,18 @@ struct OnboardingView: View {
                             )
                             .transition(
                                 .asymmetric(
-                                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                                    removal: .move(edge: .leading).combined(with: .opacity)
+                                    insertion: .move(edge: viewModel.isBackNavigation ? .leading : .trailing).combined(with: .opacity),
+                                    removal: .move(edge: viewModel.isBackNavigation ? .trailing : .leading).combined(with: .opacity)
                                 )
                             )
                         } else if viewModel.currentStep == 3 {
                             OnboardingStep3View(
-                                onClickButton: { type in
-                                    switch type {
-                                    case .sound:
-                                        path.append(Onboarding.sound)
-                                    case .delay:
-                                        path.append(Onboarding.delay)
-                                    }
-                                }
+                                viewModel: viewModel
                             )
                             .transition(
                                 .asymmetric(
-                                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                                    removal: .move(edge: .leading).combined(with: .opacity)
+                                    insertion: .move(edge: viewModel.isBackNavigation ? .leading : .trailing).combined(with: .opacity),
+                                    removal: .move(edge: viewModel.isBackNavigation ? .trailing : .leading).combined(with: .opacity)
                                 )
                             )
                         } else if viewModel.currentStep == 4 {
@@ -79,8 +80,8 @@ struct OnboardingView: View {
                             )
                             .transition(
                                 .asymmetric(
-                                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                                    removal: .move(edge: .leading).combined(with: .opacity)
+                                    insertion: .move(edge: viewModel.isBackNavigation ? .leading : .trailing).combined(with: .opacity),
+                                    removal: .move(edge: viewModel.isBackNavigation ? .trailing : .leading).combined(with: .opacity)
                                 )
                             )
                         } else if viewModel.currentStep == 5 {
@@ -90,8 +91,8 @@ struct OnboardingView: View {
                             )
                             .transition(
                                 .asymmetric(
-                                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                                    removal: .move(edge: .leading).combined(with: .opacity)
+                                    insertion: .move(edge: viewModel.isBackNavigation ? .leading : .trailing).combined(with: .opacity),
+                                    removal: .move(edge: viewModel.isBackNavigation ? .trailing : .leading).combined(with: .opacity)
                                 )
                             )
                         }
@@ -104,9 +105,7 @@ struct OnboardingView: View {
                         content: "다음",
                         action: {
                             if viewModel.isNextButtonEnabled {
-                                withAnimation {
-                                    viewModel.onClickButton()
-                                }
+                                viewModel.onClickButton()
                             }
                         },
                         style: viewModel.isNextButtonEnabled ? .green500 : .gray300
@@ -154,42 +153,6 @@ struct OnboardingView: View {
                     }
                 }
                 .ignoresSafeArea(.keyboard, edges: .bottom)
-            }
-            .navigationDestination(for: Onboarding.self) { view in
-                switch view {
-                case .sound: 
-                    SoundSettingsView(
-                        selectedCategory: $viewModel.selectedCategory,
-                        selectedVolume: $viewModel.selectedVolume,
-                        alarmSoundList: viewModel.alarmLibrary[viewModel.selectedCategory] ?? [],
-                        onClickBtnBack: {
-                            path.removeLast()
-                        },
-                        onClickToggle: { newValue in viewModel.isMuteMode = newValue },
-                        onSoundSelected: { newValue in
-                            viewModel.selectedSound = newValue
-                            AlarmPlayer.shared.stop()
-                            AlarmPlayer.shared.play(soundFileName: newValue.fileName, numberOfLoops: 0)
-                        }
-                    )
-                    .navigationBarBackButtonHidden(true)
-                    .enableSwipeBack()
-                    .onDisappear {
-                        AlarmPlayer.shared.stop()
-                    }
-                case .delay:
-                    AlarmDelaySettingsView(
-                        selectedInterval: $viewModel.selectedInterval,
-                        selectedRepeatCount: $viewModel.selectedRepeatCount,
-                        intervalList: viewModel.intervalList,
-                        repeatCountList: viewModel.repeatCountList,
-                        onClickBtnBack: { path.removeLast() },
-                        onClickToggle: { newValue in viewModel.isDelayMode = newValue }
-                    )
-                    .navigationBarBackButtonHidden(true).enableSwipeBack()
-                @unknown default:
-                    EmptyView()
-                }
             }
         }
     }

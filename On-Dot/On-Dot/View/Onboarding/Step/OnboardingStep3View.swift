@@ -8,63 +8,31 @@
 import SwiftUI
 
 struct OnboardingStep3View: View {
-    var onClickButton: (OnboardingStep3View.ButtonType) -> Void
-    
-    enum ButtonType {
-        case sound
-        case delay
-    }
+    @StateObject var viewModel: OnboardingViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 0) {
-                Text("알람의 초기값")
-                    .font(OnDotTypo.titleMediumM)
-                    .foregroundColor(Color.green500)
-                Text("을 설정해 주세요.")
-                    .font(OnDotTypo.titleMediumM)
-                    .foregroundColor(Color.gray0)
+            if viewModel.internalStep == 1 {
+                SoundSettingsView(
+                    selectedCategory: $viewModel.selectedCategory,
+                    selectedVolume: $viewModel.selectedVolume,
+                    alarmSoundList: viewModel.alarmLibrary[viewModel.selectedCategory] ?? [],
+                    onClickToggle: { newValue in viewModel.isMuteMode = newValue },
+                    onSoundSelected: { newValue in
+                        viewModel.selectedSound = newValue
+                        AlarmPlayer.shared.stop()
+                        AlarmPlayer.shared.play(soundFileName: newValue.fileName, numberOfLoops: 0)
+                    }
+                )
+            } else {
+                AlarmDelaySettingsView(
+                    selectedInterval: $viewModel.selectedInterval,
+                    selectedRepeatCount: $viewModel.selectedRepeatCount,
+                    intervalList: viewModel.intervalList,
+                    repeatCountList: viewModel.repeatCountList,
+                    onClickToggle: { newValue in viewModel.isDelayMode = newValue }
+                )
             }
-            
-            Spacer().frame(height: 16)
-            
-            Text("추후에 마이페이지 또는 알람 생성에서 수정할 수 있어요.")
-                .font(OnDotTypo.bodyMediumR)
-                .foregroundStyle(Color.green300)
-            
-            Spacer().frame(height: 40)
-            
-            buttonView(buttonType: .sound)
-            
-            Spacer().frame(height: 16)
-            
-            buttonView(buttonType: .delay)
-        }
-    }
-    
-    @ViewBuilder
-    private func buttonView(
-        buttonType: OnboardingStep3View.ButtonType
-    ) -> some View {
-        HStack {
-            Text(buttonType == .sound ? "사운드" : "알림 미루기")
-                .font(OnDotTypo.bodyLargeR1)
-                .foregroundStyle(Color.gray0)
-            
-            Spacer()
-            
-            Image("ic_arrow_right")
-                .resizable()
-                .frame(width: 20, height: 20)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .padding(.horizontal, 20)
-        .background(Color.gray700)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onClickButton(buttonType)
         }
     }
 }

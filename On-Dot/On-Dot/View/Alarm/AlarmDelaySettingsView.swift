@@ -15,62 +15,63 @@ struct AlarmDelaySettingsView: View {
     let intervalList: [AlarmInterval]
     let repeatCountList: [RepeatCount]
     
-    var onClickBtnBack: () -> Void
     var onClickToggle: (Bool) -> Void
     
     var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                Text("알람의 미루기")
+                    .font(OnDotTypo.titleMediumM)
+                    .foregroundColor(Color.green500)
+                Text("를 설정해 주세요.")
+                    .font(OnDotTypo.titleMediumM)
+                    .foregroundColor(Color.gray0)
+            }
             
-            Color.gray900.ignoresSafeArea()
+            Spacer().frame(height: 16)
             
-            VStack(spacing: 0) {
-                TopBar(
-                    title: "알람 미루기",
-                    image: "ic_back",
-                    onClickButton: onClickBtnBack
-                )
-                
-                Spacer().frame(height: 24)
-                
-                ScrollView {
-                    HStack {
-                        Text("알람 미루기")
-                            .font(OnDotTypo.bodyLargeR1)
-                            .foregroundStyle(Color.gray0)
-                        
-                        Spacer()
-                        
-                        OnDotToggle(isOn: $isOn, action: { onClickToggle(isOn) })
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .background(Color.gray700)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    
-                    Spacer().frame(height: 20)
-                    
-                    if isOn {
-                        VStack(spacing: 20) {
-                            AlarmIntervalView(
-                                selectedInterval: $selectedInterval,
-                                intervalList: intervalList
-                            )
-                            
-                            AlarmRepeatCountView(
-                                selectedRepeatCount: $selectedRepeatCount,
-                                repeatCountList: repeatCountList
-                            )
-                        }
-                    }
+            Text("추후에 마이페이지에서 수정할 수 있어요.")
+                .font(OnDotTypo.bodyMediumR)
+                .foregroundStyle(Color.green300)
+            
+            Spacer().frame(height: 40)
+            
+            ScrollView {
+                HStack {
+                    Text("알람 미루기")
+                        .font(OnDotTypo.bodyLargeR1)
+                        .foregroundStyle(Color.gray0)
                     
                     Spacer()
+                    
+                    OnDotToggle(isOn: $isOn, action: { onClickToggle(isOn) })
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .background(Color.gray700)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+                Spacer().frame(height: 20)
+                
+                if isOn {
+                    VStack(spacing: 20) {
+                        AlarmIntervalView(
+                            selectedInterval: $selectedInterval,
+                            intervalList: intervalList
+                        )
+                        
+                        AlarmRepeatCountView(
+                            selectedRepeatCount: $selectedRepeatCount,
+                            repeatCountList: repeatCountList
+                        )
+                    }
+                }
+                
+                Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.horizontal, 22)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

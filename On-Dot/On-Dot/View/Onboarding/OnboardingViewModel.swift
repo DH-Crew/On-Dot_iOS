@@ -15,7 +15,6 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     @Published var onboardingCompleted: Bool = false
-    
     @Published var currentStep = 1
     @Published var hourText: String = ""
     @Published var minuteText: String = ""
@@ -27,6 +26,8 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isDelayMode: Bool = false
     @Published var selectedInterval: AlarmInterval = .five
     @Published var selectedRepeatCount: RepeatCount = .infinite
+    @Published var internalStep: Int = 1
+    @Published var isBackNavigation: Bool = false
     
     var isNextButtonEnabled: Bool {
         switch currentStep {
@@ -89,13 +90,26 @@ final class OnboardingViewModel: ObservableObject {
     // MARK: Handler
     func onClickButton() {
         if currentStep < 5 {
-            if currentStep == 3 { saveAlarmSettings() }
-            currentStep += 1
+            if currentStep == 3 {
+                if internalStep == 1 { internalStep += 1 }
+                else {
+                    saveAlarmSettings()
+                    currentStep += 1
+                }
+            } else {
+                isBackNavigation = false
+                currentStep += 1
+            }
         } else if currentStep == 5 {
             Task {
                 await saveOnboardingInfo()
             }
         }
+    }
+    
+    func onClickBackButton() {
+        isBackNavigation = true
+        currentStep -= 1
     }
     
     func saveAlarmSettings() {
