@@ -67,6 +67,7 @@ struct ContentView: View {
                     interval: router.interval,
                     repeatCount: router.repeatCount,
                     type: router.alarmType,
+                    mapType: router.mapType,
                     onClickNavigateButton: router.onClickNavigateButton,
                     onClickDelayButton: router.onClickDelayButton
                 )

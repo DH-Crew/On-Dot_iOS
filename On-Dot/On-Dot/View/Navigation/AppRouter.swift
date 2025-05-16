@@ -21,6 +21,7 @@ final class AppRouter: ObservableObject {
     @Published var isSnoozed = false
     @Published var fromOnboarding: Bool = false
     @Published var showPreparationStartAnimation: Bool = false
+    @Published var mapType: MapProvider.MapType = .naver
     
     private var currentScheduleId: Int = -1
     
@@ -40,7 +41,9 @@ final class AppRouter: ObservableObject {
                 print("로컬에 해당 일정이 없습니다. 화면 전환 생략합니다.")
             }
             PendingPushManager.shared.userInfo = nil
-        } 
+        }
+        
+        getDefaultMap()
     }
     
     func navigate(to newState: AppState) {
@@ -71,7 +74,7 @@ final class AppRouter: ObservableObject {
             
             if let scheduleInfo = appStorageManager.getSchedule(id: id) {
                 self.schedule = scheduleInfo
-            }
+            } else { return }
             
             if type == "prep" { state = .preparation }
             else if type == "depart" { state = .departure }
@@ -97,7 +100,7 @@ final class AppRouter: ObservableObject {
     func onPreparationStarted() {
         isSnoozed = false
         appStorageManager.saveIsSnoozed(isSnoozed)
-        state = .splash
+        state = .main
         showPreparationStartAnimation = true
     }
     
@@ -107,7 +110,7 @@ final class AppRouter: ObservableObject {
             await MainActor.run {
                 isSnoozed = false
                 appStorageManager.saveIsSnoozed(isSnoozed)
-                state = .splash
+                state = .main
                 PendingPushManager.shared.userInfo = nil
             }
         }
@@ -121,5 +124,9 @@ final class AppRouter: ObservableObject {
         } catch {
             print("일정 삭제 실패: \(error)")
         }
+    }
+    
+    private func getDefaultMap() {
+        mapType = appStorageManager.getDefaultMap()
     }
 }
