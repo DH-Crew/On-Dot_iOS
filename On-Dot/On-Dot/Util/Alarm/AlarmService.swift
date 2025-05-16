@@ -22,7 +22,6 @@ final class AlarmService {
             let id = info.id
             // 준비 알람 (Optional)
             if let prepDate = info.preparationTriggeredAt {
-                AppStorageManager.shared.saveSchedule(info)
                 scheduleTimer(id: id, type: "prep", at: prepDate)
                 scheduleLocalNotification(id: id, type: "prep", at: prepDate)
             }

@@ -250,6 +250,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
             fromLocation = location.title
             isFromLocationSelected = true
         }
+        
+        searchResult.removeAll()
     }
     
     func onClickClose(field: FocusField) {
