@@ -73,6 +73,8 @@ final class MyPageViewModel: ObservableObject {
     
     // MARK: - HomeAddressEditView Handler
     func onValueChanged(newValue: String) async {
+        if newValue.isEmpty { return }
+        
         do {
             let response = try await locationRepository.searchLocation(query: newValue)
             

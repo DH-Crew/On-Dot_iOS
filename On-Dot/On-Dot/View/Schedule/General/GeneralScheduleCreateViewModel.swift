@@ -185,6 +185,11 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
     
     // MARK: - FromToLocationView Handler
     func onValueChanged(newValue: String) async {
+        if newValue.isEmpty {
+            searchResult.removeAll()
+            return
+        }
+        
         do {
             let response = try await locationRepository.searchLocation(query: newValue)
             
@@ -248,6 +253,8 @@ final class GeneralScheduleCreateViewModel: ObservableObject {
             fromLocation = location.title
             isFromLocationSelected = true
         }
+        
+        searchResult.removeAll()
     }
     
     func onClickClose(field: FocusField) {

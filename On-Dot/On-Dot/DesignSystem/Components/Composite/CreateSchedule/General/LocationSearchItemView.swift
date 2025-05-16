@@ -24,7 +24,11 @@ struct LocationSearchItemView: View {
                     .font(OnDotTypo.bodyLargeR2)
                     .foregroundStyle(Color.gray300)
             }
+            
+            Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
     }
 }
 

@@ -66,7 +66,7 @@ struct OnDotTabView: View {
                     navigateToLoginView: { convertAppState(AppState.auth) }
                 )
                 .tabItem {
-                    Label("", image: selectedTab == 1 ? "ic_my_selected" : "ic_my_unselected")
+                    Label("", image: selectedTab == 1 ? "ic_settings_selected" : "ic_settings_unselected")
                 }
                 .tag(1)
             }

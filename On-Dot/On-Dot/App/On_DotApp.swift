@@ -75,7 +75,10 @@ struct On_DotApp: App {
                   NotificationCenter.default.publisher(for: .didReceivePush)
                 ) { note in
                   if let userInfo = note.userInfo {
-                      router.handleNotificationPayload(userInfo)
+                      if let pendingInfo = PendingPushManager.shared.userInfo, !pendingInfo.isEmpty {
+                          router.handleNotificationPayload(userInfo)
+                          PendingPushManager.shared.userInfo = nil
+                      }
                   }
                 }
                 .onAppear {

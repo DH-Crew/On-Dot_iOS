@@ -10,6 +10,8 @@ import SwiftUI
 final class AppRouter: ObservableObject {
     static let shared = AppRouter() 
     private let appStorageManager: AppStorageManager
+    private let scheduleRepository: ScheduleRepository
+    
     @Published var state: AppState
     @Published var path: [AppState] = []
     @Published var schedule: HomeScheduleInfo = .placeholder
@@ -19,17 +21,25 @@ final class AppRouter: ObservableObject {
     @Published var isSnoozed = false
     @Published var showPreparationStartAnimation: Bool = false
     
+    private var currentScheduleId: Int = -1
+    
     private init(
-        appStorageManager: AppStorageManager = AppStorageManager.shared
+        appStorageManager: AppStorageManager = AppStorageManager.shared,
+        scheduleRepository: ScheduleRepository = ScheduleRepositoryImpl()
     ) {
         self.appStorageManager = appStorageManager
+        self.scheduleRepository = scheduleRepository
         self.state = .splash
         self.isSnoozed = appStorageManager.getIsSnoozed()
         
         if let userInfo = PendingPushManager.shared.userInfo {
-            handleNotificationPayload(userInfo)
+            if let id = userInfo["id"] as? Int, appStorageManager.getSchedule(id: id) != nil {
+                handleNotificationPayload(userInfo)
+            } else {
+                print("로컬에 해당 일정이 없습니다. 화면 전환 생략합니다.")
+            }
             PendingPushManager.shared.userInfo = nil
-        }
+        } 
     }
     
     func navigate(to newState: AppState) {
@@ -51,6 +61,7 @@ final class AppRouter: ObservableObject {
            target == "alarmRing",
            let type = userInfo["type"] as? String,
            let id = userInfo["id"] as? Int {
+            currentScheduleId = id
             
             if let scheduleInfo = appStorageManager.getSchedule(id: id) {
                 self.schedule = scheduleInfo
@@ -63,8 +74,6 @@ final class AppRouter: ObservableObject {
             interval = appStorageManager.getInterval()?.rawValue ?? 3
             repeatCount = appStorageManager.getRepeatCount()?.count ?? 0
             isSnoozed = false
-            
-            self.state = .preparation
 
             print("scheduleInfo: \(schedule)")
         }
@@ -87,8 +96,24 @@ final class AppRouter: ObservableObject {
     }
     
     func onClickNavigateButton() {
-        isSnoozed = false
-        appStorageManager.saveIsSnoozed(isSnoozed)
-        state = .splash
+        Task {
+            await removeSchedule()
+            await MainActor.run {
+                isSnoozed = false
+                appStorageManager.saveIsSnoozed(isSnoozed)
+                state = .splash
+                PendingPushManager.shared.userInfo = nil
+            }
+        }
+    }
+    
+    private func removeSchedule() async {
+        do {
+            guard currentScheduleId > 0 else { return }
+            appStorageManager.removeSchedule(id: currentScheduleId)
+            try await scheduleRepository.deleteSchedule(id: currentScheduleId)
+        } catch {
+            print("일정 삭제 실패: \(error)")
+        }
     }
 }

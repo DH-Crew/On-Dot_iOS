@@ -73,25 +73,31 @@ struct FromToSearchView: View {
                 Spacer().frame(height: 20)
                 
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 16) {
-                        ForEach(viewModel.searchResult) { location in
-                            LocationSearchItemView(keyword: viewModel.currentKeyword, title: location.title, detail: location.roadAddress)
-                                .onTapGesture {
-                                    if viewModel.lastFocusedField == .from {
-                                        viewModel.selectedFromLocation = location
-                                        print("selectedFromLocation: \(viewModel.selectedFromLocation)")
-                                    } else if viewModel.lastFocusedField == .to {
-                                        viewModel.selectedToLocation = location
-                                        print("selectedToLocation: \(viewModel.selectedToLocation)")
+                    if viewModel.searchResult.isEmpty {
+                        Spacer().frame(height: 60)
+                        
+                        EmptySearchResultView()
+                    } else {
+                        LazyVStack(alignment: .leading, spacing: 16) {
+                            ForEach(viewModel.searchResult) { location in
+                                LocationSearchItemView(keyword: viewModel.currentKeyword, title: location.title, detail: location.roadAddress)
+                                    .onTapGesture {
+                                        if viewModel.lastFocusedField == .from {
+                                            viewModel.selectedFromLocation = location
+                                            print("selectedFromLocation: \(viewModel.selectedFromLocation)")
+                                        } else if viewModel.lastFocusedField == .to {
+                                            viewModel.selectedToLocation = location
+                                            print("selectedToLocation: \(viewModel.selectedToLocation)")
+                                        }
+                                        
+                                        viewModel.onClickLocationItem(location: location)
+                                        focusedField = nil
                                     }
-                                    
-                                    viewModel.onClickLocationItem(location: location)
-                                    focusedField = nil
-                                }
-                            Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
+                                Rectangle().fill(Color.gray800).frame(maxWidth: .infinity).frame(height: 0.5)
+                            }
                         }
+                        .padding(.horizontal, 22)
                     }
-                    .padding(.horizontal, 22)
                 }
                 .contentShape(Rectangle())
                 .simultaneousGesture(
@@ -100,6 +106,8 @@ struct FromToSearchView: View {
                             focusedField = nil
                         }
                 )
+                
+                Spacer()
                 
                 OnDotButton(
                     content: "다음",

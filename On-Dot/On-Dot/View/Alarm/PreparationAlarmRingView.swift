@@ -40,7 +40,7 @@ struct PreparationAlarmRingView: View {
                         .font(OnDotTypo.titleMediumSB)
                         .foregroundStyle(Color.gray0)
                     
-                    Text(DateFormatterUtil.timeLeftUntil(schedule.appointmentAt))
+                    Text(DateFormatterUtil.timeLeftUntil(schedule.departureTriggeredAt))
                         .font(OnDotTypo.titleMediumSB)
                         .foregroundStyle(Color.green500)
                 }
