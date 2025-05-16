@@ -12,20 +12,24 @@ final class MyPageViewModel: ObservableObject {
     private let memberRepository: MemberRepository
     private let authRepository: AuthRepository
     private let keychainManager: KeychainManager
+    private let appStorageManager: AppStorageManager
     
     init(
         locationRepository: LocationRepository = LocationRepositoryImpl(),
         memberRepository: MemberRepository = MemberRepositoryImpl(),
         authRepository: AuthRepository = AuthRepositoryImpl(),
-        keychainManager: KeychainManager = KeychainManager.shared
+        keychainManager: KeychainManager = KeychainManager.shared,
+        appStorageManager: AppStorageManager = AppStorageManager.shared
     ) {
         self.locationRepository = locationRepository
         self.memberRepository = memberRepository
         self.authRepository = authRepository
         self.keychainManager = keychainManager
+        self.appStorageManager = appStorageManager
         
         Task {
             await getHomeAddress()
+            selectedMapType = appStorageManager.getDefaultMap()
         }
     }
     
@@ -142,6 +146,7 @@ final class MyPageViewModel: ObservableObject {
     func editMapProvider() async {
         do {
             try await memberRepository.editMapProvider(request: MapProvider(mapProvider: selectedMapType))
+            appStorageManager.saveDefaultMap(mapType: selectedMapType)
         } catch {
             print("지도 공급자 변경 실패: \(error)")
         }

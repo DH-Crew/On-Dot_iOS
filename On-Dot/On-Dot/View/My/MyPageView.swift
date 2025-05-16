@@ -31,7 +31,7 @@ struct MyPageView: View {
                     MyPageMenuView(
                         title: "일반",
                         content1: "집 주소 설정",
-//                        content2: "길 안내 지도 설정",
+                        content2: "길 안내 지도 설정",
                         onClickContent1: { path.append(MyPageDestination.homeAddress) },
                         onClickContent2: { path.append(MyPageDestination.defaultMap) }
                     )

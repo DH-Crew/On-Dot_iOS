@@ -42,6 +42,7 @@ struct DefaultMapSettingView: View {
                 HStack(spacing: 16) {
                     mapItem(type: .naver)
                     mapItem(type: .kakao)
+                    mapItem(type: .apple)
                 }
                 .frame(maxWidth: .infinity)
                 
@@ -53,6 +54,7 @@ struct DefaultMapSettingView: View {
                         Task {
                             await viewModel.editMapProvider()
                         }
+                        onClickBackButton()
                     },
                     style: .green500
                 )
