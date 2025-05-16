@@ -109,6 +109,7 @@ final class AppRouter: ObservableObject {
     
     private func removeSchedule() async {
         do {
+            guard currentScheduleId > 0 else { return }
             appStorageManager.removeSchedule(id: currentScheduleId)
             try await scheduleRepository.deleteSchedule(id: currentScheduleId)
         } catch {
