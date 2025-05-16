@@ -109,7 +109,12 @@ final class OnboardingViewModel: ObservableObject {
     
     func onClickBackButton() {
         isBackNavigation = true
-        currentStep -= 1
+        if currentStep == 3 && internalStep > 1 {
+            internalStep -= 1
+        } else {
+            currentStep -= 1
+            internalStep = 1
+        }
     }
     
     func saveAlarmSettings() {
