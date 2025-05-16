@@ -76,7 +76,7 @@ struct OnboardingView: View {
                         } else if viewModel.currentStep == 4 {
                             OnboardingStep4View(
                                 selectedItem: $viewModel.selectedExpectationItem,
-                                gridItems: viewModel.gridItems
+                                reasonList: viewModel.step4ReasonItems
                             )
                             .transition(
                                 .asymmetric(
@@ -87,7 +87,7 @@ struct OnboardingView: View {
                         } else if viewModel.currentStep == 5 {
                             OnboardingStep5View(
                                 selectedItem: $viewModel.selectedReasonItem,
-                                reasonList: viewModel.reasonItems
+                                reasonList: viewModel.step5ReasonItems
                             )
                             .transition(
                                 .asymmetric(
