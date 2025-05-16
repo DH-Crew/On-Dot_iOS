@@ -29,7 +29,7 @@ final class MyPageViewModel: ObservableObject {
         
         Task {
             await getHomeAddress()
-            selectedMapType = appStorageManager.getDefaultMap()
+            await MainActor.run { selectedMapType = appStorageManager.getDefaultMap() }
         }
     }
     
