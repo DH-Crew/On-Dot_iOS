@@ -36,11 +36,12 @@ struct ContentView: View {
                 )
             case .onboarding:
                 OnboardingView(
-                    onOnboardingCompleted: { router.state = .main }
+                    onOnboardingCompleted: router.onOnboardingCompleted
                 )
             case .main:
                 MainView(
                     isSnoozed: router.isSnoozed,
+                    fromOnboarding: router.fromOnboarding,
                     convertAppState: { newState in
                         router.state = newState
                     }

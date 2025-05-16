@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
     @State var isSnoozed: Bool
+    @State var fromOnboarding: Bool
     
     var convertAppState: (AppState) -> Void
     
@@ -17,7 +18,12 @@ struct MainView: View {
         ZStack(alignment: .center) {
             Color.gray900.ignoresSafeArea()
             
-            OnDotTabView(selectedTab: $viewModel.selectedTab, isSnoozed: isSnoozed, convertAppState: convertAppState)
+            OnDotTabView(
+                selectedTab: $viewModel.selectedTab,
+                isSnoozed: isSnoozed,
+                fromOnboarding: fromOnboarding,
+                convertAppState: convertAppState
+            )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -26,16 +32,19 @@ struct MainView: View {
 struct OnDotTabView: View {
     @Binding var selectedTab: Int
     let isSnoozed: Bool
+    let fromOnboarding: Bool
     
     var convertAppState: (AppState) -> Void
     
     init(
         selectedTab: Binding<Int>,
         isSnoozed: Bool,
+        fromOnboarding: Bool,
         convertAppState: @escaping (AppState) -> Void
     ) {
         self._selectedTab = selectedTab
         self.isSnoozed = isSnoozed
+        self.fromOnboarding = fromOnboarding
         self.convertAppState = convertAppState
 
         let appearance = UITabBarAppearance()
@@ -71,6 +80,17 @@ struct OnDotTabView: View {
                 .tag(1)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
+
+private struct MapSettingDialogView: View {
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+            
+            
         }
     }
 }

@@ -19,6 +19,7 @@ final class AppRouter: ObservableObject {
     @Published var repeatCount: Int = -1
     @Published var alarmType: String = ""
     @Published var isSnoozed = false
+    @Published var fromOnboarding: Bool = false
     @Published var showPreparationStartAnimation: Bool = false
     
     private var currentScheduleId: Int = -1
@@ -54,6 +55,11 @@ final class AppRouter: ObservableObject {
         if !path.isEmpty {
             path.removeLast()
         }
+    }
+    
+    func onOnboardingCompleted() {
+        fromOnboarding = true
+        state = .main
     }
     
     func handleNotificationPayload(_ userInfo: [AnyHashable: Any]) {
