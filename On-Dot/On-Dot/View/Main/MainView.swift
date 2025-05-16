@@ -142,6 +142,8 @@ private struct MapSettingDialogView: View {
     ) -> some View {
         VStack(alignment: .center, spacing: 16) {
             Image(type.image)
+                .resizable()
+                .frame(width: 46, height: 46)
             
             Text(type.title)
                 .font(OnDotTypo.bodyMediumR)
