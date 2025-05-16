@@ -20,7 +20,7 @@ struct MainView: View {
             
             OnDotTabView(
                 isSnoozed: isSnoozed,
-                fromOnboarding: fromOnboarding,
+                fromOnboarding: $fromOnboarding,
                 convertAppState: convertAppState
             )
             .environmentObject(viewModel)
@@ -32,7 +32,7 @@ struct MainView: View {
 struct OnDotTabView: View {
     @EnvironmentObject private var viewModel: MainViewModel
     
-    @State var fromOnboarding: Bool
+    @Binding var fromOnboarding: Bool
     
     let isSnoozed: Bool
     
@@ -40,11 +40,11 @@ struct OnDotTabView: View {
     
     init(
         isSnoozed: Bool,
-        fromOnboarding: Bool,
+        fromOnboarding: Binding<Bool>,
         convertAppState: @escaping (AppState) -> Void
     ) {
         self.isSnoozed = isSnoozed
-        self.fromOnboarding = fromOnboarding
+        self._fromOnboarding = fromOnboarding
         self.convertAppState = convertAppState
 
         let appearance = UITabBarAppearance()
