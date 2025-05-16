@@ -9,6 +9,10 @@ import Foundation
 
 struct HomeScheduleInfo: Codable, Identifiable {
     let id: Int
+    let startLongitude: Double
+    let startLatitude: Double
+    let endLongitude: Double
+    let endLatitude: Double
     var title: String
     var isRepeat: Bool
     var repeatDays: [Int]
@@ -20,6 +24,10 @@ struct HomeScheduleInfo: Codable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case id = "scheduleId"
+        case startLongitude
+        case startLatitude
+        case endLongitude
+        case endLatitude
         case title = "scheduleTitle"
         case isRepeat
         case repeatDays
@@ -32,6 +40,10 @@ struct HomeScheduleInfo: Codable, Identifiable {
     
     static let placeholder = HomeScheduleInfo(
         id: -1,
+        startLongitude: 0.0,
+        startLatitude: 0.0,
+        endLongitude: 0.0,
+        endLatitude: 0.0,
         title: "",
         isRepeat: false,
         repeatDays: [],

@@ -17,6 +17,7 @@ final class AppStorageManager {
     private let intervalKey = "interval"
     private let repeatCountKey = "repeatCount"
     private let isSnoozedKey = "isSnoozed"
+    private let mapTypeKey = "mapType"
     
     private init() {}
     
@@ -89,5 +90,18 @@ final class AppStorageManager {
     
     func getIsSnoozed() -> Bool {
         return UserDefaults.standard.bool(forKey: isSnoozedKey)
+    }
+    
+    // MARK: - 기본 지도 저장, 조회
+    func saveDefaultMap(mapType: MapProvider.MapType) {
+        UserDefaults.standard.set(mapType.rawValue, forKey: mapTypeKey)
+    }
+    
+    func getDefaultMap() -> MapProvider.MapType {
+        if let rawValue = UserDefaults.standard.string(forKey: mapTypeKey),
+               let mapType = MapProvider.MapType(rawValue: rawValue) {
+                return mapType
+            }
+        return .naver
     }
 }

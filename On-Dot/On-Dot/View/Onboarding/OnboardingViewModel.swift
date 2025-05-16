@@ -15,7 +15,6 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     @Published var onboardingCompleted: Bool = false
-    
     @Published var currentStep = 1
     @Published var hourText: String = ""
     @Published var minuteText: String = ""
@@ -27,6 +26,8 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isDelayMode: Bool = false
     @Published var selectedInterval: AlarmInterval = .five
     @Published var selectedRepeatCount: RepeatCount = .infinite
+    @Published var internalStep: Int = 1
+    @Published var isBackNavigation: Bool = false
     
     var isNextButtonEnabled: Bool {
         switch currentStep {
@@ -69,17 +70,17 @@ final class OnboardingViewModel: ObservableObject {
     let repeatCountList: [RepeatCount] = RepeatCount.allCases
     
     // MARK: OnboardingStep4View
-    @Published var selectedExpectationItem: ExpectationItem?
-    let gridItems = [
-        ExpectationItem(id: 1, imageName: "ic_hurry_up", title: "지각방지"),
-        ExpectationItem(id: 2, imageName: "ic_mind_peace", title: "신경 쓰임 해소"),
-        ExpectationItem(id: 3, imageName: "ic_calendar_check", title: "간편한 일정 관리"),
-        ExpectationItem(id: 4, imageName: "ic_alarm_clock", title: "정확한 출발 타이밍 알림")
+    @Published var selectedExpectationItem: ReasonItem?
+    let step4ReasonItems = [
+        ReasonItem(id: 1, content: "지각방지"),
+        ReasonItem(id: 2, content: "신경 쓰임 해소"),
+        ReasonItem(id: 3, content: "간편한 일정 관리"),
+        ReasonItem(id: 4, content: "정확한 출발 타이밍 알림")
     ]
     
     // MARK: OnboardingStep5View
     @Published var selectedReasonItem: ReasonItem?
-    let reasonItems = [
+    let step5ReasonItems = [
         ReasonItem(id: 5, content: "여유 있는 하루를 보내고 싶어서"),
         ReasonItem(id: 6, content: "중요한 사람과의 약속을 잘 지키고 싶어서"),
         ReasonItem(id: 7, content: "계획한 하루를 흐트러짐 없이 보내고 싶어서"),
@@ -89,12 +90,33 @@ final class OnboardingViewModel: ObservableObject {
     // MARK: Handler
     func onClickButton() {
         if currentStep < 5 {
-            if currentStep == 3 { saveAlarmSettings() }
-            currentStep += 1
+            if currentStep == 3 {
+                if internalStep == 1 {
+                    isBackNavigation = false
+                    internalStep += 1
+                } else {
+                    saveAlarmSettings()
+                    internalStep = 1
+                    currentStep += 1
+                }
+            } else {
+                isBackNavigation = false
+                currentStep += 1
+            }
         } else if currentStep == 5 {
             Task {
                 await saveOnboardingInfo()
             }
+        }
+    }
+    
+    func onClickBackButton() {
+        isBackNavigation = true
+        if currentStep == 3 && internalStep > 1 {
+            internalStep -= 1
+        } else {
+            currentStep -= 1
+            internalStep = 1
         }
     }
     
@@ -132,13 +154,13 @@ final class OnboardingViewModel: ObservableObject {
                     longitude: coordinate.longitude,
                     latitude: coordinate.latitude,
                     soundCategory: selectedCategory.rawValue,
-                    ringTone: selectedSound?.ringTone ?? "",
+                    ringTone: selectedSound?.ringTone ?? "FRACTURED_LOVE",
                     volume: selectedVolume,
                     questions: [
                         OnboardingRequest.Question(questionId: 1, answerId: selectedExpectationItem?.id ?? -1),
                         OnboardingRequest.Question(questionId: 2, answerId: selectedReasonItem?.id ?? -1)
                     ],
-                    alarmMode: isMuteMode ? "VIBRATE" : "SOUND",
+                    alarmMode: isMuteMode ? "SILENT" : "SOUND",
                     isSnoozeEnabled: isDelayMode,
                     snoozeInterval: selectedInterval.rawValue,
                     snoozeCount: selectedRepeatCount.count

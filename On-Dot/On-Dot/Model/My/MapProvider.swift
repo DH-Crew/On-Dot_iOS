@@ -11,11 +11,13 @@ struct MapProvider: Codable {
     enum MapType: String, Codable {
         case kakao = "KAKAO"
         case naver = "NAVER"
+        case apple = "APPLE"
         
         var title: String {
             switch self {
             case .kakao: return "카카오맵"
             case .naver: return "네이버맵"
+            case .apple: return "애플맵"
             }
         }
         
@@ -23,6 +25,7 @@ struct MapProvider: Codable {
             switch self {
             case .kakao: return "ic_kakao_map"
             case .naver: return "ic_naver_map"
+            case .apple: return "ic_apple_map"
             }
         }
     }

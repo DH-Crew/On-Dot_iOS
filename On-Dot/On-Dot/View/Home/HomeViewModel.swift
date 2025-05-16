@@ -109,14 +109,6 @@ final class HomeViewModel: ObservableObject {
         selectedTime = date
     }
     
-    private func loadSampleData() {
-        scheduleList = [
-            HomeScheduleInfo(id: 1, title: "일정1", isRepeat: false, repeatDays: [], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: true),
-            HomeScheduleInfo(id: 2, title: "일정2", isRepeat: false, repeatDays: [], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: nil, departureTriggeredAt: Date(), isEnabled: false),
-            HomeScheduleInfo(id: 3, title: "일정3", isRepeat: true, repeatDays: [1, 7], appointmentAt: Date(), nextAlarmAt: Date(), preparationTriggeredAt: Date(), departureTriggeredAt: Date(), isEnabled: false)
-        ]
-    }
-    
     func getSchedules(isSnoozed: Bool = false) async {
         do {
             let response = try await scheduleRepository.getSchedules()

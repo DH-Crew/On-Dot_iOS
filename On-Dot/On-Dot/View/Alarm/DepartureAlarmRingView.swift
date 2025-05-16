@@ -17,6 +17,7 @@ struct DepartureAlarmRingView: View {
     let interval: Int
     let repeatCount: Int
     let type: String
+    let mapType: MapProvider.MapType
     
     var onClickNavigateButton: () -> Void
     var onClickDelayButton: () -> Void
@@ -107,6 +108,14 @@ struct DepartureAlarmRingView: View {
                     action: {
                         onClickNavigateButton()
                         AlarmPlayer.shared.stop()
+                        switch mapType {
+                        case .kakao:
+                            openKakaoMap()
+                        case .naver:
+                            openNaverMap()
+                        case .apple:
+                            openAppleMap()
+                        }
                     },
                     style: .outline
                 )
@@ -148,4 +157,64 @@ struct DepartureAlarmRingView: View {
         let seconds = seconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
+    
+    func openKakaoMap() {
+        let startLat = schedule.startLatitude
+        let startLng = schedule.startLongitude
+        let endLat = schedule.endLatitude
+        let endLng = schedule.endLongitude
+        
+        // URL Scheme을 사용하여 kakaomap 앱 열고 경로 생성
+        guard let url = URL(string: "kakaomap://route?sp=\(startLat),\(startLng)&ep=\(endLat),\(endLng)&by=PUBLICTRANSIT") else { return }
+        
+        // Kakaomap 앱의 앱스토어 URL 생성
+        guard let appStoreUrl = URL(string: "itms-apps://itunes.apple.com/app/id304608425") else { return }
+        
+        // Kakaomap 앱이 설치되어 있는지 확인하고 URL 열기
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else {
+            // Kakaomap 앱이 설치되어 있지 않은 경우 앱스토어 URL 열기
+            UIApplication.shared.open(appStoreUrl)
+        }
+    }
+    
+    func openNaverMap() {
+        let startLat = schedule.startLatitude
+        let startLng = schedule.startLongitude
+        let endLat = schedule.endLatitude
+        let endLng = schedule.endLongitude
+        
+        // URL Scheme을 사용하여 네이버맵 앱을 열고 경로를 생성
+        guard let url = URL(string: "nmap://route/public?slat=\(startLat)&slng=\(startLng)&dlat=\(endLat)&dlng=\(endLng)&appname=com.dh.On-Dot") else { return }
+        
+        // 네이버맵 앱의 App Store URL 생성
+        guard let appStoreUrl = URL(string: "http://itunes.apple.com/app/id311867728?mt=8") else { return }
+        
+        // 네이버맵 앱이 설치되어 있는지 확인하고 URL 열기
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else {
+            // 네이버맵 앱이 설치되어 있지 않은 경우 App Store URL 열기
+            UIApplication.shared.open(appStoreUrl)
+        }
+    }
+    
+    func openAppleMap() {
+        let startLat = schedule.startLatitude
+        let startLng = schedule.startLongitude
+        let endLat = schedule.endLatitude
+        let endLng = schedule.endLongitude
+
+        // Apple Maps URL Scheme 생성
+        guard let url = URL(string: "http://maps.apple.com/?saddr=\(startLat),\(startLng)&daddr=\(endLat),\(endLng)&dirflg=r") else { return }
+
+        // Apple Maps 앱이 설치되어 있는지 확인하고 URL 열기
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else {
+            print("Apple Maps를 열 수 없습니다.")
+        }
+    }
+
 }

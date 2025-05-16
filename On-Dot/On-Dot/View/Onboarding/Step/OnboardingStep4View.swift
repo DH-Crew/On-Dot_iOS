@@ -8,14 +8,9 @@
 import SwiftUI
 
 struct OnboardingStep4View: View {
-    @Binding var selectedItem: ExpectationItem?
+    @Binding var selectedItem: ReasonItem?
     
-    let gridItems: [ExpectationItem]
-    
-    private let columns = [
-        GridItem(.flexible(), spacing: 17),
-        GridItem(.flexible(), spacing: 17)
-    ]
+    let reasonList: [ReasonItem]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -44,13 +39,25 @@ struct OnboardingStep4View: View {
             
             Spacer().frame(height: 40)
             
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(gridItems) { item in
-                    GridItemView(item: item, isSelected: selectedItem == item)
-                        .onTapGesture {
-                            selectedItem = item
-                        }
-                }
+            ForEach(reasonList, id: \.id) { item in
+                Text(item.content)
+                    .font(OnDotTypo.bodyMediumR)
+                    .foregroundStyle(Color.gray0)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 17)
+                    .background(Color.gray700)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .contentShape(Rectangle())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(selectedItem?.id == item.id ? Color.green600 : Color.clear, lineWidth: 1)
+                    )
+                    .onTapGesture {
+                        selectedItem = item
+                    }
+                
+                Spacer().frame(height: 16)
             }
         }
     }
