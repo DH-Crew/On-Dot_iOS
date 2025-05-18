@@ -68,11 +68,16 @@ final class QuickScheduleViewModel: ObservableObject {
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
+            audioEngine.inputNode.removeTap(onBus: 0)
         }
         DispatchQueue.main.async {
             self.isRecording = false
             self.voiceInput = self.voiceInputPreview
         }
+        
+        recognitionTask?.cancel()
+        recognitionTask = nil
+        recognitionRequest = nil
         
         // 오디오 세션 해제
         do {
