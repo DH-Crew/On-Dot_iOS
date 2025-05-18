@@ -37,4 +37,8 @@ final class ScheduleRepositoryImpl: ScheduleRepository {
     func updateAlarmEnabled(id: Int, request: AlarmEnabled) async throws {
         _ = try await networkManager.request(type: EmptyResponse.self, api: .updateAlarmEnabled(scheduleId: id, request: request))
     }
+    
+    func parseSTT(request: STTRequest) async throws -> STTResponse {
+        return try await networkManager.request(type: STTResponse.self, api: .parseSTT(request: request))
+    }
 }

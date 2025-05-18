@@ -36,47 +36,15 @@ struct HomeAddressEditView: View {
                 Spacer().frame(height: 40)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    ZStack(alignment: .leading) {
-                        HStack(spacing: 4) {
-                            TextField(
-                                "",
-                                text: $viewModel.addressInput
-                            )
-                            .frame(maxWidth: .infinity)
-                            .focused($focusState)
-                            .font(OnDotTypo.bodyLargeR1)
-                            .foregroundStyle(Color.gray0)
-                            .onChange(of: viewModel.addressInput) { newValue in
-                                Task {
-                                    await viewModel.onValueChanged(newValue: newValue)
-                                }
-                            }
-                            
-                            if !viewModel.addressInput.isEmpty {
-                                Image("ic_close")
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .foregroundStyle(Color.gray400)
-                                    .frame(width: 16, height: 16)
-                                    .onTapGesture {
-                                        viewModel.addressInput = ""
-                                    }
+                    SingleTextFieldView(
+                        focusState: $focusState,
+                        input: $viewModel.addressInput,
+                        onValueChanged: { newValue in
+                            Task {
+                                await viewModel.onValueChanged(newValue: newValue)
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 16)
-                        .background(Color.gray700)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        
-                        if viewModel.addressInput.isEmpty {
-                            Text("입력")
-                                .font(OnDotTypo.bodyLargeR1)
-                                .foregroundStyle(Color.gray300)
-                                .padding(.horizontal, 20)
-                        }
-                    }
-                    
+                    )
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 22)
