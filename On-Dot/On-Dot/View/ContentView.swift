@@ -46,6 +46,10 @@ struct ContentView: View {
                         router.state = newState
                     }
                 )
+            case .quick:
+                QuickScheduleView(
+                    onClickCloseButton: { router.state = .main }
+                )
             case .general:
                 GeneralScheduleCreateView(
                     onClickBtnClose: { router.state = .main }

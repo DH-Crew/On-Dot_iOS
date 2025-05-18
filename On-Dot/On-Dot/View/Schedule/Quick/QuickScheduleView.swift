@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct QuickScheduleView: View {
-    @ObservedObject private var viewModel = QuickScheduleCreateViewModel()
+    @ObservedObject private var viewModel = QuickScheduleViewModel()
     
     @FocusState private var focusState: Bool
     

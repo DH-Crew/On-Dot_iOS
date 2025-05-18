@@ -63,6 +63,7 @@ struct OnDotTabView: View {
             TabView(selection: $viewModel.selectedTab) {
                 HomeView(
                     isSnoozed: isSnoozed,
+                    navigateToQuickScheduleCreateView: { convertAppState(AppState.quick) },
                     navigateToGeneralScheduleCreateView: { convertAppState(AppState.general) }
                 )
                 .tabItem {
