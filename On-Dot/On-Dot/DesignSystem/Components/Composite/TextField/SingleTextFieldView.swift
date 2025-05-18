@@ -11,24 +11,33 @@ struct SingleTextFieldView: View {
     @FocusState.Binding var focusState: Bool
     @Binding var input: String
     
-    var onValueChanged: (String) -> Void
+    var isReadOnly: Bool = false
+    var onValueChanged: (String) -> Void = {_ in}
     
     var body: some View {
         ZStack(alignment: .leading) {
             HStack(spacing: 4) {
-                TextField(
-                    "",
-                    text: $input
-                )
-                .frame(maxWidth: .infinity)
-                .focused($focusState)
-                .font(OnDotTypo.bodyLargeR1)
-                .foregroundStyle(Color.gray0)
-                .onChange(of: input) { newValue in
-                    onValueChanged(newValue)
+                if isReadOnly {
+                    Text(input)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(OnDotTypo.bodyLargeR1)
+                        .foregroundStyle(Color.gray0)
+                        .multilineTextAlignment(.leading)
+                } else {
+                    TextField(
+                        "",
+                        text: $input
+                    )
+                    .frame(maxWidth: .infinity)
+                    .focused($focusState)
+                    .font(OnDotTypo.bodyLargeR1)
+                    .foregroundStyle(Color.gray0)
+                    .onChange(of: input) { newValue in
+                        onValueChanged(newValue)
+                    }
                 }
                 
-                if !input.isEmpty {
+                if !input.isEmpty && !isReadOnly {
                     Image("ic_close")
                         .resizable()
                         .renderingMode(.template)
