@@ -51,12 +51,12 @@ final class QuickScheduleViewModel: ObservableObject {
     
     // STT 시작
     func startSTT() {
-        SFSpeechRecognizer.requestAuthorization { status in
+        SFSpeechRecognizer.requestAuthorization { [weak self] status in
             if status == .authorized {
-                DispatchQueue.main.async {
-                    self.isRecording = true
+                DispatchQueue.main.async { [weak self] in
+                    self?.isRecording = true
+                    self?.startRecording()
                 }
-                self.startRecording()
             } else {
                 print("STT 권한이 없습니다.")
             }
