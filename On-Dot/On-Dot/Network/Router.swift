@@ -25,6 +25,7 @@ enum Router: URLRequestConvertible {
     case getScheduleDetail(scheduleId: Int)
     case editSchedule(scheduleId: Int, schedule: ScheduleInfo)
     case updateAlarmEnabled(scheduleId: Int, request: AlarmEnabled)
+    case parseSTT(request: STTRequest)
     
     // MARK: Member
     case onboarding(onboardingRequest: OnboardingRequest)
@@ -39,7 +40,7 @@ enum Router: URLRequestConvertible {
     // MARK: -
     var method: HTTPMethod {
         switch self {
-        case .login, .createSchedule, .calculate, .withdrawal, .logout, .refresh: .post
+        case .login, .createSchedule, .calculate, .withdrawal, .logout, .refresh, .parseSTT: .post
         case .searchPlace, .getSchedules, .getScheduleDetail, .getHomeAddress: .get
         case .onboarding, .editSchedule: .put
         case .editHomeAddress, .editMapProvider, .updateAlarmEnabled: .patch
@@ -62,6 +63,7 @@ enum Router: URLRequestConvertible {
         case .deleteSchedule(let scheduleId), .getScheduleDetail(let scheduleId): "/schedules/\(scheduleId)"
         case .editSchedule(let scheduleId, _): "/schedules/\(scheduleId)"
         case .updateAlarmEnabled(let scheduleId, _): "/schedules/\(scheduleId)/alarm"
+        case .parseSTT: "/schedules/nlp"
             
         // MARK: Member
         case .onboarding: "/members/onboarding"
@@ -107,6 +109,8 @@ enum Router: URLRequestConvertible {
         case .editMapProvider(let request):
             return try? request.asDictionary()
         case .updateAlarmEnabled(_ , let request):
+            return try? request.asDictionary()
+        case .parseSTT(let request):
             return try? request.asDictionary()
         default: return nil
         }
