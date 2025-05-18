@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var path = NavigationPath()
     let isSnoozed: Bool
     
+    var navigateToQuickScheduleCreateView: () -> Void
     var navigateToGeneralScheduleCreateView: () -> Void
     
     var body: some View {
@@ -64,7 +65,12 @@ struct HomeView: View {
                     }
                     
                     VStack(alignment: .trailing, spacing: 0) {
-                        if viewModel.isShrunk { CreateScheduleMenu(onClickQuickSchedule: {}, onClickGeneralSchedule: { navigateToGeneralScheduleCreateView() }) }
+                        if viewModel.isShrunk {
+                            CreateScheduleMenu(
+                                onClickQuickSchedule: navigateToQuickScheduleCreateView,
+                                onClickGeneralSchedule: navigateToGeneralScheduleCreateView
+                            )
+                        }
                         
                         Spacer().frame(height: 15)
                         
