@@ -139,14 +139,23 @@ final class QuickScheduleViewModel: ObservableObject {
         }
         
         // 실시간 텍스트 업데이트
-        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { result, error in
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
+            guard let self = self else { return }
+            
             if let result = result {
                 DispatchQueue.main.async {
                     self.voiceInputPreview = result.bestTranscription.formattedString
                 }
-            }
-            
-            if error != nil || result?.isFinal == true {
+                
+                if result.isFinal {
+                    self.recognitionTask?.finish()
+                    self.stopSTT()
+                }
+            } else if let error = error {
+                print("STT 오류: \(error.localizedDescription)")
+                
+                // 에러 발생 시, cancel 호출
+                self.recognitionTask?.cancel()
                 self.stopSTT()
             }
         }
